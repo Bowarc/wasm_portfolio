@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+	"back",
+	"front",
+    "shared"
+]
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[workspace.dependencies]
+log = "0.4.20"
