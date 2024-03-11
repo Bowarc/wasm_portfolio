@@ -46,7 +46,7 @@ pub fn draw(
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
         &verts,
-        WebGlRenderingContext::STATIC_DRAW,
+        WebGlRenderingContext::DYNAMIC_DRAW,
     );
 
     glctx.use_program(Some(&rect_shader_prog));

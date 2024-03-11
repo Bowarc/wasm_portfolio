@@ -102,13 +102,15 @@ impl Component for App {
                     return false;
                 };
 
-                let canvas_size = maths::Point::new(
-                    glctx.drawing_buffer_width() as f64,
-                    glctx.drawing_buffer_height() as f64,
-                );
+                // glctx.clear(WebGlRenderingContext::COLOR_BUFFER_BIT| WebGlRenderingContext::DEPTH_BUFFER_BIT);
+                Self::start_wormgrid(glctx);
+                // let canvas_size = maths::Point::new(
+                //     glctx.drawing_buffer_width() as f64,
+                //     glctx.drawing_buffer_height() as f64,
+                // );
 
-                wormgrid.update(canvas_size);
-                wormgrid.draw(&glctx, &rect_shader_prog);
+                // wormgrid.update(canvas_size);
+                // wormgrid.draw(&glctx, &rect_shader_prog);
 
                 // ctx.link().send_message(Msg::UpdateWorms);
 
@@ -172,12 +174,12 @@ impl App {
             .expect("should register `requestAnimationFrame` OK");
     }
 
-    fn start_wormgrid(glctx: WebGlRenderingContext) {
+    fn start_wormgrid(glctx: &WebGlRenderingContext) {
         // This should log only once -- not once per frame
 
         let mut timestamp = 0.0;
 
-        let shader_program = render::setup(&glctx);
+        let shader_program = render::setup(glctx);
         let canvas_size = maths::Point::new(
             glctx.drawing_buffer_width() as f64,
             glctx.drawing_buffer_height() as f64,
@@ -200,6 +202,8 @@ impl App {
             let mut wormgrid = component::WormGrid::new(canvas_size, 10);
             let color = render::Color::random_rgb();
             move || {
+                glctx.clear(WebGlRenderingContext::COLOR_BUFFER_BIT| WebGlRenderingContext::DEPTH_BUFFER_BIT);
+
                 // render::draw(
                 //     &glctx,
                 //     &rect_shader_prog,
@@ -209,7 +213,7 @@ impl App {
                 wormgrid.update(canvas_size);
                 wormgrid.draw(&glctx, &rect_shader_prog);
 
-                // crate::render::end_frame(cb.borrow().as_ref().unwrap())
+                crate::render::end_frame(cb.borrow().as_ref().unwrap())
             }
         })
             as Box<dyn FnMut()>));
