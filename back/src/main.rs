@@ -28,8 +28,12 @@ async fn main() {
                 routes::root,
                 routes::style,
                 routes::wormscss,
+                routes::gitcardcss,
                 routes::front,
                 routes::wasm,
+                routes::github_icon,
+                routes::rust_icon,
+                routes::python_icon,
             ],
         )
         .ignite()

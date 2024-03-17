@@ -12,23 +12,16 @@ use std::sync::Mutex;
 use wasm_bindgen::prelude::*;
 
 mod component;
-mod maths;
 mod render;
+mod utils;
 
 // Define the possible messages which can be sent to the component
 pub enum Msg {
-    Increment,
-    Decrement,
     InitWorms,
-    UpdateWorms,
 }
 
 pub struct App {
-    value: Arc<Mutex<f32>>, // This will store the counter value
     node_ref: yew::NodeRef,
-    rect_shader_program: Option<web_sys::WebGlProgram>,
-    glctx: Option<WebGlRenderingContext>,
-    wormgrid: Option<component::WormGrid>,
 }
 
 impl Component for App {
@@ -37,86 +30,26 @@ impl Component for App {
 
     fn create(ctx: &Context<Self>) -> Self {
         Self {
-            value: Mutex::new(0.0).into(),
             node_ref: yew::NodeRef::default(),
-            rect_shader_program: None,
-            glctx: None,
-            wormgrid: None,
         }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::Increment => {
-                *self.value.lock().unwrap() += 1.0;
-                console::log!("plus one"); // Will output a string to the browser console
-                true // Return true to cause the displayed change to update
-            }
-            Msg::Decrement => {
-                *self.value.lock().unwrap() -= 1.0;
-                console::log!("minus one");
-                true
-            }
             Msg::InitWorms => {
-                log!("Init");
                 // ctx.link().send_message(Msg::UpdateWorms);
                 let canvas = self.node_ref.cast::<HtmlCanvasElement>().unwrap();
                 let w = window().unwrap();
                 canvas.set_width(w.inner_width().unwrap().as_f64().unwrap() as u32);
                 canvas.set_height(w.inner_height().unwrap().as_f64().unwrap() as u32);
-                log!("canvas");
-
                 let glctx: WebGlRenderingContext = canvas
                     .get_context("webgl")
                     .unwrap()
                     .unwrap()
                     .dyn_into()
                     .unwrap();
-                log!("glctx");
-                self.rect_shader_program = Some(render::setup(&glctx));
-                log!("program");
-                self.wormgrid = Some(component::WormGrid::new(
-                    maths::Point::new(
-                        glctx.drawing_buffer_width() as f64,
-                        glctx.drawing_buffer_height() as f64,
-                    ),
-                    255,
-                ));
-                log!("wormgrid");
-                self.glctx = Some(glctx);
-                log!("Done");
-                ctx.link().send_message(Msg::UpdateWorms);
-                false
-            }
 
-            Msg::UpdateWorms => {
-                let Some(wormgrid) = &mut self.wormgrid else {
-                    return false;
-                };
-
-                let Some(glctx) = &self.glctx else {
-                    return false;
-                };
-
-                let Some(rect_shader_prog) = &self.rect_shader_program else {
-                    return false;
-                };
-
-                // glctx.clear(WebGlRenderingContext::COLOR_BUFFER_BIT| WebGlRenderingContext::DEPTH_BUFFER_BIT);
                 Self::start_wormgrid(glctx);
-                // let canvas_size = maths::Point::new(
-                //     glctx.drawing_buffer_width() as f64,
-                //     glctx.drawing_buffer_height() as f64,
-                // );
-
-                // wormgrid.update(canvas_size);
-                // wormgrid.draw(&glctx, &rect_shader_prog);
-
-                // ctx.link().send_message(Msg::UpdateWorms);
-
-                // crate::render::end_frame(&wasm_bindgen::closure::Closure::wrap(Box::new({
-                // move || {}
-                // })));
 
                 true
             }
@@ -127,30 +60,14 @@ impl Component for App {
         log!("Draw");
         html! {
             <div>
-                <canvas id="gridWormCanvas" ref={self.node_ref.clone()} />
-                <div class="panel">
-                    // A button to send the Increment message
-                    <button class="button" onclick={ctx.link().callback(|_| Msg::Increment)}>
-                        { "+1" }
-                    </button>
-
-                    // A button to send the Decrement message
-                    <button onclick={ctx.link().callback(|_| Msg::Decrement)}>
-                        { "-1" }
-                    </button>
-
-                    // A button to send two Increment messages
-                    <button onclick={ctx.link().batch_callback(|_| vec![Msg::Increment, Msg::Increment])}>
-                        { "+1, +1" }
-                    </button>
-
-                </div>
-
-                // Display the current value of the counter
-                <p class="counter">
-                    { *self.value.lock().unwrap() }
+                <canvas id="gridworm_canvas" ref={self.node_ref.clone()} />
+                <component::Header/>
+                <p id="description">
+                    { "Hellow.\nJe suis un développeur autodidacte de " }
+                    <component::Age/>
+                    { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
                 </p>
-
+                <component::GitProjectList />
                 // Display the current date and time the page was rendered
                 <p class="footer">
                     { "Rendered: " }
@@ -174,12 +91,11 @@ impl App {
             .expect("should register `requestAnimationFrame` OK");
     }
 
-    fn start_wormgrid(glctx: &WebGlRenderingContext) {
+    fn start_wormgrid(glctx: WebGlRenderingContext) {
         // This should log only once -- not once per frame
 
         let mut timestamp = 0.0;
 
-        let shader_program = render::setup(glctx);
         let canvas_size = maths::Point::new(
             glctx.drawing_buffer_width() as f64,
             glctx.drawing_buffer_height() as f64,
@@ -196,22 +112,25 @@ impl App {
         let cb = std::rc::Rc::new(std::cell::RefCell::new(None));
 
         *cb.borrow_mut() = Some(wasm_bindgen::closure::Closure::wrap(Box::new({
-            let rect_shader_prog = shader_program.clone();
+            let rect_shader_program = render::setup(&glctx);
             let glctx = glctx.clone();
             let cb = cb.clone();
-            let mut wormgrid = component::WormGrid::new(canvas_size, 10);
+            let mut wormgrid = component::WormGrid::new(canvas_size, 20);
             let color = render::Color::random_rgb();
             move || {
-                glctx.clear(WebGlRenderingContext::COLOR_BUFFER_BIT| WebGlRenderingContext::DEPTH_BUFFER_BIT);
+                glctx.clear(
+                    WebGlRenderingContext::COLOR_BUFFER_BIT
+                        | WebGlRenderingContext::DEPTH_BUFFER_BIT,
+                );
 
                 // render::draw(
                 //     &glctx,
-                //     &rect_shader_prog,
+                //     &rect_shader_program,
                 //     &render::rect_to_vert(maths::Rect::new((0., 0.), canvas_size, 0.), canvas_size),
                 //     color,
                 // );
                 wormgrid.update(canvas_size);
-                wormgrid.draw(&glctx, &rect_shader_prog);
+                wormgrid.draw(&glctx, &rect_shader_program);
 
                 crate::render::end_frame(cb.borrow().as_ref().unwrap())
             }

@@ -5,8 +5,8 @@ mod color_mod;
 pub use color_mod::Color;
 
 pub fn setup(glctx: &WebGlRenderingContext) -> web_sys::WebGlProgram {
-    let vert_code = include_str!("./basic.vert");
-    let frag_code = include_str!("./basic.frag");
+    let vert_code = include_str!("../resources/shaders/basic.vert");
+    let frag_code = include_str!("../resources/shaders/basic.frag");
 
     // This list of vertices will draw two triangles to cover the entire canvas.
 
@@ -39,13 +39,13 @@ pub fn draw(
     // log!("{color}");
     let timestamp = 1.0;
 
-    let vertex_buffer = glctx.create_buffer().unwrap();
-    let verts = js_sys::Float32Array::from(vertices);
-
-    glctx.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&vertex_buffer));
+    glctx.bind_buffer(
+        WebGlRenderingContext::ARRAY_BUFFER,
+        Some(&glctx.create_buffer().unwrap()),
+    );
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
-        &verts,
+        &js_sys::Float32Array::from(vertices),
         WebGlRenderingContext::DYNAMIC_DRAW,
     );
 
@@ -93,13 +93,13 @@ pub fn end_frame(f: &wasm_bindgen::closure::Closure<dyn FnMut()>) {
         .expect("should register `requestAnimationFrame` OK");
 }
 
-pub fn rect_to_vert(rect: crate::maths::Rect, canvas_size: crate::maths::Vec2) -> [f32; 12] {
-    let sized_rect = crate::maths::Rect::new(
-        crate::maths::Point::new(
+pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 12] {
+    let sized_rect = maths::Rect::new(
+        maths::Point::new(
             rect.aa_topleft().x / canvas_size.x,
             rect.aa_topleft().y / canvas_size.y,
         ),
-        crate::maths::Point::new(rect.width() / canvas_size.x, rect.height() / canvas_size.y),
+        maths::Point::new(rect.width() / canvas_size.x, rect.height() / canvas_size.y),
         0.,
     );
     let x0 = sized_rect.aa_topleft().x - sized_rect.size().x;

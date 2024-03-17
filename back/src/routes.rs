@@ -19,6 +19,11 @@ pub async fn style(remote_addr: std::net::SocketAddr) -> Response {
 pub async fn wormscss(remote_addr: std::net::SocketAddr) -> Response {
     file_response("worms.css", ContentType::CSS, remote_addr)
 }
+#[rocket::get("/gitcard.css")]
+pub async fn gitcardcss(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("gitcard.css", ContentType::CSS, remote_addr)
+}
+
 
 #[rocket::get("/front.js")]
 pub async fn front(remote_addr: std::net::SocketAddr) -> Response {
@@ -28,6 +33,21 @@ pub async fn front(remote_addr: std::net::SocketAddr) -> Response {
 #[rocket::get("/front_bg.wasm")]
 pub fn wasm(remote_addr: std::net::SocketAddr) -> Response {
     file_response("front_bg.wasm", ContentType::WASM, remote_addr)
+}
+
+#[rocket::get("/resources/github.webp")]
+pub fn github_icon(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("resources/github.webp", ContentType::WASM, remote_addr)
+}
+
+#[rocket::get("/resources/rust.webp")]
+pub fn rust_icon(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("resources/rust.webp", ContentType::WASM, remote_addr)
+}
+
+#[rocket::get("/resources/python.webp")]
+pub fn python_icon(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("resources/python.webp", ContentType::WASM, remote_addr)
 }
 
 fn file_response(

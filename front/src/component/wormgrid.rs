@@ -1,52 +1,63 @@
+use gloo::console::log;
+use js_sys::Date;
 use wasm_bindgen::{closure::Closure, JsCast};
 
-const WORM_SPEED: f64 = 1.;
+const WORM_SPEED: f64 = 170.;
+
+// enum Direction {
+//     Up,
+//     Down,
+//     Left,
+//     Right,
+// }
 
 #[derive(Clone)]
 pub struct Worm {
-    rect: crate::maths::Rect,
+    rect: maths::Rect,
     color: crate::render::Color,
-    direction: crate::maths::Vec2,
+    direction: maths::Vec2,
 }
 
 impl Worm {
-    pub fn new(rect: crate::maths::Rect, color: crate::render::Color) -> Self {
+    pub fn new(rect: maths::Rect, color: crate::render::Color) -> Self {
         Self {
             rect,
             color,
             direction: {
-                let mut dir =
-                    crate::maths::Vec2::new(random::get_inc(-1., 1.), random::get_inc(-1., 1.));
+                let mut dir = maths::Vec2::new(random::get_inc(-1., 1.), random::get_inc(-1., 1.));
                 dir.normalize();
                 dir
             },
         }
     }
-    pub fn step(&mut self) {
+    pub fn step(&mut self, dt: f64) {
         let mut pos = self.rect.center();
 
-        pos += self.direction * crate::maths::Vec2::new(WORM_SPEED, WORM_SPEED);
+        pos += self.direction * maths::Vec2::new(WORM_SPEED * dt, WORM_SPEED * dt);
 
         self.rect.set_center(pos);
     }
 }
 
 pub struct WormGrid {
-    size: crate::maths::Vec2,
+    size: maths::Vec2,
     worms: Vec<Worm>,
+    last_update: wasm_timer::Instant,
 }
 
 impl WormGrid {
-    pub fn new(canvas_size: crate::maths::Vec2, worm_count: u8) -> Self {
+    pub fn new(canvas_size: maths::Vec2, worm_count: u16) -> Self {
+        log!(format!("Initializing wormgrid with {worm_count} worms on a canvas of size: {canvas_size}"));
+
         let mut worms = Vec::new();
 
         for _ in 0..worm_count {
-            let rect = crate::maths::Rect::new(
-                crate::maths::Point::new(
+            let rect = maths::Rect::new(
+                maths::Point::new(
                     random::get(-canvas_size.x, canvas_size.x),
                     random::get(-canvas_size.y, canvas_size.y),
                 ),
-                crate::maths::Point::new(10., 10.),
+                maths::Point::new(40., 40.),
                 0.,
             );
 
@@ -58,27 +69,32 @@ impl WormGrid {
         Self {
             size: canvas_size,
             worms,
+            last_update: wasm_timer::Instant::now(),
         }
     }
 
-    pub fn update(&mut self, grid_size: crate::maths::Vec2) {
+    pub fn update(&mut self, grid_size: maths::Vec2) {
+        let dt = self.last_update.elapsed().as_secs_f64();
+        self.last_update = wasm_timer::Instant::now();
+        // log!(dt);
+
         for worm in self.worms.iter_mut() {
-            worm.step();
+            worm.step(dt);
             if worm.rect.center().x < -grid_size.x {
                 worm.rect
-                    .set_center(crate::maths::Vec2::new(grid_size.x, worm.rect.center().y));
+                    .set_center(maths::Vec2::new(grid_size.x, worm.rect.center().y));
             }
             if worm.rect.center().x > grid_size.x {
                 worm.rect
-                    .set_center(crate::maths::Vec2::new(-grid_size.x, worm.rect.center().y));
+                    .set_center(maths::Vec2::new(-grid_size.x, worm.rect.center().y));
             }
             if worm.rect.center().y < -grid_size.y {
                 worm.rect
-                    .set_center(crate::maths::Vec2::new(worm.rect.center().x, grid_size.y));
+                    .set_center(maths::Vec2::new(worm.rect.center().x, grid_size.y));
             }
             if worm.rect.center().y > grid_size.y {
                 worm.rect
-                    .set_center(crate::maths::Vec2::new(worm.rect.center().x, -grid_size.y));
+                    .set_center(maths::Vec2::new(worm.rect.center().x, -grid_size.y));
             }
         }
     }

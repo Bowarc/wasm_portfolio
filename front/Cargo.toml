@@ -10,12 +10,16 @@ name = "front"
 path = "src/main.rs"
 
 [dependencies]
-random = {git = "https://github.com/bowarc/Crates", package = "random"} 
+random = {git = "https://github.com/bowarc/Crates", package = "random"}
+maths = {git = "https://github.com/bowarc/Crates", package = "maths"}
 gloo = "0.11.0"
 js-sys = "0.3.66"
 yew = { version = "0.21.0", features = ["csr"] }
 wasm-bindgen = { version = "0.2.89"}
-# serde = { version = "1.0.194", features = ["derive"] }
+wasm-bindgen-futures = "0.4.39"
+wasm-timer = "0.2.5"
+serde_json = "1.0.111"
+serde = { version = "1.0.194", features = ["derive"] }
 # wasm-bindgen-futures = "0.4.39"
 # shared = { path = "../shared"}
 # serde_json = "1.0.111"
