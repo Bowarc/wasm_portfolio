@@ -1,5 +1,6 @@
 use gloo::{console::log, utils::format::JsValueSerdeExt as _};
 use js_sys::Date;
+use serde_json::Value;
 use wasm_bindgen::{JsCast as _, JsValue};
 use web_sys::Request;
 use yew::{html, Html};
@@ -83,7 +84,6 @@ impl yew::Component for GitProjectList {
                 }).collect::<Vec<Html>>();
                 html! {
                     <div id="project_list">
-                        { "Repositories" }
                         { cards }
                     </div>
                 }
@@ -171,14 +171,15 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
             log!(Date::new(&JsValue::from_str("1995-12-25T23:15:30")));
             log!(Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))));
 
+            let as_rs_string = |s: &Value| -> String{ s.to_string().replace(&['"'],"") };
 
             Some(Repository {
-                name: value.get("name")?.to_string().replace(&['"'],""),
-                owner_name:  value.get("owner")?.get("login")?.to_string().replace(&['"'],""),
-                description:  value.get("description")?.to_string().replace(&['"'],""),
+                name: as_rs_string(value.get("name")?),
+                owner_name: as_rs_string(value.get("owner")?.get("login")?),
+                description:  as_rs_string(value.get("description")?),
                 created_date: Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))),
                 last_push_date: Date::new(&JsValue::from_str(&value.get("updated_at")?.to_string().replace(&['Z', '"'], ""))),
-                language:  value.get("language")?.to_string().replace(&['"'],""),
+                language:  as_rs_string(value.get("language")?),
                 public: !value.get("private")?.as_bool()?,
                 fork: value.get("fork")?.as_bool()?,
                 size: value.get("size")?.as_i64()? as i32,
