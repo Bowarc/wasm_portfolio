@@ -27,7 +27,6 @@ pub struct Repository {
     size: i32,
 }
 
-
 impl yew::Component for GitProjectList {
     type Message = Msg;
 
@@ -50,40 +49,40 @@ impl yew::Component for GitProjectList {
                 let cards = repos.iter().map(|repo|{
                     html!{
                         <div class="project card">
-                            <a href={format!("https://github.com/{}/{}", repo.owner_name, repo.name)}
-                                class="card_link">
-                            <div class="card_bg"></div>
-                            <div class="card_title">
-                                <img src={ 
-                                        format!("./resources/{}.webp", 
-                                            repo.language.to_lowercase()
+                            <a href={ format!("https://github.com/{}/{}", repo.owner_name, repo.name) }
+                                    class="card_link">
+                                <div class="card_bg"></div>
+                                <div class="card_title">
+                                    <img src={ 
+                                            format!("./resources/{}.webp", 
+                                                repo.language.to_lowercase()
+                                            )
+                                        }
+                                        alt={ format!("{} icon", repo.language) }
+                                        class="icon"
+                                    />
+                                    { &repo.name }
+                                </div>
+                                <div class="card_description">
+                                    { &repo.description }
+                                </div>
+                                <div class="card_date_box">
+                                    { "Last update: " }
+                                    <span class="card_date">
+                                    {
+                                        format!(" {:?} {}h{}",
+                                            repo.last_push_date.to_locale_date_string("fr-FR", &JsValue::from_str("")),
+                                            repo.last_push_date.get_hours(), repo.last_push_date.get_minutes()
                                         )
                                     }
-                                    alt={format!("{} icon", repo.language)}
-                                    class="icon"
-                                />
-                                { &repo.name }
-                            </div>
-                            <div class="card_description">
-                                {&repo.description}
-                            </div>
-                            <div class="card_date_box">
-                                { "Last update: " }
-                                <span class="card_date">
-                                { 
-                                    format!(" {:?} {}h{}", 
-                                        repo.last_push_date.to_locale_date_string("fr-FR", &JsValue::from_str("")),
-                                        repo.last_push_date.get_hours(), repo.last_push_date.get_minutes()
-                                    )
-                                }
-                                </span>
-                            </div>
+                                    </span>
+                                </div>
                             </a>
                         </div> 
                     }
                 }).collect::<Vec<Html>>();
                 html! {
-                    <div class="project_list">
+                    <div id="project_list">
                         { "Repositories" }
                         { cards }
                     </div>
