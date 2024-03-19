@@ -1,20 +1,16 @@
-.project{
-    border: 1px solid var(--background-accent);
-/*    background-color: var(--background-secondary);*/
-    border-radius: 10px;
-    margin: 0.8%;
-    margin-left: 10%;
-    margin-bottom: 2%;
-    width: 80%;
-}
-
-.project:not(:last-child) {
-  margin-bottom: 0.8%;
-}
-
 .card {
     overflow: hidden;
     border-radius: 28px;
+    border: 1px solid var(--background-accent);
+    /*    background-color: var(--background-secondary);*/
+        border-radius: 10px;
+        margin: 0.8%;
+        margin-left: 10%;
+        margin-bottom: 2%;
+        width: 80%;
+}
+.card:not(:last-child) {
+  margin-bottom: 0.8%;
 }
 
 .card_link {
@@ -45,6 +41,7 @@
 .card_description{
     margin-bottom: 10px;
     color: var(--text-secondary);
+    margin-left: 1%
 }
 
 .card_date_box {

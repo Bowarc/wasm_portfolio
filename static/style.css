@@ -51,9 +51,6 @@ a {
     text-decoration: None;
 }
 
-.project .card_description{
-    margin-left: 1%;
-}
 
 #description{
     --side-margin: 20%;
@@ -63,9 +60,3 @@ a {
     font-size: 2em;
     color: var(--text);
 }
-
-/*
-    Totally not stolen from https://codepen.io/wikyware-net/pen/dyKPRxQ
-*/
-
-

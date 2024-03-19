@@ -48,7 +48,7 @@ impl yew::Component for GitProjectList {
             crate::utils::FetchState::Success(repos) => {
                 let cards = repos.iter().map(|repo|{
                     html!{
-                        <div class="project card">
+                        <div class="card">
                             <a href={ format!("https://github.com/{}/{}", repo.owner_name, repo.name) }
                                     class="card_link">
                                 <div class="card_bg"></div>
@@ -70,7 +70,7 @@ impl yew::Component for GitProjectList {
                                     { "Last update: " }
                                     <span class="card_date">
                                     {
-                                        format!(" {:?} {}h{}",
+                                        format!(" {} {}h{}",
                                             repo.last_push_date.to_locale_date_string("fr-FR", &JsValue::from_str("")),
                                             repo.last_push_date.get_hours(), repo.last_push_date.get_minutes()
                                         )
@@ -163,21 +163,22 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
     log!(json_data.clone());
 
     let repos = json_data
+
         .into_serde::<Vec<serde_json::Value>>()
         .unwrap()
         .iter()
         .flat_map(|value| {
-            log!(format!("name: {:?}", value.get("name")));
+            log!(Date::new(&JsValue::from_str("1995-12-25T23:15:30")));
+            log!(Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))));
 
-            let sanitize_string = |s: String| -> String{ s.replace(&['"', ' ',],"")}; 
 
             Some(Repository {
-                name: sanitize_string(value.get("name")?.to_string()),
-                owner_name:  sanitize_string(value.get("owner")?.get("login")?.to_string()),
-                description:  sanitize_string(value.get("description")?.to_string()),
-                created_date: Date::new(&JsValue::from_str(&value.get("created_at")?.to_string())),
-                last_push_date: Date::new(&JsValue::from_str(&value.get("updated_at")?.to_string())),
-                language:  sanitize_string(value.get("language")?.to_string()),
+                name: value.get("name")?.to_string().replace(&['"'],""),
+                owner_name:  value.get("owner")?.get("login")?.to_string().replace(&['"'],""),
+                description:  value.get("description")?.to_string().replace(&['"'],""),
+                created_date: Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))),
+                last_push_date: Date::new(&JsValue::from_str(&value.get("updated_at")?.to_string().replace(&['Z', '"'], ""))),
+                language:  value.get("language")?.to_string().replace(&['"'],""),
                 public: !value.get("private")?.as_bool()?,
                 fork: value.get("fork")?.as_bool()?,
                 size: value.get("size")?.as_i64()? as i32,
