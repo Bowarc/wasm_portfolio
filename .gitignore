@@ -1,5 +1,6 @@
 /target
 /log/*
-/static/*
+/static/*.js
+/static/*.wasm
 */**/*.wasm
 */**/*.js

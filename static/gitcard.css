@@ -1,0 +1,99 @@
+.project{
+    border: 1px solid var(--background-accent);
+/*    background-color: var(--background-secondary);*/
+    border-radius: 10px;
+    margin: 0.8%;
+    margin-left: 10%;
+    margin-bottom: 2%;
+    width: 80%;
+}
+
+.project:not(:last-child) {
+  margin-bottom: 0.8%;
+}
+
+.card {
+    overflow: hidden;
+    border-radius: 28px;
+}
+
+.card_link {
+    display: block;
+/*    padding: 30px 20px;*/
+    padding: 3% 2%;
+    background-color: #282828;
+    overflow: hidden;
+    position: relative;
+}
+.card_link:hover,
+.card_link:hover .card_date {
+    text-decoration: none;
+    color: #FFF;
+}
+.card_link:hover .card_bg {
+    transform: translate(0vw, 60%) scale(3);
+    width: 100%; height: 100%;
+}
+
+.card_title {
+    font-weight: bold;
+    font-size: 30px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.card_description{
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+}
+
+.card_date_box {
+    font-size: 18px;
+    color: var(--text-secondary);
+    z-index: 2;
+    position: relative;
+}
+
+.card_date {
+    font-weight: bold;
+    color: var(--text-accent);
+
+    transition: color .5s ease
+}
+
+.card_bg {
+    height: 128px;
+    width: 128px;
+    background-color: #f9b23430;
+
+    z-index: 1;
+    position: absolute;
+    top: -75px;
+    right: -75px;
+
+    border-radius: 50%;
+
+    transition: all .5s ease;
+}
+
+.card:nth-child(2n) .card_bg {
+    background-color: #3ecd5e30;
+}
+
+.card:nth-child(3n) .card_bg {
+    background-color: #e4400230;
+}
+
+.card:nth-child(4n) .card_bg {
+    background-color: #952aff30;
+}
+
+.card:nth-child(5n) .card_bg {
+    background-color: #cd3e9430;
+}
+
+.card:nth-child(6n) .card_bg {
+    background-color: #4c49ea30;
+}
+
+

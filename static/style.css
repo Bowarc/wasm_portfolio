@@ -1,0 +1,71 @@
+:root{
+    --text: #e6f7dc;
+    --background: #333;
+    --background-secondary: #282828;
+    --background-accent: #1e8681;
+    --text-primary: #43EB63; /*#ade58b;*/
+    --text-secondary: #37a1d3;
+    --text-accent: #f9b234;
+}
+
+body{
+/*    background-color: var(--background);*/
+    background-color: transparent;
+    width:  100%;
+    height: 100%;
+    margin: 0;
+    text-align: center ;
+}
+
+#header {
+  text-align: right;
+}
+
+.icon{
+    width: 25px;
+    height: 25px;
+}
+
+#project_list{
+    color: var(--text-primary);
+/*    border: 1px solid var(--primary);*/
+    border-radius: 10px;
+    padding: 1%;
+    margin-left: 25%;
+    width: 50%;
+    height: 100%;
+
+/*    position: absolute;
+    top: 50%;*/
+}
+
+
+
+a:visited{
+    color: var(--text-primary);
+    text-decoration: None;
+}
+
+a {
+    color: var(--text-primary);
+    text-decoration: None;
+}
+
+.project .card_description{
+    margin-left: 1%;
+}
+
+#description{
+    --side-margin: 20%;
+    margin-top: 5%;
+    margin-left:  var(--side-margin);
+    margin-right: var(--side-margin) ; 
+    font-size: 2em;
+    color: var(--text);
+}
+
+/*
+    Totally not stolen from https://codepen.io/wikyware-net/pen/dyKPRxQ
+*/
+
+
