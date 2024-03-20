@@ -1,6 +1,6 @@
 use gloo::console::log;
 use wasm_bindgen::JsCast;
-use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext,};
+use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext};
 #[path = "render/color.rs"]
 mod color_mod;
 pub use color_mod::Color;
@@ -95,18 +95,22 @@ pub fn draw_rect(
 pub fn draw_circle(
     glctx: &WebGlRenderingContext,
     circle_shader_prog: &web_sys::WebGlProgram,
-    vertices: &[f32],
-    pos: maths::Point,
+    circle: maths::Circle,
     color: Color,
 ) {
     let canvasWidth = glctx.drawing_buffer_width() as f32;
     let canvasHeight = glctx.drawing_buffer_height() as f32;
 
     // Not used atm
-    let to_clip_space = |x: f32, y: f32| -> (f32, f32) { 
+    let to_clip_space = |x: f32, y: f32| -> (f32, f32) {
         // as i did in rect_to_vert?
         (x / canvasWidth, y / canvasHeight)
     };
+
+    let vertices = circle_to_vert(
+        circle,
+        maths::Vec2::new(canvasWidth as f64, canvasHeight as f64),
+    );
 
     glctx.bind_buffer(
         WebGlRenderingContext::ARRAY_BUFFER,
@@ -114,7 +118,7 @@ pub fn draw_circle(
     );
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
-        &js_sys::Float32Array::from(vertices),
+        &js_sys::Float32Array::from(vertices.as_slice()),
         WebGlRenderingContext::DYNAMIC_DRAW,
     );
 
@@ -147,9 +151,16 @@ pub fn draw_circle(
             .as_ref(),
         &[
             // Shift the center pos to try to match glsl coords,
-            pos.x as f32 + glctx.drawing_buffer_width() as f32, 
-            glctx.drawing_buffer_height() as f32 - pos.y as f32,
+            circle.center.x as f32 + glctx.drawing_buffer_width() as f32,
+            glctx.drawing_buffer_height() as f32 - circle.center.y as f32,
         ],
+    );
+
+    glctx.uniform1f(
+        glctx
+            .get_uniform_location(&circle_shader_prog, "u_radius")
+            .as_ref(),
+            circle.radius as f32,
     );
 
     // log!(format!(

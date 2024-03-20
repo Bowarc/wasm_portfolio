@@ -94,22 +94,15 @@ impl WormGrid {
             crate::render::draw_circle(
                 &glctx,
                 &circle_shader_prog,
-                &verticies,
-                worm.rect.center(),
+                maths::Circle::new(worm.rect.center(), worm.rect.width()),
                 worm.color,
             )
         }
 
-        let center = maths::Vec2::new(0., 0.);
-        let verticies = crate::render::circle_to_vert(
-            maths::Circle::new(center, 100.),
-            self.size,
-        );
         crate::render::draw_circle(
             &glctx,
             &circle_shader_prog,
-            &verticies,
-            center,
+            maths::Circle::new(maths::Vec2::new(0., 0.), 100.),
             crate::render::Color::random_rgb(),
         );
     }
