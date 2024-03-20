@@ -101,7 +101,12 @@ pub fn draw_circle(
 ) {
     let canvasWidth = glctx.drawing_buffer_width() as f32;
     let canvasHeight = glctx.drawing_buffer_height() as f32;
-    let to_clip_space = |x: f32, y: f32| -> (f32, f32) { ((x / canvasWidth), (y / canvasHeight)) };
+
+    // Not used atm
+    let to_clip_space = |x: f32, y: f32| -> (f32, f32) { 
+        // as i did in rect_to_vert?
+        (x / canvasWidth, y / canvasHeight)
+    };
 
     glctx.bind_buffer(
         WebGlRenderingContext::ARRAY_BUFFER,
@@ -141,21 +146,19 @@ pub fn draw_circle(
             .get_uniform_location(&circle_shader_prog, "u_center")
             .as_ref(),
         &[
+            // Shift the center pos to try to match glsl coords,
             pos.x as f32 + glctx.drawing_buffer_width() as f32, 
             glctx.drawing_buffer_height() as f32 - pos.y as f32,
         ],
     );
-    // glctx.uniform4f(        glctx
-    //         .get_uniform_location(&circle_shader_prog, "u_transform")
-    //         .as_ref(),, x, y, z, w);
 
-    log!(format!(
-        "Canvas size: {:?}",
-        maths::Point::new(
-            glctx.drawing_buffer_width() as f64,
-            glctx.drawing_buffer_height() as f64,
-        )
-    ));
+    // log!(format!(
+    //     "Canvas size: {:?}",
+    //     maths::Point::new(
+    //         glctx.drawing_buffer_width() as f64,
+    //         glctx.drawing_buffer_height() as f64,
+    //     )
+    // ));
 
     // log!(format!(
     //     "{:.0},{:.0} -> {:?}",
@@ -164,6 +167,7 @@ pub fn draw_circle(
     //     to_clip_space(pos.x as f32, pos.y as f32)
     // ));
 
+    // Other tests
     glctx.uniform2fv_with_f32_array(
         glctx
             .get_uniform_location(&circle_shader_prog, "u_resolution")

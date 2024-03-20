@@ -36,7 +36,7 @@ impl WormGrid {
 
         for _ in 0..worm_count {
             let rect = maths::Rect::new(
-                maths::Point::new(-canvas_size.x, canvas_size.y),
+                maths::Point::new(canvas_size.x, -canvas_size.y),
                 maths::Point::new(40., 40.),
                 0.,
             );
@@ -58,25 +58,26 @@ impl WormGrid {
         self.last_update = wasm_timer::Instant::now();
         // log!(dt);
 
-        for worm in self.worms.iter_mut() {
-            worm.step(dt);
-            if worm.rect.center().x < -grid_size.x {
-                worm.rect
-                    .set_center(maths::Vec2::new(grid_size.x, worm.rect.center().y));
-            }
-            if worm.rect.center().x > grid_size.x {
-                worm.rect
-                    .set_center(maths::Vec2::new(-grid_size.x, worm.rect.center().y));
-            }
-            if worm.rect.center().y < -grid_size.y {
-                worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, grid_size.y));
-            }
-            if worm.rect.center().y > grid_size.y {
-                worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, -grid_size.y));
-            }
-        }
+        // Removed to test canvas position
+        // for worm in self.worms.iter_mut() {
+        //     worm.step(dt);
+        //     if worm.rect.center().x < -grid_size.x {
+        //         worm.rect
+        //             .set_center(maths::Vec2::new(grid_size.x, worm.rect.center().y));
+        //     }
+        //     if worm.rect.center().x > grid_size.x {
+        //         worm.rect
+        //             .set_center(maths::Vec2::new(-grid_size.x, worm.rect.center().y));
+        //     }
+        //     if worm.rect.center().y < -grid_size.y {
+        //         worm.rect
+        //             .set_center(maths::Vec2::new(worm.rect.center().x, grid_size.y));
+        //     }
+        //     if worm.rect.center().y > grid_size.y {
+        //         worm.rect
+        //             .set_center(maths::Vec2::new(worm.rect.center().x, -grid_size.y));
+        //     }
+        // }
     }
     pub fn draw(
         &mut self,
