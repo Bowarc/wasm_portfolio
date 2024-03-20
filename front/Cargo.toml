@@ -11,6 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 random = {git = "https://github.com/bowarc/Crates", package = "random"}
+time = {git = "https://github.com/bowarc/Crates", package = "time"}
 maths = {git = "https://github.com/bowarc/Crates", package = "maths"}
 gloo = "0.11.0"
 js-sys = "0.3.66"
