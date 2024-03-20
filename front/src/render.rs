@@ -112,9 +112,11 @@ pub fn draw_circle(
         maths::Vec2::new(canvasWidth as f64, canvasHeight as f64),
     );
 
+    let buffer = glctx.create_buffer().unwrap(); // memory leak please fix
+
     glctx.bind_buffer(
         WebGlRenderingContext::ARRAY_BUFFER,
-        Some(&glctx.create_buffer().unwrap()),
+        Some(&buffer),
     );
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
@@ -141,8 +143,12 @@ pub fn draw_circle(
 
     // Attach the position vector as an attribute for the GL context.
     let position = glctx.get_attrib_location(&circle_shader_prog, "a_position") as u32;
-    glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 0, 0);
+    glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
     glctx.enable_vertex_attrib_array(position);
+
+    let uv = glctx.get_attrib_location(&circle_shader_prog, "a_uv") as u32;
+    glctx.vertex_attrib_pointer_with_i32(uv, 2, WebGlRenderingContext::FLOAT, true, 16, 8);
+    glctx.enable_vertex_attrib_array(uv);
 
     // Attach the time as a uniform for the GL context.
     glctx.uniform2fv_with_f32_array(
@@ -200,7 +206,7 @@ pub fn end_frame(f: &wasm_bindgen::closure::Closure<dyn FnMut()>) {
         .expect("should register `requestAnimationFrame` OK");
 }
 
-pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 12] {
+pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
     let sized_rect = maths::Rect::new(
         maths::Point::new(
             rect.aa_topleft().x / canvas_size.x,
@@ -216,16 +222,16 @@ pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 12] {
 
     let out = [
         // First triangle
-        (x0, y0),
-        (x1, y0),
-        (x0, y1),
+        (x0, y0, 0.0, 0.0),
+        (x1, y0, 1.0, 0.0),
+        (x0, y1, 0.0, 1.0),
         // Second triangle
-        (x0, y1),
-        (x1, y0),
-        (x1, y1),
+        (x0, y1, 0.0, 1.0),
+        (x1, y0, 1.0, 0.0),
+        (x1, y1, 1.0, 1.0),
     ]
     .iter()
-    .flat_map(|&(x, y)| vec![x as f32, y as f32])
+    .flat_map(|&(x, y, u, v)| vec![x as f32, y as f32, u as f32, v as f32])
     .collect::<Vec<_>>()
     .try_into()
     .unwrap_or_else(|_| panic!("Failed to convert rectangle to triangles"));
@@ -235,7 +241,7 @@ pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 12] {
     out
 }
 
-pub fn circle_to_vert(circle: maths::Circle, canvas_size: maths::Vec2) -> [f32; 12] {
+pub fn circle_to_vert(circle: maths::Circle, canvas_size: maths::Vec2) -> [f32; 24] {
     rect_to_vert(
         maths::Rect::new_from_center(circle.center(), circle.radius, 0.),
         canvas_size,
