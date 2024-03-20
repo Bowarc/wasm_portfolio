@@ -61,13 +61,13 @@ impl Component for App {
         html! {
             <div>
                 <canvas id="gridworm_canvas" ref={self.node_ref.clone()} />
-                // <component::Header/>
-                // <p id="description">
-                //     { "Hellow.\nJe suis un développeur autodidacte de " }
-                //     <component::Age/>
-                //     { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
-                // </p>
-                // <component::GitProjectList />
+                <component::Header/>
+                <p id="description">
+                    { "Hellow.\nJe suis un développeur autodidacte de " }
+                    <component::Age/>
+                    { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
+                </p>
+                <component::GitProjectList />
                 // Display the current date and time the page was rendered
                 <p class="footer">
                     { "Rendered: " }
@@ -116,7 +116,7 @@ impl App {
             let circle_shader_program = render::setup_shader(&glctx, "circle");
             let glctx = glctx.clone();
             let cb = cb.clone();
-            let mut wormgrid = component::WormGrid::new(canvas_size, 2);
+            let mut wormgrid = component::WormGrid::new(canvas_size, 20);
             let color = render::Color::random_rgb();
             move || {
                 glctx.clear(
