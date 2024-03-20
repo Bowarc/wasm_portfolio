@@ -121,7 +121,7 @@ pub fn draw_circle(
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
         &js_sys::Float32Array::from(vertices.as_slice()),
-        WebGlRenderingContext::DYNAMIC_DRAW,
+        WebGlRenderingContext::STREAM_DRAW, // DYNAMIC_DRAW
     );
 
     glctx.use_program(Some(&circle_shader_prog));
@@ -130,7 +130,7 @@ pub fn draw_circle(
     // gl.enable(gl.BLEND);
     // gl.disable(gl.DEPTH_TEST);
 
-    glctx.blend_func(WebGlRenderingContext::SRC_ALPHA, WebGlRenderingContext::ONE);
+    glctx.blend_func(WebGlRenderingContext::SRC_ALPHA, WebGlRenderingContext::ONE_MINUS_SRC_ALPHA);
     glctx.enable(WebGlRenderingContext::BLEND);
     glctx.disable(WebGlRenderingContext::DEPTH_TEST);
 
