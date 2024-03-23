@@ -17,7 +17,7 @@
     display: block;
 /*    padding: 30px 20px;*/
     padding: 3% 2%;
-    background-color: var(--background-100);
+    background-color: var(--accent-100);
     overflow: hidden;
     position: relative;
 }
