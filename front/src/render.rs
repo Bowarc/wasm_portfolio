@@ -5,6 +5,17 @@ use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext};
 mod color_mod;
 pub use color_mod::Color;
 
+static mut BUFFER_ID: Option<web_sys::WebGlBuffer> = None;
+
+pub fn init(glctx: &WebGlRenderingContext) {
+    if unsafe { BUFFER_ID.is_some() } {
+        panic!("Buffer already initialized");
+    }
+    unsafe {
+        BUFFER_ID = Some(glctx.create_buffer().unwrap());
+    }
+}
+
 pub fn setup_shader(glctx: &WebGlRenderingContext, name: &str) -> web_sys::WebGlProgram {
     let vert_code = match name {
         "circle" => include_str!("../resources/shaders/circle.vert"),
@@ -40,19 +51,23 @@ pub fn setup_shader(glctx: &WebGlRenderingContext, name: &str) -> web_sys::WebGl
 pub fn draw_rect(
     glctx: &WebGlRenderingContext,
     rect_shader_prog: &web_sys::WebGlProgram,
-    vertices: &[f32],
+    rect: maths::Rect,
     color: Color,
 ) {
-    // log!("{color}");
-    let timestamp = 1.0;
-
-    glctx.bind_buffer(
-        WebGlRenderingContext::ARRAY_BUFFER,
-        Some(&glctx.create_buffer().unwrap()),
+    let vertices = rect_to_vert(
+        rect,
+        maths::Vec2::new(
+            glctx.drawing_buffer_width() as f64,
+            glctx.drawing_buffer_height() as f64,
+        ),
     );
+
+    let buffer = unsafe { BUFFER_ID.clone().unwrap() };
+
+    glctx.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
-        &js_sys::Float32Array::from(vertices),
+        &js_sys::Float32Array::from(vertices.as_slice()),
         WebGlRenderingContext::DYNAMIC_DRAW,
     );
 
@@ -60,33 +75,24 @@ pub fn draw_rect(
 
     // Attach the position vector as an attribute for the GL context.
     let position = glctx.get_attrib_location(&rect_shader_prog, "a_position") as u32;
-    glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, false, 0, 0);
+    glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
     glctx.enable_vertex_attrib_array(position);
 
+    let uv = glctx.get_attrib_location(&rect_shader_prog, "a_uv") as u32;
+    glctx.vertex_attrib_pointer_with_i32(uv, 2, WebGlRenderingContext::FLOAT, true, 16, 8);
+    glctx.enable_vertex_attrib_array(uv);
+
     // Attach the time as a uniform for the GL context.
-    glctx.uniform1f(
+    glctx.uniform4fv_with_f32_array(
         glctx
-            .get_uniform_location(&rect_shader_prog, "u_r")
+            .get_uniform_location(&rect_shader_prog, "u_color")
             .as_ref(),
-        color.r() as f32 / 255.,
-    );
-    glctx.uniform1f(
-        glctx
-            .get_uniform_location(&rect_shader_prog, "u_g")
-            .as_ref(),
-        color.g() as f32 / 255.,
-    );
-    glctx.uniform1f(
-        glctx
-            .get_uniform_location(&rect_shader_prog, "u_b")
-            .as_ref(),
-        color.b() as f32 / 255.,
-    );
-    glctx.uniform1f(
-        glctx
-            .get_uniform_location(&rect_shader_prog, "u_a")
-            .as_ref(),
-        color.a() as f32 / 255.,
+        &[
+            color.r() as f32 / 255.,
+            color.g() as f32 / 255.,
+            color.b() as f32 / 255.,
+            color.a() as f32 / 255.,
+        ],
     );
 
     glctx.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, 6);
@@ -112,12 +118,9 @@ pub fn draw_circle(
         maths::Vec2::new(canvasWidth as f64, canvasHeight as f64),
     );
 
-    let buffer = glctx.create_buffer().unwrap(); // memory leak please fix
+    let buffer = unsafe { BUFFER_ID.clone().unwrap() };
 
-    glctx.bind_buffer(
-        WebGlRenderingContext::ARRAY_BUFFER,
-        Some(&buffer),
-    );
+    glctx.bind_buffer(WebGlRenderingContext::ARRAY_BUFFER, Some(&buffer));
     glctx.buffer_data_with_array_buffer_view(
         WebGlRenderingContext::ARRAY_BUFFER,
         &js_sys::Float32Array::from(vertices.as_slice()),
@@ -130,7 +133,10 @@ pub fn draw_circle(
     // gl.enable(gl.BLEND);
     // gl.disable(gl.DEPTH_TEST);
 
-    glctx.blend_func(WebGlRenderingContext::SRC_ALPHA, WebGlRenderingContext::ONE_MINUS_SRC_ALPHA);
+    glctx.blend_func(
+        WebGlRenderingContext::SRC_ALPHA,
+        WebGlRenderingContext::ONE_MINUS_SRC_ALPHA,
+    );
     glctx.enable(WebGlRenderingContext::BLEND);
     glctx.disable(WebGlRenderingContext::DEPTH_TEST);
 
@@ -151,47 +157,15 @@ pub fn draw_circle(
     glctx.enable_vertex_attrib_array(uv);
 
     // Attach the time as a uniform for the GL context.
-    glctx.uniform2fv_with_f32_array(
+    glctx.uniform4fv_with_f32_array(
         glctx
-            .get_uniform_location(&circle_shader_prog, "u_center")
+            .get_uniform_location(&circle_shader_prog, "u_color")
             .as_ref(),
         &[
-            // Shift the center pos to try to match glsl coords,
-            circle.center.x as f32 + glctx.drawing_buffer_width() as f32,
-            glctx.drawing_buffer_height() as f32 - circle.center.y as f32,
-        ],
-    );
-
-    glctx.uniform1f(
-        glctx
-            .get_uniform_location(&circle_shader_prog, "u_radius")
-            .as_ref(),
-            circle.radius as f32,
-    );
-
-    // log!(format!(
-    //     "Canvas size: {:?}",
-    //     maths::Point::new(
-    //         glctx.drawing_buffer_width() as f64,
-    //         glctx.drawing_buffer_height() as f64,
-    //     )
-    // ));
-
-    // log!(format!(
-    //     "{:.0},{:.0} -> {:?}",
-    //     pos.x,
-    //     pos.y,
-    //     to_clip_space(pos.x as f32, pos.y as f32)
-    // ));
-
-    // Other tests
-    glctx.uniform2fv_with_f32_array(
-        glctx
-            .get_uniform_location(&circle_shader_prog, "u_resolution")
-            .as_ref(),
-        &[
-            glctx.drawing_buffer_width() as f32,
-            glctx.drawing_buffer_height() as f32,
+            color.r() as f32 / 255.,
+            color.g() as f32 / 255.,
+            color.b() as f32 / 255.,
+            color.a() as f32 / 255.,
         ],
     );
 
@@ -207,18 +181,19 @@ pub fn end_frame(f: &wasm_bindgen::closure::Closure<dyn FnMut()>) {
 }
 
 pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
-    let sized_rect = maths::Rect::new(
+    let sized_rect = maths::Rect::new_from_center(
         maths::Point::new(
-            rect.aa_topleft().x / canvas_size.x,
-            rect.aa_topleft().y / canvas_size.y,
+            rect.center().x / canvas_size.x,
+            rect.center().y / canvas_size.y,
         ),
         maths::Point::new(rect.width() / canvas_size.x, rect.height() / canvas_size.y),
         0.,
     );
-    let x0 = sized_rect.aa_topleft().x - sized_rect.size().x;
-    let y0 = sized_rect.aa_topleft().y - sized_rect.size().y;
-    let x1 = sized_rect.aa_topleft().x + sized_rect.size().x;
-    let y1 = sized_rect.aa_topleft().y + sized_rect.size().y;
+
+    let x0 = sized_rect.aa_topleft().x;
+    let y0 = sized_rect.aa_topright().y;
+    let x1 = sized_rect.aa_botright().x;
+    let y1 = sized_rect.aa_botleft().y;
 
     let out = [
         // First triangle

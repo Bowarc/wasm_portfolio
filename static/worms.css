@@ -1,5 +1,5 @@
 #gridworm_canvas{
-    background-color: black;
+    background-color: var(--background-50);
     position: fixed;
     z-index: -1;
     left: 0px;

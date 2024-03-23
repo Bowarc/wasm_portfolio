@@ -94,7 +94,7 @@ impl App {
     fn start_wormgrid(glctx: WebGlRenderingContext) {
         // This should log only once -- not once per frame
 
-        let mut timestamp = 0.0;
+        render::init(&glctx);
 
         let canvas_size = maths::Point::new(
             glctx.drawing_buffer_width() as f64,

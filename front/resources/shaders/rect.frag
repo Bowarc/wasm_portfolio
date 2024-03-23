@@ -1,10 +1,10 @@
 precision mediump float;
 
-uniform float u_r;
-uniform float u_g;
-uniform float u_b;
-uniform float u_a;
+uniform vec4 u_color;
+
+varying vec2 uv; // could be usefull later
+
 
 void main() {
-    gl_FragColor = vec4(u_r, u_g, u_b, u_a);
+    gl_FragColor = u_color;
 }
