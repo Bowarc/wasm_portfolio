@@ -59,7 +59,7 @@ impl yew::Component for GitProjectList {
                                                 repo.language.to_lowercase()
                                             )
                                         }
-                                        alt={ format!("{} icon", repo.language) }
+                                        alt={ format!("icon ") }
                                         class="icon"
                                     />
                                     { &repo.name }
@@ -185,6 +185,10 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
                 size: value.get("size")?.as_i64()? as i32,
             })
         })
+        .filter(|repo|repo.description!="null")
+        .filter(|repo| ![".nvim", ".cfg"].iter().map(|pattern| repo.name.contains(pattern)).any(|r|r))
+        .filter(|repo| !repo.fork)
+
         .collect::<Vec<Repository>>();
 
     Ok(repos)
