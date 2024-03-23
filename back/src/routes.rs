@@ -11,8 +11,13 @@ pub async fn root(remote_addr: std::net::SocketAddr) -> Response {
     file_response("index.html", ContentType::HTML, remote_addr)
 }
 
+
+#[rocket::get("/theme.css")]
+pub async fn themecss(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("theme.css", ContentType::CSS, remote_addr)
+}
 #[rocket::get("/style.css")]
-pub async fn style(remote_addr: std::net::SocketAddr) -> Response {
+pub async fn stylecss(remote_addr: std::net::SocketAddr) -> Response {
     file_response("style.css", ContentType::CSS, remote_addr)
 }
 #[rocket::get("/worms.css")]

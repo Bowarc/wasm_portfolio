@@ -26,7 +26,8 @@ async fn main() {
             "/",
             rocket::routes![
                 routes::root,
-                routes::style,
+                routes::themecss,
+                routes::stylecss,
                 routes::wormscss,
                 routes::gitcardcss,
                 routes::front,
