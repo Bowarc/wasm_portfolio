@@ -73,6 +73,21 @@ pub fn draw_rect(
 
     glctx.use_program(Some(&rect_shader_prog));
 
+    glctx.blend_func(
+        WebGlRenderingContext::SRC_ALPHA,
+        WebGlRenderingContext::ONE_MINUS_SRC_ALPHA,
+    );
+    glctx.enable(WebGlRenderingContext::BLEND);
+    glctx.disable(WebGlRenderingContext::DEPTH_TEST);
+
+    glctx.viewport(
+        0,
+        0,
+        glctx.drawing_buffer_width(),
+        glctx.drawing_buffer_height(),
+    );
+
+
     // Attach the position vector as an attribute for the GL context.
     let position = glctx.get_attrib_location(&rect_shader_prog, "a_position") as u32;
     glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
@@ -104,18 +119,12 @@ pub fn draw_circle(
     circle: maths::Circle,
     color: Color,
 ) {
-    let canvasWidth = glctx.drawing_buffer_width() as f32;
-    let canvasHeight = glctx.drawing_buffer_height() as f32;
-
-    // Not used atm
-    let to_clip_space = |x: f32, y: f32| -> (f32, f32) {
-        // as i did in rect_to_vert?
-        (x / canvasWidth, y / canvasHeight)
-    };
-
     let vertices = circle_to_vert(
         circle,
-        maths::Vec2::new(canvasWidth as f64, canvasHeight as f64),
+        maths::Vec2::new(
+            glctx.drawing_buffer_width() as f64,
+            glctx.drawing_buffer_height() as f64,
+        ),
     );
 
     let buffer = unsafe { BUFFER_ID.clone().unwrap() };
@@ -173,7 +182,6 @@ pub fn draw_circle(
 }
 
 pub fn end_frame(f: &wasm_bindgen::closure::Closure<dyn FnMut()>) {
-    use wasm_bindgen::JsCast;
     window()
         .unwrap()
         .request_animation_frame(f.as_ref().unchecked_ref())
@@ -191,9 +199,11 @@ pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
     );
 
     let x0 = sized_rect.aa_topleft().x;
-    let y0 = sized_rect.aa_topright().y;
+    let y0 = sized_rect.aa_topleft().y;
     let x1 = sized_rect.aa_botright().x;
-    let y1 = sized_rect.aa_botleft().y;
+    let y1 = sized_rect.aa_botright().y;
+
+    // log!(format!("{:?}", sized_rect));
 
     let out = [
         // First triangle
@@ -206,7 +216,8 @@ pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
         (x1, y1, 1.0, 1.0),
     ]
     .iter()
-    .flat_map(|&(x, y, u, v)| vec![x as f32, y as f32, u as f32, v as f32])
+    .flat_map(|&(x, y, u, v)| vec![x, y, u, v])
+    .map(|x| x as f32)
     .collect::<Vec<_>>()
     .try_into()
     .unwrap_or_else(|_| panic!("Failed to convert rectangle to triangles"));

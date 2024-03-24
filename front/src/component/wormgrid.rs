@@ -6,7 +6,7 @@ use wasm_bindgen::{closure::Closure, JsCast};
 
 const WORM_SPEED: f64 = 370.;
 
-pub struct  WormGrid {
+pub struct WormGrid {
     size: maths::Vec2,
     worms: Vec<Worm>,
     last_update: wasm_timer::Instant,
@@ -19,7 +19,7 @@ pub struct Worm {
     direction: Direction,
     rotation_timer: time::DTDelay,
     tail: std::collections::VecDeque<WormTailBit>,
-    tail_spawn_delay: time::DTDelay
+    tail_spawn_delay: time::DTDelay,
 }
 
 #[derive(Clone, Debug)]
@@ -105,12 +105,16 @@ impl WormGrid {
                 crate::render::draw_rect(
                     glctx,
                     rect_shader_prog,
-                    maths::Rect::new_from_center(tail_bit.position, worm.rect.size(), 0.),
+                    maths::Rect::new_from_center(
+                        tail_bit.position,
+                        worm.rect.size(),
+                        tail_bit.lifetime.fraction(),
+                    ),
                     crate::render::Color::from_rgba(
                         worm.color.r(),
                         worm.color.g(),
                         worm.color.b(),
-                        (tail_bit.lifetime.fraction()*255.) as u8,
+                        (tail_bit.lifetime.fraction() * 255.) as u8,
                     ),
                 )
             });
@@ -138,14 +142,41 @@ impl WormGrid {
             });
 
             // Draw head
+            // let angle = worm.direction.to_vec2().as_angle();
+            // let line = maths::Line::new_rotated(worm.rect.center(), 100., angle);
+            // crate::render::draw_line(glctx, line_shader_prog, line, worm.color);
+
+            let base = maths::Point::new_rotated(
+                worm.rect.center(),
+                worm.rect.center() + maths::Point::new(worm.rect.size().x, 0.),
+                worm.direction.to_vec2().as_angle(),
+            );
+
+            let mut rect = maths::Rect::new_from_center(
+                maths::Point::new_rotated(
+                    worm.rect.center(),
+                    worm.rect.center() + maths::Point::new(worm.rect.size().x, 0.),
+                    worm.direction.to_vec2().as_angle(),
+                ),
+                worm.rect.size() * worm.direction.to_vec2(),
+                0.,
+            );
+
+            if rect.width() == 0. {
+                rect.set_width(10.);
+            } else if rect.height() == 0. {
+                rect.set_height(10);
+            }
+
+            crate::render::draw_rect(glctx, rect_shader_prog, rect, worm.color);
         }
 
-        crate::render::draw_circle(
-            &glctx,
-            &circle_shader_prog,
-            maths::Circle::new(maths::Vec2::new(0., 0.), 100.),
-            crate::render::Color::random_rgba(),
-        );
+        // crate::render::draw_circle(
+        //     &glctx,
+        //     &circle_shader_prog,
+        //     maths::Circle::new(maths::Vec2::new(0., 0.), 100.),
+        //     crate::render::Color::random_rgba(),
+        // );
     }
 }
 
@@ -162,7 +193,7 @@ impl Worm {
             ]),
             rotation_timer: time::DTDelay::new(random::get_inc(0., 1.)),
             tail: std::collections::VecDeque::<WormTailBit>::new(),
-            tail_spawn_delay: time::DTDelay::new(rect.size().x / WORM_SPEED)
+            tail_spawn_delay: time::DTDelay::new(rect.size().x / WORM_SPEED),
         }
     }
     pub fn step(&mut self, dt: f64) {
@@ -196,15 +227,14 @@ impl Worm {
             return;
         }
 
-        if self.tail_spawn_delay.ended(){
+        if self.tail_spawn_delay.ended() {
             self.tail_spawn_delay.restart();
             self.tail.push_front(WormTailBit::new(self.rect.center()));
         }
 
-        while self.tail.get(self.tail.len() -1).unwrap().lifetime.ended(){
+        while self.tail.get(self.tail.len() - 1).unwrap().lifetime.ended() {
             self.tail.pop_back();
         }
-
     }
 }
 
