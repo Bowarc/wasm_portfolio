@@ -61,13 +61,13 @@ impl Component for App {
         html! {
             <div>
                 <canvas id="gridworm_canvas" ref={self.node_ref.clone()} />
-                // <component::Header/>
+                <component::Header/>
                 <p id="description">
                     { "Hellow.\nJe suis un développeur autodidacte de " }
                     <component::Age/>
                     { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
                 </p>
-                // <component::GitProjectList />
+                <component::GitProjectList />
                 // Display the current date and time the page was rendered
                 <p class="footer">
                     { "Rendered: " }

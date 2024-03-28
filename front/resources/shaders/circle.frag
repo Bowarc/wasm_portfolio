@@ -3,13 +3,11 @@ precision mediump float;
 #endif
 
 uniform vec4 u_color;
-
+uniform bool u_gradient;
+uniform bool u_ring;
 varying vec2 uv;
 
 void main() {
-  // tests
-  // vec2 center = vec2(0.0);
-  
   // Thoses coords should be betwen [0, 0] topleft -> [window_width, window_height], right ? 
   vec2 pixelCoord = gl_FragCoord.xy /* / u_resolution -0.5 */ ;
 
@@ -17,10 +15,17 @@ void main() {
   if (d > 0.5){
     discard;
   }
-  gl_FragColor = u_color;
-
-
   
+  if (u_ring && d < 0.3){
+    discard;
+  }
+
+  if (u_gradient) {
+    gl_FragColor = vec4(u_color.xyz, 0.5-d);
+  }else{
+    gl_FragColor = u_color;
+  }
+
   // if(d > 0.5){
   //   gl_FragColor = vec4(1, 0, 0, d);
   // }else{

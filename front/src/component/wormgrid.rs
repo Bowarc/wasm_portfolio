@@ -16,6 +16,7 @@ pub struct WormGrid {
 pub struct Worm {
     rect: maths::Rect,
     color: crate::render::Color,
+    head_color: crate::render::Color,
     direction: Direction,
     rotation_timer: time::DTDelay,
     tail: std::collections::VecDeque<WormTailBit>,
@@ -119,56 +120,63 @@ impl WormGrid {
                 )
             });
 
-            // Draw corner point
-            [
-                worm.rect.aa_topleft(),
-                worm.rect.aa_topright(),
-                worm.rect.aa_botright(),
-                worm.rect.aa_botleft(),
-            ]
-            .iter()
-            .for_each(|corner| {
-                crate::render::draw_circle(
-                    &glctx,
-                    &circle_shader_prog,
-                    maths::Circle::new(*corner, worm.rect.width() / 4.),
-                    crate::render::Color::from_rgba(
-                        worm.color.r(),
-                        worm.color.g(),
-                        worm.color.b(),
-                        255,
-                    ),
-                )
-            });
+            // // Draw corner point
+            // [
+            //     worm.rect.aa_topleft(),
+            //     worm.rect.aa_topright(),
+            //     worm.rect.aa_botright(),
+            //     worm.rect.aa_botleft(),
+            // ]
+            // .iter()
+            // .for_each(|corner| {
+            //     crate::render::draw_circle(
+            //         &glctx,
+            //         &circle_shader_prog,
+            //         maths::Circle::new(*corner, worm.rect.width() / 4.),
+            //         crate::render::Color::from_rgba(
+            //             worm.color.r(),
+            //             worm.color.g(),
+            //             worm.color.b(),
+            //             255,
+            //         ),
+            //     )
+            // });
 
             // Draw head
-            // let angle = worm.direction.to_vec2().as_angle();
-            // let line = maths::Line::new_rotated(worm.rect.center(), 100., angle);
-            // crate::render::draw_line(glctx, line_shader_prog, line, worm.color);
+            
+            let head_radius= 20.;
+            let antena_distance = 30.;
+            let antena_radius = 20.;
 
-            let base = maths::Point::new_rotated(
+
+            let triangle_base = maths::Point::new_rotated(
                 worm.rect.center(),
-                worm.rect.center() + maths::Point::new(worm.rect.size().x, 0.),
+                worm.rect.center() + maths::Point::new(worm.rect.width(), 0.),
                 worm.direction.to_vec2().as_angle(),
             );
 
-            let mut rect = maths::Rect::new_from_center(
-                maths::Point::new_rotated(
-                    worm.rect.center(),
-                    worm.rect.center() + maths::Point::new(worm.rect.size().x, 0.),
-                    worm.direction.to_vec2().as_angle(),
-                ),
-                worm.rect.size() * worm.direction.to_vec2(),
-                0.,
-            );
+            [
+                -90.0f64.to_radians(),
+                0.0f64.to_radians(),
+                90.0f64.to_radians(),
+            ]
+            .iter()
+            .for_each(|angle| {
+                let new_pt = maths::Point::new_rotated(
+                    triangle_base,
+                    triangle_base + maths::Point::new(antena_distance, 0.),
+                    *angle + worm.direction.to_vec2().as_angle(),
+                );
 
-            if rect.width() == 0. {
-                rect.set_width(10.);
-            } else if rect.height() == 0. {
-                rect.set_height(10);
-            }
+                let circle = maths::Circle::new(new_pt, antena_radius);
+                crate::render::draw_circle(glctx, circle_shader_prog, circle, worm.head_color, true, false);
+            });
+            
 
-            crate::render::draw_rect(glctx, rect_shader_prog, rect, worm.color);
+            crate::render::draw_circle(glctx, circle_shader_prog, maths::Circle::new(triangle_base, head_radius), worm.color, false, true);
+            crate::render::draw_circle(glctx, circle_shader_prog, maths::Circle::new(triangle_base, head_radius * 0.85), worm.color, true, false);
+
+
         }
 
         // crate::render::draw_circle(
@@ -185,6 +193,7 @@ impl Worm {
         Self {
             rect,
             color,
+            head_color: crate::render::Color::random_rgb(),
             direction: random::pick(&[
                 Direction::Up,
                 Direction::Down,
