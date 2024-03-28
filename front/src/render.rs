@@ -7,6 +7,7 @@ pub use color_mod::Color;
 
 static mut BUFFER_ID: Option<web_sys::WebGlBuffer> = None;
 
+
 pub fn init(glctx: &WebGlRenderingContext) {
     if unsafe { BUFFER_ID.is_some() } {
         panic!("Buffer already initialized");
@@ -87,7 +88,6 @@ pub fn draw_rect(
         glctx.drawing_buffer_height(),
     );
 
-
     // Attach the position vector as an attribute for the GL context.
     let position = glctx.get_attrib_location(&rect_shader_prog, "a_position") as u32;
     glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
@@ -118,6 +118,8 @@ pub fn draw_circle(
     circle_shader_prog: &web_sys::WebGlProgram,
     circle: maths::Circle,
     color: Color,
+    gradient: bool,
+    ring: bool,
 ) {
     let vertices = circle_to_vert(
         circle,
@@ -176,6 +178,20 @@ pub fn draw_circle(
             color.b() as f32 / 255.,
             color.a() as f32 / 255.,
         ],
+    );
+
+    glctx.uniform1i(
+        glctx
+            .get_uniform_location(&circle_shader_prog, "u_gradient")
+            .as_ref(),
+        gradient as i32,
+    );
+
+    glctx.uniform1i(
+        glctx
+            .get_uniform_location(&circle_shader_prog, "u_ring")
+            .as_ref(),
+        ring as i32,
     );
 
     glctx.draw_arrays(WebGlRenderingContext::TRIANGLES, 0, 6);
