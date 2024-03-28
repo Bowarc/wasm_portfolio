@@ -67,52 +67,51 @@ impl Color {
     pub fn red(&self) -> u8 {
         self.0
     }
-    pub fn set_red(&mut self, new_red: u8){
+    pub fn set_red(&mut self, new_red: u8) {
         self.0 = new_red;
     }
     pub fn green(&self) -> u8 {
         self.1
     }
-    pub fn set_green(&mut self, new_green: u8){
-        self.1 =  new_green;
+    pub fn set_green(&mut self, new_green: u8) {
+        self.1 = new_green;
     }
     pub fn blue(&self) -> u8 {
         self.2
     }
-    pub fn set_blue(&mut self, new_blue: u8){
+    pub fn set_blue(&mut self, new_blue: u8) {
         self.2 = new_blue;
     }
     pub fn alpha(&self) -> u8 {
         self.3
     }
-    pub fn set_alpha(&mut self, new_alpha: u8){
-        self.3 =  new_alpha;
+    pub fn set_alpha(&mut self, new_alpha: u8) {
+        self.3 = new_alpha;
     }
     pub fn r(&self) -> u8 {
         self.red()
     }
-    pub fn set_r(&mut self, new_r: u8){
+    pub fn set_r(&mut self, new_r: u8) {
         self.set_red(new_r)
     }
     pub fn g(&self) -> u8 {
         self.green()
     }
-    pub fn set_g(&mut self, new_g: u8){
+    pub fn set_g(&mut self, new_g: u8) {
         self.set_green(new_g)
     }
     pub fn b(&self) -> u8 {
         self.blue()
     }
-    pub fn set_b(&mut self, new_b: u8){
+    pub fn set_b(&mut self, new_b: u8) {
         self.set_blue(new_b)
     }
     pub fn a(&self) -> u8 {
         self.alpha()
     }
-    pub fn set_a(&mut self, new_a: u8){
+    pub fn set_a(&mut self, new_a: u8) {
         self.set_alpha(new_a)
     }
-
 }
 
 impl Default for Color {

@@ -7,7 +7,6 @@ pub use color_mod::Color;
 
 static mut BUFFER_ID: Option<web_sys::WebGlBuffer> = None;
 
-
 pub fn init(glctx: &WebGlRenderingContext) {
     if unsafe { BUFFER_ID.is_some() } {
         panic!("Buffer already initialized");

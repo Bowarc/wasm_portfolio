@@ -21,7 +21,7 @@ pub struct Repository {
     owner_name: String,
     description: String,
     created_date: Date,
-    last_push_date: Date,
+    last_update: Date,
     language: String,
     public: bool,
     fork: bool,
@@ -41,11 +41,11 @@ impl yew::Component for GitProjectList {
     }
 
     fn view(&self, ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
-        match &self.repos{
+        match &self.repos {
             crate::utils::FetchState::NotFetching => {
-                html!{<></>}
-            },
-            crate::utils::FetchState::Fetching => html!{<></>},
+                html! {<></>}
+            }
+            crate::utils::FetchState::Fetching => html! {<></>},
             crate::utils::FetchState::Success(repos) => {
                 let cards = repos.iter().map(|repo|{
                     html!{
@@ -54,7 +54,7 @@ impl yew::Component for GitProjectList {
                                     class="card_link">
                                 <div class="card_bg"></div>
                                 <div class="card_title">
-                                    <img src={ 
+                                    <img src={
                                             format!("./resources/{}.webp", 
                                                 repo.language.to_lowercase()
                                             )
@@ -72,14 +72,14 @@ impl yew::Component for GitProjectList {
                                     <span class="card_date">
                                     {
                                         format!(" {} {}h{}",
-                                            repo.last_push_date.to_locale_date_string("fr-FR", &JsValue::from_str("")),
-                                            repo.last_push_date.get_hours(), repo.last_push_date.get_minutes()
+                                            repo.last_update.to_locale_date_string("fr-FR", &JsValue::from_str("")),
+                                            repo.last_update.get_hours(), repo.last_update.get_minutes()
                                         )
                                     }
                                     </span>
                                 </div>
                             </a>
-                        </div> 
+                        </div>
                     }
                 }).collect::<Vec<Html>>();
                 html! {
@@ -87,8 +87,8 @@ impl yew::Component for GitProjectList {
                         { cards }
                     </div>
                 }
-            },
-            crate::utils::FetchState::Failed(_) => html!{<></>},
+            }
+            crate::utils::FetchState::Failed(_) => html! {<></>},
         }
     }
 
@@ -107,16 +107,15 @@ impl yew::Component for GitProjectList {
                         Err(err) => {
                             log!("Repos fatch failled with error: {err}");
                             Msg::FetchReposResult(crate::utils::FetchState::Failed(err))
-                        },
+                        }
                     }
                 });
-
             }
             Msg::FetchReposResult(repos) => {
                 log!("Received repos fetch result");
 
                 self.repos = repos
-            },
+            }
         }
 
         true
@@ -162,34 +161,54 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
     let json_data = wasm_bindgen_futures::JsFuture::from(resp.json()?).await?;
     log!(json_data.clone());
 
-    let repos = json_data
-
+    let mut repos = json_data
         .into_serde::<Vec<serde_json::Value>>()
         .unwrap()
         .iter()
         .flat_map(|value| {
             log!(Date::new(&JsValue::from_str("1995-12-25T23:15:30")));
-            log!(Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))));
+            log!(Date::new(&JsValue::from_str(
+                &value
+                    .get("created_at")?
+                    .to_string()
+                    .replace(&['Z', '"'], "")
+            )));
 
-            let as_rs_string = |s: &Value| -> String{ s.to_string().replace(&['"'],"") };
+            let as_rs_string = |s: &Value| -> String { s.to_string().replace(&['"'], "") };
 
             Some(Repository {
                 name: as_rs_string(value.get("name")?),
                 owner_name: as_rs_string(value.get("owner")?.get("login")?),
-                description:  as_rs_string(value.get("description")?),
-                created_date: Date::new(&JsValue::from_str(&value.get("created_at")?.to_string().replace(&['Z', '"'], ""))),
-                last_push_date: Date::new(&JsValue::from_str(&value.get("updated_at")?.to_string().replace(&['Z', '"'], ""))),
-                language:  as_rs_string(value.get("language")?),
+                description: as_rs_string(value.get("description")?),
+                created_date: Date::new(&JsValue::from_str(
+                    &value
+                        .get("created_at")?
+                        .to_string()
+                        .replace(&['Z', '"'], ""),
+                )),
+                last_update: Date::new(&JsValue::from_str(
+                    &value
+                        .get("updated_at")?
+                        .to_string()
+                        .replace(&['Z', '"'], ""),
+                )),
+                language: as_rs_string(value.get("language")?),
                 public: !value.get("private")?.as_bool()?,
                 fork: value.get("fork")?.as_bool()?,
                 size: value.get("size")?.as_i64()? as i32,
             })
         })
-        .filter(|repo|repo.description!="null")
-        .filter(|repo| ![".nvim", ".cfg"].iter().map(|pattern| repo.name.contains(pattern)).any(|r|r))
+        .filter(|repo| repo.description != "null")
+        .filter(|repo| {
+            ![".nvim", ".cfg"]
+                .iter()
+                .map(|pattern| repo.name.contains(pattern))
+                .any(|r| r)
+        })
         .filter(|repo| !repo.fork)
-
         .collect::<Vec<Repository>>();
+
+    repos.sort_by_key(|repo| -repo.last_update.get_time() as i64);
 
     Ok(repos)
 }

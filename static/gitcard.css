@@ -27,7 +27,8 @@
 .card_link {
     display: block;
     padding: 3% 2%;
-    background-color: var(--accent-100);
+    background-color: var(--background-50);
+/*    background-color: ;*/
     overflow: hidden;
     position: relative;
     height: 100%;
