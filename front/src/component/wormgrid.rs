@@ -143,11 +143,10 @@ impl WormGrid {
             // });
 
             // Draw head
-            
-            let head_radius= 20.;
+
+            let head_radius = 30.;
             let antena_distance = 30.;
             let antena_radius = 20.;
-
 
             let triangle_base = maths::Point::new_rotated(
                 worm.rect.center(),
@@ -169,14 +168,36 @@ impl WormGrid {
                 );
 
                 let circle = maths::Circle::new(new_pt, antena_radius);
-                crate::render::draw_circle(glctx, circle_shader_prog, circle, worm.head_color, true, false);
+                crate::render::draw_circle(
+                    glctx,
+                    circle_shader_prog,
+                    circle,
+                    worm.head_color,
+                    true,
+                    false,
+                );
             });
-            
 
-            crate::render::draw_circle(glctx, circle_shader_prog, maths::Circle::new(triangle_base, head_radius), worm.color, false, true);
-            crate::render::draw_circle(glctx, circle_shader_prog, maths::Circle::new(triangle_base, head_radius * 0.85), worm.color, true, false);
-
-
+            crate::render::draw_circle(
+                glctx,
+                circle_shader_prog,
+                maths::Circle::new(triangle_base, head_radius),
+                {
+                    let mut c = worm.color;
+                    c.set_alpha(25);
+                    c
+                } ,
+                false,
+                true,
+            );
+            crate::render::draw_circle(
+                glctx,
+                circle_shader_prog,
+                maths::Circle::new(triangle_base, head_radius * 0.5),
+                worm.color,
+                true,
+                false,
+            );
         }
 
         // crate::render::draw_circle(
