@@ -11,7 +11,6 @@ pub async fn root(remote_addr: std::net::SocketAddr) -> Response {
     file_response("index.html", ContentType::HTML, remote_addr)
 }
 
-
 #[rocket::get("/theme.css")]
 pub async fn themecss(remote_addr: std::net::SocketAddr) -> Response {
     file_response("theme.css", ContentType::CSS, remote_addr)
@@ -28,7 +27,6 @@ pub async fn wormscss(remote_addr: std::net::SocketAddr) -> Response {
 pub async fn gitcardcss(remote_addr: std::net::SocketAddr) -> Response {
     file_response("gitcard.css", ContentType::CSS, remote_addr)
 }
-
 
 #[rocket::get("/front.js")]
 pub async fn front(remote_addr: std::net::SocketAddr) -> Response {

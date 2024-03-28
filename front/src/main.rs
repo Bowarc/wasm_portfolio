@@ -134,11 +134,7 @@ impl App {
                 //     color,
                 // );
                 wormgrid.update(canvas_size);
-                wormgrid.draw(
-                    &glctx,
-                    &rect_shader_program,
-                    &circle_shader_program,
-                );
+                wormgrid.draw(&glctx, &rect_shader_program, &circle_shader_program);
 
                 crate::render::end_frame(cb.borrow().as_ref().unwrap())
             }

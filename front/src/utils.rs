@@ -1,6 +1,5 @@
 use js_sys::Date;
 
-
 #[derive(Debug)]
 pub enum FetchState<T> {
     NotFetching,

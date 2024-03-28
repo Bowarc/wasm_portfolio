@@ -186,7 +186,7 @@ impl WormGrid {
                     let mut c = worm.color;
                     c.set_alpha(25);
                     c
-                } ,
+                },
                 false,
                 true,
             );

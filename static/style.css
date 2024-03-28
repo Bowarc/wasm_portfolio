@@ -5,6 +5,7 @@
 html{
 /*    background-color: var(--background-500);*/
 /*    background-color: transparent;*/
+    color: var(--text-900);
 }
 
 body{
