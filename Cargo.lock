@@ -372,6 +372,7 @@ dependencies = [
 name = "front"
 version = "0.1.0"
 dependencies = [
+ "futures",
  "gloo 0.11.0",
  "js-sys",
  "maths",

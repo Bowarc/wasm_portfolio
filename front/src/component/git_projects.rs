@@ -6,7 +6,7 @@ use web_sys::Request;
 use yew::{html, Html};
 
 pub struct GitProjectList {
-    repos: crate::utils::FetchState<Vec<Repository>>,
+    repos: Vec<Repository>,
 }
 
 pub enum Msg {
@@ -35,19 +35,13 @@ impl yew::Component for GitProjectList {
 
     fn create(ctx: &yew::prelude::Context<Self>) -> Self {
         ctx.link().send_message(Msg::FetchRepos);
-        Self {
-            repos: crate::utils::FetchState::NotFetching,
-        }
+        Self { repos: Vec::new() }
     }
 
     fn view(&self, ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
-        match &self.repos {
-            crate::utils::FetchState::NotFetching => {
-                html! {<></>}
-            }
-            crate::utils::FetchState::Fetching => html! {<></>},
-            crate::utils::FetchState::Success(repos) => {
-                let cards = repos.iter().map(|repo|{
+        html! {
+            <div id="project_list">
+                {self.repos.iter().map(|repo|{
                     html!{
                         <div class="card">
                             <a href={ format!("https://github.com/{}/{}", repo.owner_name, repo.name) }
@@ -55,7 +49,7 @@ impl yew::Component for GitProjectList {
                                 <div class="card_bg"></div>
                                 <div class="card_title">
                                     <img src={
-                                            format!("./resources/{}.webp", 
+                                            format!("./resources/{}.webp",
                                                 repo.language.to_lowercase()
                                             )
                                         }
@@ -81,14 +75,8 @@ impl yew::Component for GitProjectList {
                             </a>
                         </div>
                     }
-                }).collect::<Vec<Html>>();
-                html! {
-                    <div id="project_list">
-                        { cards }
-                    </div>
-                }
-            }
-            crate::utils::FetchState::Failed(_) => html! {<></>},
+                }).collect::<Vec<Html>>()}
+            </div>
         }
     }
 
@@ -98,23 +86,58 @@ impl yew::Component for GitProjectList {
                 log!("Fetch repos");
                 ctx.link()
                     .send_message(Msg::FetchReposResult(crate::utils::FetchState::Fetching));
-                ctx.link().send_future(async {
-                    match fetch_repos("Bowarc").await {
-                        Ok(repos) => {
-                            log!("Repos fetch success");
-                            Msg::FetchReposResult(crate::utils::FetchState::Success(repos))
+
+                ["Bowarc", "HugoLz"].iter().for_each(|user| {
+                    ctx.link().send_future(async {
+                        {
+                            match fetch_repos(user).await {
+                                Ok(repos) => {
+                                    log!("Repos fetch success");
+                                    Msg::FetchReposResult(crate::utils::FetchState::Success(repos))
+                                }
+                                Err(err) => {
+                                    log!("Repos fatch failled with error: {err}");
+                                    Msg::FetchReposResult(crate::utils::FetchState::Failed(err))
+                                }
+                            }
                         }
-                        Err(err) => {
-                            log!("Repos fatch failled with error: {err}");
-                            Msg::FetchReposResult(crate::utils::FetchState::Failed(err))
-                        }
-                    }
+                    });
                 });
             }
-            Msg::FetchReposResult(repos) => {
-                log!("Received repos fetch result");
+            Msg::FetchReposResult(state) => {
+                match state {
+                    crate::utils::FetchState::Success(repos) => {
+                        log!(format!("Received repo fetch state: Success with {} repos", repos.len()));
+                        repos.iter().for_each(|repo|{
+                            log!(&repo.name)
+                        });
+                        self.repos.append(
+                            &mut repos
+                                .into_iter()
+                                .filter(|repo| repo.description != "null")
+                                .filter(|repo| {
+                                    ![".nvim", ".cfg"]
+                                        .iter()
+                                        .map(|pattern| repo.name.contains(pattern))
+                                        .any(|r| r)
+                                })
+                                .filter(|repo| !repo.fork)
+                                .collect::<Vec<Repository>>(),
+                        );
+                        self.repos
+                            .sort_by_key(|repo| -repo.last_update.get_time() as i64);
+                    }
+                    crate::utils::FetchState::NotFetching => {
+                        log!("Received repo fetch state: NotFetching")
+                    },
+                    crate::utils::FetchState::Fetching => {
+                        log!("Received repo fetch state: Fetching")
+                    },
+                    crate::utils::FetchState::Failed(why) => {
+                        log!(format!("Received repo fetch state: Error({why:?})"))
 
-                self.repos = repos
+                    },
+                }
             }
         }
 
@@ -140,7 +163,7 @@ impl yew::Component for GitProjectList {
     fn destroy(&mut self, ctx: &yew::prelude::Context<Self>) {}
 }
 
-async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen::JsValue> {
+async fn fetch_repos(user: &'static str) -> Result<Vec<Repository>, wasm_bindgen::JsValue> {
     let mut opts = web_sys::RequestInit::new();
     opts.method("GET");
     opts.mode(web_sys::RequestMode::Cors);
@@ -148,7 +171,7 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
     log!(opts.clone());
 
     let request = Request::new_with_str_and_init(
-        &format!("https://api.github.com/users/{usr}/repos"),
+        &format!("https://api.github.com/users/{user}/repos?per_page=100"),
         &opts,
     )?;
 
@@ -166,14 +189,6 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
         .unwrap()
         .iter()
         .flat_map(|value| {
-            log!(Date::new(&JsValue::from_str("1995-12-25T23:15:30")));
-            log!(Date::new(&JsValue::from_str(
-                &value
-                    .get("created_at")?
-                    .to_string()
-                    .replace(&['Z', '"'], "")
-            )));
-
             let as_rs_string = |s: &Value| -> String { s.to_string().replace(&['"'], "") };
 
             Some(Repository {
@@ -188,7 +203,7 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
                 )),
                 last_update: Date::new(&JsValue::from_str(
                     &value
-                        .get("updated_at")?
+                        .get("pushed_at")?
                         .to_string()
                         .replace(&['Z', '"'], ""),
                 )),
@@ -198,17 +213,7 @@ async fn fetch_repos(usr: &'static str) -> Result<Vec<Repository>, wasm_bindgen:
                 size: value.get("size")?.as_i64()? as i32,
             })
         })
-        .filter(|repo| repo.description != "null")
-        .filter(|repo| {
-            ![".nvim", ".cfg"]
-                .iter()
-                .map(|pattern| repo.name.contains(pattern))
-                .any(|r| r)
-        })
-        .filter(|repo| !repo.fork)
         .collect::<Vec<Repository>>();
-
-    repos.sort_by_key(|repo| -repo.last_update.get_time() as i64);
 
     Ok(repos)
 }

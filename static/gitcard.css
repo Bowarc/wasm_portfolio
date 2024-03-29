@@ -2,14 +2,13 @@
     color: white;
     width: 95%;
 
-    display: inline-grid;
+    display: grid;
     --card-width: 45%;
     grid-template-columns: var(--card-width) var(--card-width);
     justify-content: center;
-    grid-gap: 2%;
+    grid-gap: 2vw 2vh;
 
-
-    margin-bottom: 7%;
+/*    border: 2px solid red;*/
 }
 
 .card {
@@ -113,19 +112,19 @@
 }
 */
 .card:nth-child(2n) .card_bg {
-    background-color: color-mix(in srgb, var(--primary-400), transparent 66%);
+    background-color: color-mix(in srgb, var(--primary-500), transparent 66%);
 }
 
 .card:nth-child(3n) .card_bg {
-    background-color: color-mix(in srgb, var(--secondary-400), transparent 66%);
+    background-color: color-mix(in srgb, var(--secondary-500), transparent 66%);
 }
 
 .card:nth-child(4n) .card_bg {
-    background-color: color-mix(in srgb, var(--accent-400), transparent 66%);
+    background-color: color-mix(in srgb, var(--accent-500), transparent 66%);
 }
 
 .card:nth-child(5n) .card_bg {
-    background-color: color-mix(in srgb, var(--text-800), transparent 66%);
+    background-color: color-mix(in srgb, var(--text-500), transparent 66%);
 }
 /*
 .card:nth-child(6n) .card_bg {
