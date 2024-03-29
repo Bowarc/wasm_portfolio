@@ -126,6 +126,15 @@ impl App {
                     WebGlRenderingContext::COLOR_BUFFER_BIT
                         | WebGlRenderingContext::DEPTH_BUFFER_BIT,
                 );
+                let window_size = maths::Point::new(
+                    window().unwrap().inner_width().unwrap().as_f64().unwrap(),
+                    window().unwrap().inner_height().unwrap().as_f64().unwrap(),
+                );
+
+                if window_size != wormgrid.size(){
+                    glctx.canvas().unwrap().dyn_into::<HtmlCanvasElement>().unwrap().set_width(window_size.x as u32);
+                    glctx.canvas().unwrap().dyn_into::<HtmlCanvasElement>().unwrap().set_height(window_size.y as u32);
+                } 
 
                 // render::draw(
                 //     &glctx,
@@ -133,7 +142,7 @@ impl App {
                 //     &render::rect_to_vert(maths::Rect::new((0., 0.), canvas_size, 0.), canvas_size),
                 //     color,
                 // );
-                wormgrid.update(canvas_size);
+                wormgrid.update(window_size);
                 wormgrid.draw(&glctx, &rect_shader_program, &circle_shader_program);
 
                 crate::render::end_frame(cb.borrow().as_ref().unwrap())
