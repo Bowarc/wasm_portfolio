@@ -68,28 +68,29 @@ impl WormGrid {
         }
     }
 
-    pub fn update(&mut self, grid_size: maths::Vec2) {
+    pub fn update(&mut self, window_size: maths::Vec2) {
+        self.size = window_size;
         let dt = self.last_update.elapsed().as_secs_f64();
         self.last_update = wasm_timer::Instant::now();
         // log!(dt);
 
         for worm in self.worms.iter_mut() {
             worm.step(dt);
-            if worm.rect.center().x < -grid_size.x {
+            if worm.rect.center().x < -window_size.x {
                 worm.rect
-                    .set_center(maths::Vec2::new(grid_size.x, worm.rect.center().y));
+                    .set_center(maths::Vec2::new(window_size.x, worm.rect.center().y));
             }
-            if worm.rect.center().x > grid_size.x {
+            if worm.rect.center().x > window_size.x {
                 worm.rect
-                    .set_center(maths::Vec2::new(-grid_size.x, worm.rect.center().y));
+                    .set_center(maths::Vec2::new(-window_size.x, worm.rect.center().y));
             }
-            if worm.rect.center().y < -grid_size.y {
+            if worm.rect.center().y < -window_size.y {
                 worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, grid_size.y));
+                    .set_center(maths::Vec2::new(worm.rect.center().x, window_size.y));
             }
-            if worm.rect.center().y > grid_size.y {
+            if worm.rect.center().y > window_size.y {
                 worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, -grid_size.y));
+                    .set_center(maths::Vec2::new(worm.rect.center().x, -window_size.y));
             }
             worm.update_queue(dt);
         }
@@ -206,6 +207,9 @@ impl WormGrid {
         //     maths::Circle::new(maths::Vec2::new(0., 0.), 100.),
         //     crate::render::Color::random_rgba(),
         // );
+    }
+    pub fn size(&self) -> maths::Vec2{
+        self.size
     }
 }
 
