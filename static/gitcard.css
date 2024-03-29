@@ -6,7 +6,7 @@
     --card-width: 45%;
     grid-template-columns: var(--card-width) var(--card-width);
     justify-content: center;
-    grid-gap: 2vw 2vh;
+    grid-gap: 2vh 2vw;
 
 /*    border: 2px solid red;*/
 }
@@ -105,7 +105,6 @@
     background-color: #4c49ea30;
 }
 */
-
 
 /*.card:nth-child(1n) .card_bg {
     background-color: color-mix(in srgb, var(--primary-400), transparent 66%);

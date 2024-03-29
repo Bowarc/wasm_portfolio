@@ -73,9 +73,6 @@ impl Component for App {
                     { "Rendered: " }
                     { String::from(Date::new_0().to_string()) }
                 </p>
-                {
-                    "salut"
-                }
             </div>
         }
     }
