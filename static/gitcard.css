@@ -2,13 +2,13 @@
     color: white;
     width: 95%;
 
-    display: grid;
+    display: inline-grid;
     --card-width: 45%;
     grid-template-columns: var(--card-width) var(--card-width);
     justify-content: center;
     grid-gap: 2vw 2vh;
 
-/*    border: 2px solid red;*/
+    border: 2px solid red;
 }
 
 .card {

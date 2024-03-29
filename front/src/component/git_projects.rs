@@ -104,41 +104,39 @@ impl yew::Component for GitProjectList {
                     });
                 });
             }
-            Msg::FetchReposResult(state) => {
-                match state {
-                    crate::utils::FetchState::Success(repos) => {
-                        log!(format!("Received repo fetch state: Success with {} repos", repos.len()));
-                        repos.iter().for_each(|repo|{
-                            log!(&repo.name)
-                        });
-                        self.repos.append(
-                            &mut repos
-                                .into_iter()
-                                .filter(|repo| repo.description != "null")
-                                .filter(|repo| {
-                                    ![".nvim", ".cfg"]
-                                        .iter()
-                                        .map(|pattern| repo.name.contains(pattern))
-                                        .any(|r| r)
-                                })
-                                .filter(|repo| !repo.fork)
-                                .collect::<Vec<Repository>>(),
-                        );
-                        self.repos
-                            .sort_by_key(|repo| -repo.last_update.get_time() as i64);
-                    }
-                    crate::utils::FetchState::NotFetching => {
-                        log!("Received repo fetch state: NotFetching")
-                    },
-                    crate::utils::FetchState::Fetching => {
-                        log!("Received repo fetch state: Fetching")
-                    },
-                    crate::utils::FetchState::Failed(why) => {
-                        log!(format!("Received repo fetch state: Error({why:?})"))
-
-                    },
+            Msg::FetchReposResult(state) => match state {
+                crate::utils::FetchState::Success(repos) => {
+                    log!(format!(
+                        "Received repo fetch state: Success with {} repos",
+                        repos.len()
+                    ));
+                    repos.iter().for_each(|repo| log!(&repo.name));
+                    self.repos.append(
+                        &mut repos
+                            .into_iter()
+                            .filter(|repo| repo.description != "null")
+                            .filter(|repo| {
+                                ![".nvim", ".cfg"]
+                                    .iter()
+                                    .map(|pattern| repo.name.contains(pattern))
+                                    .any(|r| r)
+                            })
+                            .filter(|repo| !repo.fork)
+                            .collect::<Vec<Repository>>(),
+                    );
+                    self.repos
+                        .sort_by_key(|repo| -repo.last_update.get_time() as i64);
                 }
-            }
+                crate::utils::FetchState::NotFetching => {
+                    log!("Received repo fetch state: NotFetching")
+                }
+                crate::utils::FetchState::Fetching => {
+                    log!("Received repo fetch state: Fetching")
+                }
+                crate::utils::FetchState::Failed(why) => {
+                    log!(format!("Received repo fetch state: Error({why:?})"))
+                }
+            },
         }
 
         true
@@ -190,23 +188,18 @@ async fn fetch_repos(user: &'static str) -> Result<Vec<Repository>, wasm_bindgen
         .iter()
         .flat_map(|value| {
             let as_rs_string = |s: &Value| -> String { s.to_string().replace(&['"'], "") };
+            let date_as_rs_string = |s: &Value| -> String { as_rs_string(s).replace('Z', "") };
 
             Some(Repository {
                 name: as_rs_string(value.get("name")?),
                 owner_name: as_rs_string(value.get("owner")?.get("login")?),
                 description: as_rs_string(value.get("description")?),
-                created_date: Date::new(&JsValue::from_str(
-                    &value
-                        .get("created_at")?
-                        .to_string()
-                        .replace(&['Z', '"'], ""),
-                )),
-                last_update: Date::new(&JsValue::from_str(
-                    &value
-                        .get("pushed_at")?
-                        .to_string()
-                        .replace(&['Z', '"'], ""),
-                )),
+                created_date: Date::new(&JsValue::from_str(&date_as_rs_string(
+                    value.get("created_at")?,
+                ))),
+                last_update: Date::new(&JsValue::from_str(&date_as_rs_string(
+                    value.get("pushed_at")?,
+                ))),
                 language: as_rs_string(value.get("language")?),
                 public: !value.get("private")?.as_bool()?,
                 fork: value.get("fork")?.as_bool()?,
