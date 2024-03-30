@@ -1,8 +1,4 @@
-use std::path::StripPrefixError;
-
 use gloo::console::log;
-use js_sys::Date;
-use wasm_bindgen::{closure::Closure, JsCast};
 
 const WORM_SPEED: f64 = 370.;
 
@@ -103,7 +99,7 @@ impl WormGrid {
     ) {
         for worm in self.worms.iter() {
             // Draw tail
-            worm.tail.iter().enumerate().for_each(|(i, tail_bit)| {
+            worm.tail.iter().for_each(|tail_bit| {
                 crate::render::draw_rect(
                     glctx,
                     rect_shader_prog,
@@ -266,7 +262,7 @@ impl Worm {
             self.tail.push_front(WormTailBit::new(self.rect.center()));
         }
 
-        while self.tail.get(self.tail.len() - 1).unwrap().lifetime.ended() {
+        while self.tail.back().unwrap().lifetime.ended() {
             self.tail.pop_back();
         }
     }

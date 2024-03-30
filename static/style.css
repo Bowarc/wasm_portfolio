@@ -1,6 +1,5 @@
 :root{
-  --text-background-color: color-mix(in srgb, var(--background-50), transparent 30%);
-
+  --text-background-color: color-mix(in srgb, var(--background-50), transparent 20%);
 }
 
 *{
@@ -44,10 +43,9 @@ body{
 
 .current{
   border: 2px solid var(--primary-700) !important;
-  background: red;
 }
 
-.scene{
+.scene_button{
   width: 100%;
   font-size: 16px;
   margin-top: 0.5vh;
@@ -56,8 +54,10 @@ body{
 /*  padding: 10px 20px;*/
   border: 1px solid var(--primary-400);
   border-radius: 8px;
-  background-color: var(--text-background-color);
+  background-color: transparent;
   color: var(--background-900);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .icon{
@@ -76,15 +76,15 @@ a {
   text-decoration: None;
 }
 
-#description{
+#description {
   --side-margin: 20%;
   margin-left:  var(--side-margin);
   margin-right: var(--side-margin) ; 
-  font-size: 2em;
+  font-size: 1.5em;
   color: var(--primary-500);
-  background-color: var(--text-background-color);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
-
 
 /* https://stackoverflow.com/a/62221520 ily */
 #global {

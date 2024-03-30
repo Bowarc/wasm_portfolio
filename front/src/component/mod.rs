@@ -1,5 +1,5 @@
 mod wormgrid;
-pub use wormgrid::{Worm, WormGrid};
+pub use wormgrid::WormGrid;
 mod age;
 pub use age::Age;
 mod git_projects;

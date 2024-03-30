@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use js_sys::Date;
 
 #[derive(Debug)]
@@ -35,5 +37,5 @@ pub fn time_since(date: Date) -> String {
         return s(interval, "minute");
     }
 
-    return s(interval, "second");
+    s(interval, "second")   
 }

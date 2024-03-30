@@ -1,6 +1,6 @@
-use gloo::console::log;
 use wasm_bindgen::JsCast;
-use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext};
+use web_sys::{window, WebGlRenderingContext};
+
 #[path = "render/color.rs"]
 mod color_mod;
 pub use color_mod::Color;
@@ -71,7 +71,7 @@ pub fn draw_rect(
         WebGlRenderingContext::DYNAMIC_DRAW,
     );
 
-    glctx.use_program(Some(&rect_shader_prog));
+    glctx.use_program(Some(rect_shader_prog));
 
     glctx.blend_func(
         WebGlRenderingContext::SRC_ALPHA,
@@ -88,18 +88,18 @@ pub fn draw_rect(
     );
 
     // Attach the position vector as an attribute for the GL context.
-    let position = glctx.get_attrib_location(&rect_shader_prog, "a_position") as u32;
+    let position = glctx.get_attrib_location(rect_shader_prog, "a_position") as u32;
     glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
     glctx.enable_vertex_attrib_array(position);
 
-    let uv = glctx.get_attrib_location(&rect_shader_prog, "a_uv") as u32;
+    let uv = glctx.get_attrib_location(rect_shader_prog, "a_uv") as u32;
     glctx.vertex_attrib_pointer_with_i32(uv, 2, WebGlRenderingContext::FLOAT, true, 16, 8);
     glctx.enable_vertex_attrib_array(uv);
 
     // Attach the time as a uniform for the GL context.
     glctx.uniform4fv_with_f32_array(
         glctx
-            .get_uniform_location(&rect_shader_prog, "u_color")
+            .get_uniform_location(rect_shader_prog, "u_color")
             .as_ref(),
         &[
             color.r() as f32 / 255.,
@@ -137,7 +137,7 @@ pub fn draw_circle(
         WebGlRenderingContext::STREAM_DRAW, // DYNAMIC_DRAW
     );
 
-    glctx.use_program(Some(&circle_shader_prog));
+    glctx.use_program(Some(circle_shader_prog));
 
     // gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     // gl.enable(gl.BLEND);
@@ -158,18 +158,18 @@ pub fn draw_circle(
     );
 
     // Attach the position vector as an attribute for the GL context.
-    let position = glctx.get_attrib_location(&circle_shader_prog, "a_position") as u32;
+    let position = glctx.get_attrib_location(circle_shader_prog, "a_position") as u32;
     glctx.vertex_attrib_pointer_with_i32(position, 2, WebGlRenderingContext::FLOAT, true, 16, 0);
     glctx.enable_vertex_attrib_array(position);
 
-    let uv = glctx.get_attrib_location(&circle_shader_prog, "a_uv") as u32;
+    let uv = glctx.get_attrib_location(circle_shader_prog, "a_uv") as u32;
     glctx.vertex_attrib_pointer_with_i32(uv, 2, WebGlRenderingContext::FLOAT, true, 16, 8);
     glctx.enable_vertex_attrib_array(uv);
 
     // Attach the time as a uniform for the GL context.
     glctx.uniform4fv_with_f32_array(
         glctx
-            .get_uniform_location(&circle_shader_prog, "u_color")
+            .get_uniform_location(circle_shader_prog, "u_color")
             .as_ref(),
         &[
             color.r() as f32 / 255.,
@@ -181,14 +181,14 @@ pub fn draw_circle(
 
     glctx.uniform1i(
         glctx
-            .get_uniform_location(&circle_shader_prog, "u_gradient")
+            .get_uniform_location(circle_shader_prog, "u_gradient")
             .as_ref(),
         gradient as i32,
     );
 
     glctx.uniform1i(
         glctx
-            .get_uniform_location(&circle_shader_prog, "u_ring")
+            .get_uniform_location(circle_shader_prog, "u_ring")
             .as_ref(),
         ring as i32,
     );

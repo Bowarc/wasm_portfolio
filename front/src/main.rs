@@ -1,21 +1,12 @@
-use gloo::console::{self, log};
+use gloo::console::log;
 use js_sys::Date;
-use wasm_bindgen::{prelude::wasm_bindgen, JsCast};
 use web_sys::{window, HtmlCanvasElement, WebGlRenderingContext};
 use yew::{html, Component, Context, Html};
-
-use std::cell::RefCell;
-use std::rc::Rc;
-use std::sync::Arc;
-use std::sync::Mutex;
-
-use wasm_bindgen::prelude::*;
 
 mod component;
 mod render;
 mod utils;
 
-// Define the possible messages which can be sent to the component
 pub enum Msg {
     InitWorms,
     SwitchScene(Scene), // sao <3
@@ -37,26 +28,28 @@ impl Component for App {
     type Message = Msg;
     type Properties = ();
 
-    fn create(ctx: &Context<Self>) -> Self {
+    fn create(_ctx: &Context<Self>) -> Self {
         Self {
             current_scene: Scene::Main,
             canvas_node_ref: yew::NodeRef::default(),
         }
     }
 
-    fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &Context<Self>, msg: Self::Message) -> bool {
+        use wasm_bindgen::JsCast as _;
+
         match msg {
             Msg::InitWorms => {
-                // ctx.link().send_message(Msg::UpdateWorms);
                 let canvas = self.canvas_node_ref.cast::<HtmlCanvasElement>().unwrap();
                 let w = window().unwrap();
                 canvas.set_width(w.inner_width().unwrap().as_f64().unwrap() as u32);
                 canvas.set_height(w.inner_height().unwrap().as_f64().unwrap() as u32);
-                let glctx: WebGlRenderingContext = canvas
+
+                let glctx = canvas
                     .get_context("webgl")
                     .unwrap()
                     .unwrap()
-                    .dyn_into()
+                    .dyn_into::<WebGlRenderingContext>()
                     .unwrap();
 
                 Self::start_wormgrid(glctx);
@@ -78,6 +71,7 @@ impl Component for App {
                         { "Hellow.\nJe suis un développeur autodidacte de " }
                         <component::Age/>
                         { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
+                        { "" }
                     </p>
                 </>}
             }
@@ -99,8 +93,7 @@ impl Component for App {
                 <a class="header_item" href="http://github.com/Bowarc">
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
-                <div id="scene_list" class="header_item">
-                {
+                <div id="scene_list" class="header_item">{
                     [ Scene::Main, Scene::GitRepos, Scene::BTSResume ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
@@ -108,22 +101,19 @@ impl Component for App {
                             ""
                         };
                         html!{
-                            <button class={format!("scene {current}")} onclick={ctx.link().callback(|_| Msg::SwitchScene(*scene))}>
+                            <button class={format!("scene_button {current}")} onclick={ctx.link().callback(|_| Msg::SwitchScene(*scene))}>
                                 { format!("{scene}") }
                             </button>
                         }
                     }).collect::<Vec<yew::virtual_dom::VNode>>()
-                }
-                </div>
+                }</div>
             </div>
             <div id="main">
                 <canvas id="gridworm_canvas" ref={self.canvas_node_ref.clone()} />
                 { scene_html }
             </div>
             <footer>
-                // Display the current date and time the page was rendered
-                { "Rendered: " }
-                { String::from(Date::new_0().to_string()) }
+                { format!("Rendered: {}", String::from(Date::new_0().to_string()))}
             </footer>
             </div>
         }
@@ -136,15 +126,9 @@ impl Component for App {
 }
 
 impl App {
-    fn request_animation_frame(f: &Closure<dyn FnMut()>) {
-        window()
-            .unwrap()
-            .request_animation_frame(f.as_ref().unchecked_ref())
-            .expect("should register `requestAnimationFrame` OK");
-    }
-
     fn start_wormgrid(glctx: WebGlRenderingContext) {
         // This should log only once -- not once per frame
+        use wasm_bindgen::JsCast as _;
 
         render::init(&glctx);
 
@@ -153,23 +137,20 @@ impl App {
             glctx.drawing_buffer_height() as f64,
         );
 
-        let blob = maths::Rect::new((0.1, 0.1), (10., 10.), 0.);
-
         log!(format!("Canvas size: {canvas_size}"));
 
         // Gloo-render's request_animation_frame has this extra closure
         // wrapping logic running every frame, unnecessary cost.
         // Here constructing the wrapped closure just once.
 
-        let cb = std::rc::Rc::new(std::cell::RefCell::new(None));
+        let update_fn = std::rc::Rc::new(std::cell::RefCell::new(None));
 
-        *cb.borrow_mut() = Some(wasm_bindgen::closure::Closure::wrap(Box::new({
+        *update_fn.borrow_mut() = Some(wasm_bindgen::closure::Closure::wrap(Box::new({
             let rect_shader_program = render::setup_shader(&glctx, "rect");
             let circle_shader_program = render::setup_shader(&glctx, "circle");
             let glctx = glctx.clone();
-            let cb = cb.clone();
-            let mut wormgrid = component::WormGrid::new(canvas_size, 20);
-            let color = render::Color::random_rgb();
+            let update_fn = update_fn.clone();
+            let mut wormgrid = component::WormGrid::new(canvas_size, 40);
             move || {
                 glctx.clear(
                     WebGlRenderingContext::COLOR_BUFFER_BIT
@@ -181,18 +162,13 @@ impl App {
                 );
 
                 if window_size != wormgrid.size() {
-                    glctx
+                    let canvas = glctx
                         .canvas()
                         .unwrap()
                         .dyn_into::<HtmlCanvasElement>()
-                        .unwrap()
-                        .set_width(window_size.x as u32);
-                    glctx
-                        .canvas()
-                        .unwrap()
-                        .dyn_into::<HtmlCanvasElement>()
-                        .unwrap()
-                        .set_height(window_size.y as u32);
+                        .unwrap();
+                    canvas.set_width(window_size.x as u32);
+                    canvas.set_height(window_size.y as u32);
                 }
 
                 // render::draw(
@@ -204,12 +180,12 @@ impl App {
                 wormgrid.update(window_size);
                 wormgrid.draw(&glctx, &rect_shader_program, &circle_shader_program);
 
-                crate::render::end_frame(cb.borrow().as_ref().unwrap())
+                crate::render::end_frame(update_fn.borrow().as_ref().unwrap())
             }
         })
             as Box<dyn FnMut()>));
 
-        crate::render::end_frame(cb.borrow().as_ref().unwrap());
+        crate::render::end_frame(update_fn.borrow().as_ref().unwrap());
     }
 }
 

@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
 pub struct Color(u8, u8, u8, u8); // 0 - 255
 
