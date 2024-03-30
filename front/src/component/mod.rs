@@ -1,5 +1,3 @@
-mod header;
-pub use header::Header;
 mod wormgrid;
 pub use wormgrid::{Worm, WormGrid};
 mod age;

@@ -18,10 +18,19 @@ mod utils;
 // Define the possible messages which can be sent to the component
 pub enum Msg {
     InitWorms,
+    SwitchScene(Scene), // sao <3
+}
+
+#[derive(Clone, Copy, PartialEq)]
+pub enum Scene {
+    Main,
+    GitRepos,
+    BTSResume,
 }
 
 pub struct App {
-    node_ref: yew::NodeRef,
+    current_scene: Scene,
+    canvas_node_ref: yew::NodeRef,
 }
 
 impl Component for App {
@@ -30,7 +39,8 @@ impl Component for App {
 
     fn create(ctx: &Context<Self>) -> Self {
         Self {
-            node_ref: yew::NodeRef::default(),
+            current_scene: Scene::Main,
+            canvas_node_ref: yew::NodeRef::default(),
         }
     }
 
@@ -38,7 +48,7 @@ impl Component for App {
         match msg {
             Msg::InitWorms => {
                 // ctx.link().send_message(Msg::UpdateWorms);
-                let canvas = self.node_ref.cast::<HtmlCanvasElement>().unwrap();
+                let canvas = self.canvas_node_ref.cast::<HtmlCanvasElement>().unwrap();
                 let w = window().unwrap();
                 canvas.set_width(w.inner_width().unwrap().as_f64().unwrap() as u32);
                 canvas.set_height(w.inner_height().unwrap().as_f64().unwrap() as u32);
@@ -50,7 +60,10 @@ impl Component for App {
                     .unwrap();
 
                 Self::start_wormgrid(glctx);
-
+                true
+            }
+            Msg::SwitchScene(scene) => {
+                self.current_scene = scene;
                 true
             }
         }
@@ -58,21 +71,60 @@ impl Component for App {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         log!("Draw");
+        let scene_html = match self.current_scene {
+            Scene::Main => {
+                html! {<>
+                    <p id="description">
+                        { "Hellow.\nJe suis un développeur autodidacte de " }
+                        <component::Age/>
+                        { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
+                    </p>
+                </>}
+            }
+            Scene::GitRepos => {
+                html! {<>
+                    <component::GitProjectList />
+                </>}
+            }
+            Scene::BTSResume => {
+                html! {<>
+
+                </>}
+            }
+        };
+
         html! {
-            <div>
-                <canvas id="gridworm_canvas" ref={self.node_ref.clone()} />
-                <component::Header/>
-                <p id="description">
-                    { "Hellow.\nJe suis un développeur autodidacte de " }
-                    <component::Age/>
-                    { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
-                </p>
-                <component::GitProjectList />
+            <div id="global">
+            <div id="header">
+                <a class="header_item" href="http://github.com/Bowarc">
+                    <img src="resources/github.webp" alt="Github icon" class="icon"/>
+                </a>
+                <div id="scene_list" class="header_item">
+                {
+                    [ Scene::Main, Scene::GitRepos, Scene::BTSResume ].iter().map(|scene|{
+                        let current = if &self.current_scene == scene{
+                            "current"
+                        }else{
+                            ""
+                        };
+                        html!{
+                            <button class={format!("scene {current}")} onclick={ctx.link().callback(|_| Msg::SwitchScene(*scene))}>
+                                { format!("{scene}") }
+                            </button>
+                        }
+                    }).collect::<Vec<yew::virtual_dom::VNode>>()
+                }
+                </div>
+            </div>
+            <div id="main">
+                <canvas id="gridworm_canvas" ref={self.canvas_node_ref.clone()} />
+                { scene_html }
+            </div>
+            <footer>
                 // Display the current date and time the page was rendered
-                <p class="footer">
-                    { "Rendered: " }
-                    { String::from(Date::new_0().to_string()) }
-                </p>
+                { "Rendered: " }
+                { String::from(Date::new_0().to_string()) }
+            </footer>
             </div>
         }
     }
@@ -128,10 +180,20 @@ impl App {
                     window().unwrap().inner_height().unwrap().as_f64().unwrap(),
                 );
 
-                if window_size != wormgrid.size(){
-                    glctx.canvas().unwrap().dyn_into::<HtmlCanvasElement>().unwrap().set_width(window_size.x as u32);
-                    glctx.canvas().unwrap().dyn_into::<HtmlCanvasElement>().unwrap().set_height(window_size.y as u32);
-                } 
+                if window_size != wormgrid.size() {
+                    glctx
+                        .canvas()
+                        .unwrap()
+                        .dyn_into::<HtmlCanvasElement>()
+                        .unwrap()
+                        .set_width(window_size.x as u32);
+                    glctx
+                        .canvas()
+                        .unwrap()
+                        .dyn_into::<HtmlCanvasElement>()
+                        .unwrap()
+                        .set_height(window_size.y as u32);
+                }
 
                 // render::draw(
                 //     &glctx,
@@ -148,6 +210,22 @@ impl App {
             as Box<dyn FnMut()>));
 
         crate::render::end_frame(cb.borrow().as_ref().unwrap());
+    }
+}
+
+impl std::fmt::Display for Scene {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Scene::Main => {
+                write!(f, "Main menu")
+            }
+            Scene::GitRepos => {
+                write!(f, "Git repos")
+            }
+            Scene::BTSResume => {
+                write!(f, "Void")
+            }
+        }
     }
 }
 fn main() {

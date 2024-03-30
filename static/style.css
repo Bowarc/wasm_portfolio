@@ -1,45 +1,107 @@
+:root{
+  --text-background-color: color-mix(in srgb, var(--background-50), transparent 30%);
+
+}
+
 *{
-    scrollbar-color: #454a4d #202324;
+  scrollbar-color: #454a4d #202324;
 }
 
 html{
-    color: var(--text-900);
+  color: var(--text-900);
 }
 
 body{
-    background-color: transparent;
-    width:  100%;
-    height: 100%;
-    margin: 0;
-    text-align: center ;
-    margin-bottom: 5%;
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  text-align: center;
 }
 
 #header {
-  text-align: right;
+  top: 0px;
+  width: 100%;
+  height: 6vh;
+  margin-bottom: 3%;
+/*  background-color: red;*/
+/*  border: 2px solid red;*/
+}
+
+#header .icon{
+  float: right;
+}
+
+#header #scene_list{
+  height: 100%;
+  left: 0px;
+  display: grid;
+  grid-template-columns: repeat(100, auto);
+  grid-gap: 0.5%;
+  padding-left: 0.2%;
+/*  border: 2px solid green; */
+}
+
+.current{
+  border: 2px solid var(--primary-700) !important;
+  background: red;
+}
+
+.scene{
+  width: 100%;
+  font-size: 16px;
+  margin-top: 0.5vh;
+  margin-bottom: 0.5vh;
+  cursor: pointer;
+/*  padding: 10px 20px;*/
+  border: 1px solid var(--primary-400);
+  border-radius: 8px;
+  background-color: var(--text-background-color);
+  color: var(--background-900);
 }
 
 .icon{
-    width: 25px;
-    height: 25px;
-    font-size: 10px;
+  width: 25px;
+  height: 25px;
+  font-size: 10px;
 }
 
 a:visited{
-    color: var(--text-500);
-    text-decoration: None;
+  color: var(--text-500);
+  text-decoration: None;
 }
 
 a {
-    color: var(--pink-300);
-    text-decoration: None;
+  color: var(--pink-300);
+  text-decoration: None;
 }
 
 #description{
-    --side-margin: 20%;
-    margin-top: 5%;
-    margin-left:  var(--side-margin);
-    margin-right: var(--side-margin) ; 
-    font-size: 2em;
-    color: var(--primary-500);
+  --side-margin: 20%;
+  margin-left:  var(--side-margin);
+  margin-right: var(--side-margin) ; 
+  font-size: 2em;
+  color: var(--primary-500);
+  background-color: var(--text-background-color);
+}
+
+
+/* https://stackoverflow.com/a/62221520 ily */
+#global {
+  /* The power of flexboxes! */
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#main {
+  /* Key part: Eat the remaining space! */
+  flex-grow: 1;
+}
+
+footer {
+  margin-top: 5%;
+  text-align: right;
+  background-color: transparent;
 }

@@ -208,7 +208,7 @@ impl WormGrid {
         //     crate::render::Color::random_rgba(),
         // );
     }
-    pub fn size(&self) -> maths::Vec2{
+    pub fn size(&self) -> maths::Vec2 {
         self.size
     }
 }

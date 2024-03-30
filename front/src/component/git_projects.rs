@@ -34,6 +34,7 @@ impl yew::Component for GitProjectList {
     type Properties = ();
 
     fn create(ctx: &yew::prelude::Context<Self>) -> Self {
+        log!("GitProjectList comp created");
         ctx.link().send_message(Msg::FetchRepos);
         Self { repos: Vec::new() }
     }
@@ -83,7 +84,7 @@ impl yew::Component for GitProjectList {
     fn update(&mut self, ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::FetchRepos => {
-                log!("Fetch repos");
+                // log!("Fetch repos");
                 ctx.link()
                     .send_message(Msg::FetchReposResult(crate::utils::FetchState::Fetching));
 
@@ -92,11 +93,11 @@ impl yew::Component for GitProjectList {
                         {
                             match fetch_repos(user).await {
                                 Ok(repos) => {
-                                    log!("Repos fetch success");
+                                    // log!("Repos fetch success");
                                     Msg::FetchReposResult(crate::utils::FetchState::Success(repos))
                                 }
                                 Err(err) => {
-                                    log!("Repos fatch failled with error: {err}");
+                                    // log!("Repos fatch failled with error: {err}");
                                     Msg::FetchReposResult(crate::utils::FetchState::Failed(err))
                                 }
                             }
@@ -106,11 +107,10 @@ impl yew::Component for GitProjectList {
             }
             Msg::FetchReposResult(state) => match state {
                 crate::utils::FetchState::Success(repos) => {
-                    log!(format!(
-                        "Received repo fetch state: Success with {} repos",
-                        repos.len()
-                    ));
-                    repos.iter().for_each(|repo| log!(&repo.name));
+                    // log!(format!(
+                    //     "Received repo fetch state: Success with {} repos",
+                    //     repos.len()
+                    // ));
                     self.repos.append(
                         &mut repos
                             .into_iter()
@@ -128,13 +128,13 @@ impl yew::Component for GitProjectList {
                         .sort_by_key(|repo| -repo.last_update.get_time() as i64);
                 }
                 crate::utils::FetchState::NotFetching => {
-                    log!("Received repo fetch state: NotFetching")
+                    // log!("Received repo fetch state: NotFetching")
                 }
                 crate::utils::FetchState::Fetching => {
-                    log!("Received repo fetch state: Fetching")
+                    // log!("Received repo fetch state: Fetching")
                 }
                 crate::utils::FetchState::Failed(why) => {
-                    log!(format!("Received repo fetch state: Error({why:?})"))
+                    // log!(format!("Received repo fetch state: Error({why:?})"))
                 }
             },
         }
@@ -166,21 +166,21 @@ async fn fetch_repos(user: &'static str) -> Result<Vec<Repository>, wasm_bindgen
     opts.method("GET");
     opts.mode(web_sys::RequestMode::Cors);
 
-    log!(opts.clone());
+    // log!(opts.clone());
 
     let request = Request::new_with_str_and_init(
         &format!("https://api.github.com/users/{user}/repos?per_page=100"),
         &opts,
     )?;
 
-    log!(request.url());
+    // log!(request.url());
     let window = gloo::utils::window();
     let resp_value =
         wasm_bindgen_futures::JsFuture::from(window.fetch_with_request(&request)).await?;
     let resp: web_sys::Response = resp_value.dyn_into().unwrap();
 
     let json_data = wasm_bindgen_futures::JsFuture::from(resp.json()?).await?;
-    log!(json_data.clone());
+    // log!(json_data.clone());
 
     let mut repos = json_data
         .into_serde::<Vec<serde_json::Value>>()

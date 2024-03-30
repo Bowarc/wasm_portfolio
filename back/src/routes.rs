@@ -32,6 +32,10 @@ pub async fn gitcardcss(remote_addr: std::net::SocketAddr) -> Response {
 pub async fn front(remote_addr: std::net::SocketAddr) -> Response {
     file_response("front.js", ContentType::JavaScript, remote_addr)
 }
+#[rocket::get("/live.js")]
+pub async fn live(remote_addr: std::net::SocketAddr) -> Response {
+    file_response("live.js", ContentType::JavaScript, remote_addr)
+}
 
 #[rocket::get("/front_bg.wasm")]
 pub fn wasm(remote_addr: std::net::SocketAddr) -> Response {

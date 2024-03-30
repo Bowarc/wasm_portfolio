@@ -31,6 +31,7 @@ async fn main() {
                 routes::wormscss,
                 routes::gitcardcss,
                 routes::front,
+                routes::live,
                 routes::wasm,
                 routes::github_icon,
                 routes::rust_icon,
