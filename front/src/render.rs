@@ -20,12 +20,12 @@ pub fn setup_shader(glctx: &WebGlRenderingContext, name: &str) -> web_sys::WebGl
     let vert_code = match name {
         "circle" => include_str!("../resources/shaders/circle.vert"),
         "rect" => include_str!("../resources/shaders/rect.vert"),
-        _ => panic!("Not loaded"),
+        _ => panic!("The vertex shader '{name}.vert' is not loaded"),
     };
     let frag_code = match name {
         "circle" => include_str!("../resources/shaders/circle.frag"),
         "rect" => include_str!("../resources/shaders/rect.frag"),
-        _ => panic!("Not loaded"),
+        _ => panic!("The fragment shader '{name}.frag' is not loaded"),
     };
 
     let vert_shader = glctx

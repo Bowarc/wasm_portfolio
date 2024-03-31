@@ -66,13 +66,8 @@ body{
   font-size: 10px;
 }
 
-a:visited{
-  color: var(--text-500);
-  text-decoration: None;
-}
-
 a {
-  color: var(--pink-300);
+  color: var(--text-700);
   text-decoration: None;
 }
 
@@ -95,7 +90,7 @@ a {
   min-height: 100vh;
 }
 
-#main {
+#content {
   /* Key part: Eat the remaining space! */
   flex-grow: 1;
 }

@@ -5,9 +5,10 @@ use yew::{html, Component, Context, Html};
 
 mod component;
 mod render;
+mod scene;
 mod utils;
 
-pub enum Msg {
+pub enum Message {
     InitWorms,
     SwitchScene(Scene), // sao <3
 }
@@ -16,7 +17,10 @@ pub enum Msg {
 pub enum Scene {
     Main,
     GitRepos,
+    // RustShowcase,
+    WASMShowcase,
     BTSResume,
+    Contact,
 }
 
 pub struct App {
@@ -25,7 +29,7 @@ pub struct App {
 }
 
 impl Component for App {
-    type Message = Msg;
+    type Message = Message;
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
@@ -39,7 +43,7 @@ impl Component for App {
         use wasm_bindgen::JsCast as _;
 
         match msg {
-            Msg::InitWorms => {
+            Message::InitWorms => {
                 let canvas = self.canvas_node_ref.cast::<HtmlCanvasElement>().unwrap();
                 let w = window().unwrap();
                 canvas.set_width(w.inner_width().unwrap().as_f64().unwrap() as u32);
@@ -55,7 +59,7 @@ impl Component for App {
                 Self::start_wormgrid(glctx);
                 true
             }
-            Msg::SwitchScene(scene) => {
+            Message::SwitchScene(scene) => {
                 self.current_scene = scene;
                 true
             }
@@ -68,10 +72,23 @@ impl Component for App {
             Scene::Main => {
                 html! {<>
                     <p id="description">
-                        { "Hellow.\nJe suis un développeur autodidacte de " }
-                        <component::Age/>
-                        { ", spécialisé dans le développement logiciel et backend. J'ai commencé mon parcours avec Python et aujourd'hui j'utilise principalement Rust." }
-                        { "" }
+                        <p>
+                            {"Développeur Autodidacte de " }
+                            <component::Age/>
+                            { ", spécialisé dans le développement logiciel et backend."}
+                        </p>
+                        <p>{"J'ai commencé avec Python avant de me concentrer principalement sur Rust, un langage dans lequel je vois un potentiel considérable pour ses performances et sa sécurité."}</p>
+                        <p>{"Je suis familier avec les environnements Windows et Linux, ce qui me permet de concevoir des solutions robustes et polyvalentes."}</p>
+                        <p>{"Mon expertise s'étend à la construction et à la maintenance d'applications de bureau ainsi qu'à la mise en place de solutions côté serveur."}</p>
+                        <p>
+                            {"En outre, je suis compétent dans le développement front-end, notamment avec "}
+                            <a href="https://yew.rs/" class="link">{"Yew"}</a>
+                            {" via "}
+                            <a href="https://webassembly.org/" class="link">{"WebAssembly"}</a>
+                            {", ce qui me permet de créer des expériences utilisateur riches et réactives."}
+                        </p>
+                        <p>{"J'ai eu l'occasion de travailler sur divers projets, dont [insérer exemple notable ou quantifiable ici], démontrant ma capacité à livrer des solutions de haute qualité dans des environnements variés."}</p>
+                        <p>{"Je suis passionné par l'innovation technologique et je m'efforce constamment d'approfondir mes compétences pour relever de nouveaux défis."}</p>
                     </p>
                 </>}
             }
@@ -81,6 +98,18 @@ impl Component for App {
                 </>}
             }
             Scene::BTSResume => {
+                html! {<>
+                </>}
+            }
+            // Scene::RustShowcase => {
+            //     html! {<>
+            //     </>}
+            // },
+            Scene::WASMShowcase => {
+                html! {<>
+                </>}
+            }
+            Scene::Contact => {
                 html! {<>
 
                 </>}
@@ -94,21 +123,21 @@ impl Component for App {
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Main, Scene::GitRepos, Scene::BTSResume ].iter().map(|scene|{
+                    [ Scene::Main, Scene::GitRepos, Scene::WASMShowcase, Scene::BTSResume, Scene::Contact ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
                             ""
                         };
                         html!{
-                            <button class={format!("scene_button {current}")} onclick={ctx.link().callback(|_| Msg::SwitchScene(*scene))}>
+                            <button class={format!("scene_button {current}")} onclick={ctx.link().callback(|_| Message::SwitchScene(*scene))}>
                                 { format!("{scene}") }
                             </button>
                         }
                     }).collect::<Vec<yew::virtual_dom::VNode>>()
                 }</div>
             </div>
-            <div id="main">
+            <div id="content">
                 <canvas id="gridworm_canvas" ref={self.canvas_node_ref.clone()} />
                 { scene_html }
             </div>
@@ -120,7 +149,7 @@ impl Component for App {
     }
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
         if first_render {
-            ctx.link().send_message(Msg::InitWorms);
+            ctx.link().send_message(Message::InitWorms);
         }
     }
 }
@@ -192,15 +221,11 @@ impl App {
 impl std::fmt::Display for Scene {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Scene::Main => {
-                write!(f, "Main menu")
-            }
-            Scene::GitRepos => {
-                write!(f, "Git repos")
-            }
-            Scene::BTSResume => {
-                write!(f, "Void")
-            }
+            Scene::Main => write!(f, "Main menu"),
+            Scene::GitRepos => write!(f, "Git repos"),
+            Scene::BTSResume => write!(f, "BTSResume"),
+            Scene::WASMShowcase => write!(f, "Web assembly"),
+            Scene::Contact => write!(f, "Contact"),
         }
     }
 }
