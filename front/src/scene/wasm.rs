@@ -25,8 +25,8 @@ impl yew::Component for WASM {
             document.body().unwrap().append_child(&script).unwrap();
         };
 
-        create_script("/prism.min.js","prism");
-        create_script("/prism-autoloader.min.js","prism-autoloader");
+        create_script("./lib/prism/prism.min.js","prism");
+        create_script("./lib/prism/prism-autoloader.min.js","prism-autoloader");
 
         false
     }
