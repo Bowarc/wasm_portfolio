@@ -9,42 +9,44 @@ impl yew::Component for WASM {
     type Properties = ();
 
     fn create(_ctx: &yew::prelude::Context<Self>) -> Self {
-        let document = web_sys::window().unwrap().document().unwrap();
-        let script = document.create_element("script").unwrap();
-        script.set_attribute("src", "https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js").unwrap();
-        script.set_attribute("defer", "").unwrap();
-
-        document.body().unwrap().append_child(&script).unwrap();
-
-        let script_auto = document.create_element("script").unwrap();
-        script_auto.set_attribute("src", "https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/autoloader/prism-autoloader.min.js").unwrap();
-        script_auto.set_attribute("defer", "").unwrap();
-        document.body().unwrap().append_child(&script_auto).unwrap();
         Self
     }
 
     fn update(&mut self, _ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
         log!("update wasm");
-        true
+
+        let document = web_sys::window().unwrap().document().unwrap();
+
+        let create_script = |path: &str, id: &str| {
+            let script = document.create_element("script").unwrap();
+            script.set_attribute("src", path).unwrap();
+            script.set_attribute("defer", "").unwrap();
+            script.set_id(id);
+            document.body().unwrap().append_child(&script).unwrap();
+        };
+
+        create_script("/prism.min.js","prism");
+        create_script("/prism-autoloader.min.js","prism-autoloader");
+
+        false
     }
 
     fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, first_render: bool) {
-        // if first_render {
-        //     // Prism.js initialization
-        //     let document = web_sys::window().unwrap().document().unwrap();
-        //     let script = document.create_element("script").unwrap();
-        //     script.set_attribute("src", "https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js").unwrap();
-        //     // script.set_attribute("defer", "").unwrap();
-        //     document.body().unwrap().append_child(&script).unwrap();
+        ctx.link().send_future(async {
+            let document = web_sys::window().unwrap().document().unwrap();
 
-        //     let script_auto = document.create_element("script").unwrap();
-        //     script_auto.set_attribute("src", "https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/plugins/autoloader/prism-autoloader.min.js").unwrap();
-        //     // script_auto.set_attribute("defer", "").unwrap();
-        //     document.body().unwrap().append_child(&script_auto).unwrap();
+            let remove_script = |id: &str|{
+                if let Some(script_element) = document.get_element_by_id(id) {
+                    let parent_node = script_element.parent_node().unwrap();
+                    parent_node.remove_child(&script_element).unwrap();
+                }
+            };
 
-        //     // Send a message to trigger code block highlighting
-        //     ctx.link().send_message(());
-        // }
+            remove_script("prism");
+            remove_script("prism-autoloader");
+
+            gloo_timers::future::TimeoutFuture::new(25).await;
+        });
     }
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
         log!("draw wasm");

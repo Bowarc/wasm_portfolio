@@ -22,6 +22,7 @@ wasm-timer = "0.2.5"
 serde_json = "1.0.111"
 serde = { version = "1.0.194", features = ["derive"] }
 futures = "0.3.30"
+gloo-timers = { version = "0.3.0", features = ["futures"] }
 # wasm-bindgen-futures = "0.4.39"
 # shared = { path = "../shared"}
 # serde_json = "1.0.111"
