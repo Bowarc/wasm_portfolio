@@ -27,9 +27,9 @@ fi
 
 cp ./target/wasm-bindgen/$mode/* $out_dir
 
-if ! [ -d "./static" ]; then
+if ! [ -d "./website/" ]; then
     echo Creating ouput directory
-    mkdir ./static
+    mkdir ./website/
 fi
 
-cp $out_dir/* ./static/
+cp $out_dir/* ./website/
