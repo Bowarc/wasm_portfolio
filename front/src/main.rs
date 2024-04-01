@@ -17,9 +17,7 @@ pub enum Message {
 pub enum Scene {
     Home,
     GitRepos,
-    // RustShowcase,
     WASMShowcase,
-    BTSResume,
     Contact,
 }
 
@@ -76,7 +74,7 @@ impl Component for App {
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::BTSResume, Scene::Contact ].iter().map(|scene|{
+                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Contact ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
@@ -180,7 +178,6 @@ impl Scene{
             Scene::Home => html!{<><scene::Home /></>},
             Scene::GitRepos => html!{<><scene::GitRepos /></>},
             Scene::WASMShowcase => html!{<><scene::WASM /></>},
-            Scene::BTSResume => html!{<></>},
             Scene::Contact => html!{<><scene::Contact /></>},
         }
     }
@@ -191,7 +188,6 @@ impl std::fmt::Display for Scene {
         match self {
             Scene::Home => write!(f, "Home menu"),
             Scene::GitRepos => write!(f, "Git repos"),
-            Scene::BTSResume => write!(f, "BTSResume"),
             Scene::WASMShowcase => write!(f, "Web assembly"),
             Scene::Contact => write!(f, "Contact"),
         }
