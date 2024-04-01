@@ -31,7 +31,7 @@ impl yew::Component for WASM {
         false
     }
 
-    fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, first_render: bool) {
+    fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, _first_render: bool) {
         ctx.link().send_future(async {
             let document = web_sys::window().unwrap().document().unwrap();
 
@@ -45,7 +45,7 @@ impl yew::Component for WASM {
             remove_script("prism");
             remove_script("prism-autoloader");
 
-            gloo_timers::future::TimeoutFuture::new(25).await;
+            // gloo_timers::future::TimeoutFuture::new(100).await;
         });
     }
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
