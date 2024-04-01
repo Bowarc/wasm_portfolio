@@ -15,7 +15,7 @@ pub enum Message {
 
 #[derive(Clone, Copy, PartialEq)]
 pub enum Scene {
-    Main,
+    Home,
     GitRepos,
     // RustShowcase,
     WASMShowcase,
@@ -34,7 +34,7 @@ impl Component for App {
 
     fn create(_ctx: &Context<Self>) -> Self {
         Self {
-            current_scene: Scene::Main,
+            current_scene: Scene::Home,
             canvas_node_ref: yew::NodeRef::default(),
         }
     }
@@ -68,62 +68,15 @@ impl Component for App {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         log!("Draw");
-        let scene_html = match self.current_scene {
-            Scene::Main => {
-                html! {<>
-                    <p id="description">
-                        <p>
-                            {"Développeur Autodidacte de " }
-                            <component::Age/>
-                            { ", spécialisé dans le développement logiciel et backend."}
-                        </p>
-                        <p>{"J'ai commencé avec Python avant de me concentrer principalement sur Rust, un langage dans lequel je vois un potentiel considérable pour ses performances et sa sécurité."}</p>
-                        <p>{"Je suis familier avec les environnements Windows et Linux, ce qui me permet de concevoir des solutions robustes et polyvalentes."}</p>
-                        <p>{"Mon expertise s'étend à la construction et à la maintenance d'applications de bureau ainsi qu'à la mise en place de solutions côté serveur."}</p>
-                        <p>
-                            {"En outre, je suis compétent dans le développement front-end, notamment avec "}
-                            <a href="https://yew.rs/" class="link">{"Yew"}</a>
-                            {" via "}
-                            <a href="https://webassembly.org/" class="link">{"WebAssembly"}</a>
-                            {", ce qui me permet de créer des expériences utilisateur riches et réactives."}
-                        </p>
-                        <p>{"J'ai eu l'occasion de travailler sur divers projets, dont [insérer exemple notable ou quantifiable ici], démontrant ma capacité à livrer des solutions de haute qualité dans des environnements variés."}</p>
-                        <p>{"Je suis passionné par l'innovation technologique et je m'efforce constamment d'approfondir mes compétences pour relever de nouveaux défis."}</p>
-                    </p>
-                </>}
-            }
-            Scene::GitRepos => {
-                html! {<>
-                    <component::GitProjectList />
-                </>}
-            }
-            Scene::BTSResume => {
-                html! {<>
-                </>}
-            }
-            // Scene::RustShowcase => {
-            //     html! {<>
-            //     </>}
-            // },
-            Scene::WASMShowcase => {
-                html! {<>
-                </>}
-            }
-            Scene::Contact => {
-                html! {<>
 
-                </>}
-            }
-        };
-
-        html! {
+        let vnode = html! {
             <div id="global">
             <div id="header">
-                <a class="header_item" href="http://github.com/Bowarc">
+                <a class="header_item" href="http://github.com/Bowarc/wasm_portfolio">
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Main, Scene::GitRepos, Scene::WASMShowcase, Scene::BTSResume, Scene::Contact ].iter().map(|scene|{
+                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::BTSResume, Scene::Contact ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
@@ -139,13 +92,16 @@ impl Component for App {
             </div>
             <div id="content">
                 <canvas id="gridworm_canvas" ref={self.canvas_node_ref.clone()} />
-                { scene_html }
+                {
+                    self.current_scene.html()
+                }
             </div>
             <footer>
                 { format!("Rendered: {}", String::from(Date::new_0().to_string()))}
             </footer>
             </div>
-        }
+        };
+        vnode
     }
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
         if first_render {
@@ -218,10 +174,22 @@ impl App {
     }
 }
 
+impl Scene{
+    fn html(&self) -> yew::virtual_dom::VNode{
+        match self{
+            Scene::Home => html!{<><scene::Home /></>},
+            Scene::GitRepos => html!{<><scene::GitRepos /></>},
+            Scene::WASMShowcase => html!{<><scene::WASM /></>},
+            Scene::BTSResume => html!{<></>},
+            Scene::Contact => html!{<><scene::Contact /></>},
+        }
+    }
+}
+
 impl std::fmt::Display for Scene {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Scene::Main => write!(f, "Main menu"),
+            Scene::Home => write!(f, "Home menu"),
             Scene::GitRepos => write!(f, "Git repos"),
             Scene::BTSResume => write!(f, "BTSResume"),
             Scene::WASMShowcase => write!(f, "Web assembly"),
