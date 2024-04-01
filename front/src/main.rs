@@ -67,7 +67,7 @@ impl Component for App {
     fn view(&self, ctx: &Context<Self>) -> Html {
         log!("Draw");
 
-        let vnode = html! {
+        html! {
             <div id="global">
             <div id="header">
                 <a class="header_item" href="http://github.com/Bowarc/wasm_portfolio">
@@ -98,8 +98,7 @@ impl Component for App {
                 { format!("Rendered: {}", String::from(Date::new_0().to_string()))}
             </footer>
             </div>
-        };
-        vnode
+        }
     }
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
         if first_render {

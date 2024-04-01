@@ -4,10 +4,12 @@
     <meta charset='utf-8'>
     <title>WASM portfolio</title>
     <link rel="stylesheet" type="text/css" href="./theme.css">
+    <link rel="stylesheet" type="text/css" href="./prism_theme.css">
     <link rel="stylesheet" type="text/css" href="./style.css">
     <link rel="stylesheet" type="text/css" href="./worms.css">
     <link rel="stylesheet" type="text/css" href="./gitcard.css">
-    <script type="text/javascript" src="./live.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" rel="stylesheet" />
+    <!-- <script type="text/javascript" src="./live.js"></script> -->
     <script type='module'>
       import init from './front.js';
       init('front_bg.wasm');
@@ -16,6 +18,5 @@
       <link rel='modulepreload' href='./front.js'> -->
   </head>
   <body>
-     <canvas id='gridwormCanvas' width='0' height='0'></canvas>
   </body>
 </html>
