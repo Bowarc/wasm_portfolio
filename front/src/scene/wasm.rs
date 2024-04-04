@@ -26,7 +26,7 @@ impl yew::Component for WASM {
         };
 
         create_script("./lib/prism/prism.min.js","prism");
-        create_script("./lib/prism/prism-autoloader.min.js","prism-autoloader");
+        create_script("./lib/prism/prism-rust.min.js","prism-rust");
 
         false
     }
@@ -43,10 +43,10 @@ impl yew::Component for WASM {
             };
 
             remove_script("prism");
-            remove_script("prism-autoloader");
+            remove_script("prism-rust");
 
             // gloo_timers::future::TimeoutFuture::new(100).await;
-        });
+        }); // Implicit () which is the message type of this component
     }
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
         log!("draw wasm");
@@ -77,14 +77,14 @@ use gloo::console;
 use js_sys::Date;
 use yew::{html, Component, Context, Html};
 
-// Define the possible messages which can be sent to the component
+// Définis les messages possibles qui peuvent être envoyés au composant
 pub enum Msg {
     Increment,
     Decrement,
 }
 
 pub struct App {
-    value: i64, // This will store the counter value
+    value: i64, // Stocke la valeur du compteur
 }
 
 impl Component for App {
@@ -99,8 +99,8 @@ impl Component for App {
         match msg {
             Msg::Increment => {
                 self.value += 1;
-                console::log!("plus one"); // Will output a string to the browser console
-                true // Return true to cause the displayed change to update
+                console::log!("plus one"); // Print dans la console du navigateur
+                true // Doit-on re-afficher la page ?
             }
             Msg::Decrement => {
                 self.value -= 1;
@@ -111,32 +111,36 @@ impl Component for App {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let x = "AAaa";
+        let e = 1 / 4;
+        let z = 3.14;
+        let y = false;
         html! {
             <div>
                 <div class="panel">
-                    // A button to send the Increment message
+                    // Un bouton pour envoyer le message Incrément
                     <button class="button" onclick={ctx.link().callback(|_| Msg::Increment)}>
                         { "+1" }
                     </button>
 
-                    // A button to send the Decrement message
+                    // Un bouton pour envoyer le message Décrémentation
                     <button onclick={ctx.link().callback(|_| Msg::Decrement)}>
                         { "-1" }
                     </button>
 
-                    // A button to send two Increment messages
+                    // Un bouton pour envoyer deux messages Incrément
                     <button onclick={ctx.link().batch_callback(|_| vec![Msg::Increment, Msg::Increment])}>
                         { "+1, +1" }
                     </button>
 
                 </div>
 
-                // Display the current value of the counter
+                // Afficher la valeur actuelle du compteur
                 <p class="counter">
                     { self.value }
                 </p>
 
-                // Display the current date and time the page was rendered
+                // Afficher la date et l'heure actuelles auxquelles la page a été rendue
                 <p class="footer">
                     { "Rendered: " }
                     { String::from(Date::new_0().to_string()) }
