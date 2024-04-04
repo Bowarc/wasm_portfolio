@@ -79,7 +79,7 @@ impl WormGrid {
 
         for i in 0..self.worms.len() {
             let iworm = self.worms.get(i).unwrap();
-            let mut collide = self.worms.iter().enumerate().any(|(j, jworm)| {
+            let collide = self.worms.iter().enumerate().any(|(j, jworm)| {
                 if i == j {
                     return false;
                 }
@@ -147,7 +147,7 @@ impl WormGrid {
     ) {
         for worm in self.worms.iter() {
             // Draw tail
-            worm.tail.iter().enumerate().for_each(|(i, tail_bit)| {
+            worm.tail.iter().for_each(|tail_bit| {
                 crate::render::draw_rect(
                     glctx,
                     rect_shader_prog,
@@ -382,22 +382,22 @@ impl Direction {
             Direction::Right => Vec2::new(1., 0.),
         }
     }
-    fn fliped(&self) -> Self {
-        match self {
-            Direction::Up => Direction::Down,
-            Direction::Down => Direction::Up,
-            Direction::Left => Direction::Right,
-            Direction::Right => Direction::Left,
-        }
-    }
-    fn others(&self) -> [Self; 3] {
-        match self {
-            Direction::Up => [Self::Down, Self::Left, Self::Right],
-            Direction::Down => [Self::Up, Self::Left, Self::Right],
-            Direction::Left => [Self::Up, Self::Down, Self::Right],
-            Direction::Right => [Self::Up, Self::Down, Self::Left],
-        }
-    }
+    // fn fliped(&self) -> Self {
+    //     match self {
+    //         Direction::Up => Direction::Down,
+    //         Direction::Down => Direction::Up,
+    //         Direction::Left => Direction::Right,
+    //         Direction::Right => Direction::Left,
+    //     }
+    // }
+    // fn others(&self) -> [Self; 3] {
+    //     match self {
+    //         Direction::Up => [Self::Down, Self::Left, Self::Right],
+    //         Direction::Down => [Self::Up, Self::Left, Self::Right],
+    //         Direction::Left => [Self::Up, Self::Down, Self::Right],
+    //         Direction::Right => [Self::Up, Self::Down, Self::Left],
+    //     }
+    // }
 
     fn sides(&self) -> [Self; 2] {
         match self {

@@ -12,7 +12,7 @@ impl yew::Component for WASM {
         Self
     }
 
-    fn update(&mut self, _ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &yew::prelude::Context<Self>, _msg: Self::Message) -> bool {
         log!("update wasm");
 
         let document = web_sys::window().unwrap().document().unwrap();
@@ -111,10 +111,6 @@ impl Component for App {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let x = "AAaa";
-        let e = 1 / 4;
-        let z = 3.14;
-        let y = false;
         html! {
             <div>
                 <div class="panel">
