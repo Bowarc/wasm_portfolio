@@ -21,7 +21,7 @@ void main() {
   }
 
   if (u_gradient) {
-    gl_FragColor = vec4(u_color.xyz, 0.5-d);
+    gl_FragColor = vec4(u_color.xyz, 0.5-d* (1./u_color.a));
   }else{
     gl_FragColor = u_color;
   }
