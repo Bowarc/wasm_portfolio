@@ -111,6 +111,10 @@ impl Component for App {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let x = "AAaa";
+        let e = 1 / 4;
+        let z = 3.14;
+        let y = false;
         html! {
             <div>
                 <div class="panel">
