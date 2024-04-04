@@ -1,7 +1,9 @@
-use futures::io::Read;
 use gloo::console::log;
 
+const TAIL_MAX_LEN: usize = 5;
 const WORM_SPEED: f64 = 370.;
+const WORM_ROTATION_TIMER_LOW: f64 = 0.5;
+const WORM_ROTATION_TIMER_HIGH: f64 = 3.;
 
 pub struct WormGrid {
     size: maths::Vec2,
@@ -72,43 +74,38 @@ impl WormGrid {
         // log!(dt);
 
         for i in 0..self.worms.len() {
-            let mut collide = false;
-            for j in 0..self.worms.len() {
+            let iworm = self.worms.get(i).unwrap();
+            let mut collide = self.worms.iter().enumerate().any(|(j, jworm)| {
                 if i == j {
-                    continue;
+                    return false;
                 }
-                let iworm = self.worms.get(i).unwrap();
-                let jworm = self.worms.get(j).unwrap();
 
-                let c = jworm.tail.iter().any(|bit| {
-                    maths::collision::rect_rect(
-                        iworm.rect,
+                jworm.tail.iter().any(|bit| {
+                    let prediction_time_s = 0.5;
+                    maths::collision::rect_line(
                         maths::Rect::new_from_center(bit.position, iworm.rect.size(), 0.),
+                        maths::Line::new_rotated(
+                            iworm.rect.center(),
+                            WORM_SPEED * prediction_time_s,
+                            iworm.direction.to_vec2().as_angle(),
+                        ),
                     )
-                });
-                if c {
-                    collide = true;
-                    break;
-                }
-            }
+                })
+            });
 
             let worm = self.worms.get_mut(i).unwrap();
+
             if collide {
-                worm.direction = random::pick(&[
-                    Direction::Up,
-                    Direction::Down,
-                    Direction::Left,
-                    Direction::Right,
-                ]);
+                worm.direction = random::pick(&worm.direction.sides());
+                worm.rotation_timer.restart();
+                worm.step(dt)
             }
 
-            worm.step(dt);
-
-            let out_bounds = worm.rect.center().x < -window_size.x
+            if worm.rect.center().x < -window_size.x
                 || worm.rect.center().x > window_size.x
                 || worm.rect.center().y < -window_size.y
-                || worm.rect.center().y > window_size.y;
-            if out_bounds {
+                || worm.rect.center().y > window_size.y
+            {
                 worm.direction = if worm.rect.center().x < -window_size.x {
                     Direction::Right
                 } else if worm.rect.center().x > window_size.x {
@@ -119,19 +116,13 @@ impl WormGrid {
                     Direction::Up
                 } else {
                     log!(format!("[ERROR] Could not infer new direction for out of bounds worm with dir: {:?}", worm.direction));
-                    random::pick(&[
-                        Direction::Up,
-                        Direction::Down,
-                        Direction::Left,
-                        Direction::Right,
-                    ])
+                    // Maybe should reset the worm pos at 0, 0
+                    random::pick(&Direction::all())
                 };
-
-                worm.rect.set_center(worm.rect.center() +worm.direction.to_vec2() * window_size.x * 0.01);
-
-
+                // worm.rotation_timer.restart();
             }
-            worm.update_queue(dt);
+            worm.step(dt);
+            worm.update_tail(dt);
         }
     }
     pub fn draw(
@@ -142,7 +133,7 @@ impl WormGrid {
     ) {
         for worm in self.worms.iter() {
             // Draw tail
-            worm.tail.iter().for_each(|tail_bit| {
+            worm.tail.iter().enumerate().for_each(|(i, tail_bit)| {
                 crate::render::draw_rect(
                     glctx,
                     rect_shader_prog,
@@ -179,18 +170,21 @@ impl WormGrid {
             //             worm.color.b(),
             //             255,
             //         ),
+            //         false,
+            //         false,
             //     )
             // });
 
             // Draw head
 
+            let head_distance_to_body = worm.rect.width() / 2.;
             let head_radius = 30.;
             let antena_distance = 30.;
             let antena_radius = 20.;
 
             let triangle_base = maths::Point::new_rotated(
                 worm.rect.center(),
-                worm.rect.center() + maths::Point::new(worm.rect.width(), 0.),
+                worm.rect.center() + maths::Point::new(head_distance_to_body, 0.),
                 worm.direction.to_vec2().as_angle(),
             );
 
@@ -258,13 +252,11 @@ impl Worm {
             rect,
             color,
             head_color: crate::render::Color::random_rgb(),
-            direction: random::pick(&[
-                Direction::Up,
-                Direction::Down,
-                Direction::Left,
-                Direction::Right,
-            ]),
-            rotation_timer: time::DTDelay::new(random::get_inc(0., 1.)),
+            direction: random::pick(&Direction::all()),
+            rotation_timer: time::DTDelay::new(random::get_inc(
+                WORM_ROTATION_TIMER_LOW,
+                WORM_ROTATION_TIMER_HIGH,
+            )),
             tail: std::collections::VecDeque::<WormTailBit>::new(),
             tail_spawn_delay: time::DTDelay::new(rect.size().x / WORM_SPEED),
         }
@@ -272,13 +264,11 @@ impl Worm {
     pub fn step(&mut self, dt: f64) {
         self.rotation_timer.update(dt);
         if self.rotation_timer.ended() {
-            self.direction = random::pick(&[
-                Direction::Up,
-                Direction::Down,
-                Direction::Left,
-                Direction::Right,
-            ]);
-            self.rotation_timer = time::DTDelay::new(random::get_inc(0.1, 1.))
+            self.direction = random::pick(&self.direction.sides());
+            self.rotation_timer = time::DTDelay::new(random::get_inc(
+                WORM_ROTATION_TIMER_LOW,
+                WORM_ROTATION_TIMER_HIGH,
+            ))
         }
 
         let mut pos = self.rect.center();
@@ -288,7 +278,7 @@ impl Worm {
         self.rect.set_center(pos);
     }
 
-    pub fn update_queue(&mut self, dt: f64) {
+    pub fn update_tail(&mut self, dt: f64) {
         self.tail_spawn_delay.update(dt);
 
         let positions = self
@@ -317,17 +307,9 @@ impl Worm {
             // bit.lifetime.update(dt)
         });
 
-        const TAIL_MAX_LEN: usize = 4;
-
         if self.tail.is_empty() || self.tail.len() < TAIL_MAX_LEN && self.tail_spawn_delay.ended() {
             self.tail_spawn_delay.restart();
-            self.tail.push_front(WormTailBit::new(
-                if self.tail.len() == 0 {
-                    self.rect.center()
-                } else {
-                    *positions.get(self.tail.len() - 1).unwrap()
-                } + maths::Vec2::new(0., self.rect.width()),
-            ));
+            self.tail.push_front(WormTailBit::new(self.rect.center()));
             return;
         }
 
@@ -338,6 +320,9 @@ impl Worm {
 }
 
 impl Direction {
+    fn all() -> [Self; 4] {
+        [Self::Up, Self::Down, Self::Left, Self::Right]
+    }
     fn to_vec2(&self) -> maths::Vec2 {
         use maths::Vec2;
         match self {
@@ -353,6 +338,23 @@ impl Direction {
             Direction::Down => Direction::Up,
             Direction::Left => Direction::Right,
             Direction::Right => Direction::Left,
+        }
+    }
+    fn others(&self) -> [Self; 3] {
+        match self {
+            Direction::Up => [Self::Down, Self::Left, Self::Right],
+            Direction::Down => [Self::Up, Self::Left, Self::Right],
+            Direction::Left => [Self::Up, Self::Down, Self::Right],
+            Direction::Right => [Self::Up, Self::Down, Self::Left],
+        }
+    }
+
+    fn sides(&self) -> [Self; 2] {
+        match self {
+            Direction::Up => [Self::Left, Self::Right],
+            Direction::Down => [Self::Left, Self::Right],
+            Direction::Left => [Self::Up, Self::Down],
+            Direction::Right => [Self::Up, Self::Down],
         }
     }
 }

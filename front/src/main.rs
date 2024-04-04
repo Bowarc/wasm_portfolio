@@ -19,6 +19,7 @@ pub enum Scene {
     GitRepos,
     WASMShowcase,
     Contact,
+    Void,
 }
 
 pub struct App {
@@ -74,7 +75,7 @@ impl Component for App {
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Contact ].iter().map(|scene|{
+                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Contact, Scene::Void ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
@@ -132,7 +133,7 @@ impl App {
             let circle_shader_program = render::setup_shader(&glctx, "circle");
             let glctx = glctx.clone();
             let update_fn = update_fn.clone();
-            let mut wormgrid = component::WormGrid::new(canvas_size, 2);
+            let mut wormgrid = component::WormGrid::new(canvas_size, 30);
             move || {
                 glctx.clear(
                     WebGlRenderingContext::COLOR_BUFFER_BIT
@@ -178,6 +179,7 @@ impl Scene{
             Scene::GitRepos => html!{<><scene::GitRepos /></>},
             Scene::WASMShowcase => html!{<><scene::WASM /></>},
             Scene::Contact => html!{<><scene::Contact /></>},
+            Scene::Void => html!{<></>}
         }
     }
 }
@@ -189,6 +191,7 @@ impl std::fmt::Display for Scene {
             Scene::GitRepos => write!(f, "Git repos"),
             Scene::WASMShowcase => write!(f, "Web assembly"),
             Scene::Contact => write!(f, "Contact"),
+            Scene::Void => write!(f, "Void"),
         }
     }
 }
