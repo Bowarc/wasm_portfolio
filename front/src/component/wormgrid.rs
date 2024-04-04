@@ -5,6 +5,10 @@ const WORM_SPEED: f64 = 370.;
 const WORM_ROTATION_TIMER_LOW: f64 = 0.5;
 const WORM_ROTATION_TIMER_HIGH: f64 = 3.;
 
+// Debug
+const DEBUG_DRAW_VISION_POINTS: bool = false;
+const DEBUG_DRAW_HEAD_POINTS: bool = false;
+
 pub struct WormGrid {
     size: maths::Vec2,
     worms: Vec<Worm>,
@@ -82,14 +86,24 @@ impl WormGrid {
 
                 jworm.tail.iter().any(|bit| {
                     let prediction_time_s = 0.5;
-                    maths::collision::rect_line(
-                        maths::Rect::new_from_center(bit.position, iworm.rect.size(), 0.),
-                        maths::Line::new_rotated(
-                            iworm.rect.center(),
-                            WORM_SPEED * prediction_time_s,
-                            iworm.direction.to_vec2().as_angle(),
-                        ),
-                    )
+
+                    // One eye at each side of it's head looking forward
+                    [90.0f64, -90.0f64].iter().any(|angle| {
+                        let angle = angle.to_radians();
+                        maths::collision::rect_line(
+                            maths::Rect::new_from_center(bit.position, iworm.rect.size(), 0.),
+                            maths::Line::new_rotated(
+                                maths::Point::new_rotated(
+                                    iworm.rect.center(),
+                                    iworm.rect.center()
+                                        + maths::Point::new(iworm.rect.width() / 2., 0.),
+                                    angle + iworm.direction.to_vec2().as_angle(),
+                                ),
+                                WORM_SPEED * prediction_time_s,
+                                iworm.direction.to_vec2().as_angle(),
+                            ),
+                        )
+                    })
                 })
             });
 
@@ -152,28 +166,30 @@ impl WormGrid {
             });
 
             // // Draw corner point
-            // [
-            //     worm.rect.aa_topleft(),
-            //     worm.rect.aa_topright(),
-            //     worm.rect.aa_botright(),
-            //     worm.rect.aa_botleft(),
-            // ]
-            // .iter()
-            // .for_each(|corner| {
-            //     crate::render::draw_circle(
-            //         &glctx,
-            //         &circle_shader_prog,
-            //         maths::Circle::new(*corner, worm.rect.width() / 4.),
-            //         crate::render::Color::from_rgba(
-            //             worm.color.r(),
-            //             worm.color.g(),
-            //             worm.color.b(),
-            //             255,
-            //         ),
-            //         false,
-            //         false,
-            //     )
-            // });
+            if DEBUG_DRAW_HEAD_POINTS {
+                [
+                    worm.rect.aa_topleft(),
+                    worm.rect.aa_topright(),
+                    worm.rect.aa_botright(),
+                    worm.rect.aa_botleft(),
+                ]
+                .iter()
+                .for_each(|corner| {
+                    crate::render::draw_circle(
+                        &glctx,
+                        &circle_shader_prog,
+                        maths::Circle::new(*corner, worm.rect.width() / 4.),
+                        crate::render::Color::from_rgba(
+                            worm.color.r(),
+                            worm.color.g(),
+                            worm.color.b(),
+                            255,
+                        ),
+                        false,
+                        false,
+                    )
+                });
+            }
 
             // Draw head
 
@@ -232,6 +248,40 @@ impl WormGrid {
                 true,
                 false,
             );
+
+            // Debug vision points
+            if DEBUG_DRAW_VISION_POINTS {
+                [90.0f64, -90.0f64].iter().for_each(|angle| {
+                    let angle = angle.to_radians();
+                    let line = maths::Line::new_rotated(
+                        maths::Point::new_rotated(
+                            worm.rect.center(),
+                            worm.rect.center() + maths::Point::new(worm.rect.width() / 2., 0.),
+                            angle + worm.direction.to_vec2().as_angle(),
+                        ),
+                        WORM_SPEED * 0.5,
+                        worm.direction.to_vec2().as_angle(),
+                    );
+
+                    let size = 10.;
+                    crate::render::draw_circle(
+                        glctx,
+                        circle_shader_prog,
+                        maths::Circle::new(line.0, size),
+                        crate::render::Color::WHITE,
+                        false,
+                        false,
+                    );
+                    crate::render::draw_circle(
+                        glctx,
+                        circle_shader_prog,
+                        maths::Circle::new(line.1, size),
+                        crate::render::Color::WHITE,
+                        false,
+                        false,
+                    );
+                });
+            }
         }
 
         // crate::render::draw_circle(
