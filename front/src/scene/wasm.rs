@@ -26,7 +26,7 @@ impl yew::Component for WASM {
         };
 
         create_script("./lib/prism/prism.min.js","prism");
-        create_script("./lib/prism/prism-autoloader.min.js","prism-autoloader");
+        create_script("./lib/prism/prism-rust.min.js","prism-rust");
 
         false
     }
@@ -43,7 +43,7 @@ impl yew::Component for WASM {
             };
 
             remove_script("prism");
-            remove_script("prism-autoloader");
+            remove_script("prism-rust");
 
             // gloo_timers::future::TimeoutFuture::new(100).await;
         });

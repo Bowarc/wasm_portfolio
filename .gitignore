@@ -1,6 +1,5 @@
-/target
-/log/*
+/front/out
 /static/*.js
 /static/*.wasm
-*/**/*.wasm
-*/**/*.js
+/target
+/log/*
