@@ -1,3 +1,4 @@
+use futures::io::Read;
 use gloo::console::log;
 
 const WORM_SPEED: f64 = 370.;
@@ -70,23 +71,65 @@ impl WormGrid {
         self.last_update = wasm_timer::Instant::now();
         // log!(dt);
 
-        for worm in self.worms.iter_mut() {
+        for i in 0..self.worms.len() {
+            let mut collide = false;
+            for j in 0..self.worms.len() {
+                if i == j {
+                    continue;
+                }
+                let iworm = self.worms.get(i).unwrap();
+                let jworm = self.worms.get(j).unwrap();
+
+                let c = jworm.tail.iter().any(|bit| {
+                    maths::collision::rect_rect(
+                        iworm.rect,
+                        maths::Rect::new_from_center(bit.position, iworm.rect.size(), 0.),
+                    )
+                });
+                if c {
+                    collide = true;
+                    break;
+                }
+            }
+
+            let worm = self.worms.get_mut(i).unwrap();
+            if collide {
+                worm.direction = random::pick(&[
+                    Direction::Up,
+                    Direction::Down,
+                    Direction::Left,
+                    Direction::Right,
+                ]);
+            }
+
             worm.step(dt);
-            if worm.rect.center().x < -window_size.x {
-                worm.rect
-                    .set_center(maths::Vec2::new(window_size.x, worm.rect.center().y));
-            }
-            if worm.rect.center().x > window_size.x {
-                worm.rect
-                    .set_center(maths::Vec2::new(-window_size.x, worm.rect.center().y));
-            }
-            if worm.rect.center().y < -window_size.y {
-                worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, window_size.y));
-            }
-            if worm.rect.center().y > window_size.y {
-                worm.rect
-                    .set_center(maths::Vec2::new(worm.rect.center().x, -window_size.y));
+
+            let out_bounds = worm.rect.center().x < -window_size.x
+                || worm.rect.center().x > window_size.x
+                || worm.rect.center().y < -window_size.y
+                || worm.rect.center().y > window_size.y;
+            if out_bounds {
+                worm.direction = if worm.rect.center().x < -window_size.x {
+                    Direction::Right
+                } else if worm.rect.center().x > window_size.x {
+                    Direction::Left
+                } else if worm.rect.center().y < -window_size.y {
+                    Direction::Down
+                } else if worm.rect.center().y > window_size.y {
+                    Direction::Up
+                } else {
+                    log!(format!("[ERROR] Could not infer new direction for out of bounds worm with dir: {:?}", worm.direction));
+                    random::pick(&[
+                        Direction::Up,
+                        Direction::Down,
+                        Direction::Left,
+                        Direction::Right,
+                    ])
+                };
+
+                worm.rect.set_center(worm.rect.center() +worm.direction.to_vec2() * window_size.x * 0.01);
+
+
             }
             worm.update_queue(dt);
         }
@@ -248,18 +291,44 @@ impl Worm {
     pub fn update_queue(&mut self, dt: f64) {
         self.tail_spawn_delay.update(dt);
 
-        self.tail.iter_mut().for_each(|bit| bit.lifetime.update(dt));
+        let positions = self
+            .tail
+            .iter()
+            .map(|tailbit| tailbit.position)
+            .collect::<Vec<maths::Point>>();
+        self.tail.iter_mut().enumerate().for_each(|(i, bit)| {
+            let previous_pos = if i == 0 {
+                self.rect.center()
+            } else {
+                *positions.get(i - 1).unwrap()
+            };
 
-        // const TAIL_MAX_LEN: usize = 4;
+            if maths::get_distance(bit.position, previous_pos)
+                < self.rect.size().x - WORM_SPEED * dt
+            {
+                return;
+            }
 
-        if self.tail.is_empty() {
-            self.tail.push_front(WormTailBit::new(self.rect.center()));
-            return;
-        }
+            let direction = maths::point::two_points_angle(bit.position, previous_pos);
 
-        if self.tail_spawn_delay.ended() {
+            bit.position += maths::Point::from_angle(direction)
+                * maths::Vec2::new(WORM_SPEED * dt, WORM_SPEED * dt);
+
+            // bit.lifetime.update(dt)
+        });
+
+        const TAIL_MAX_LEN: usize = 4;
+
+        if self.tail.is_empty() || self.tail.len() < TAIL_MAX_LEN && self.tail_spawn_delay.ended() {
             self.tail_spawn_delay.restart();
-            self.tail.push_front(WormTailBit::new(self.rect.center()));
+            self.tail.push_front(WormTailBit::new(
+                if self.tail.len() == 0 {
+                    self.rect.center()
+                } else {
+                    *positions.get(self.tail.len() - 1).unwrap()
+                } + maths::Vec2::new(0., self.rect.width()),
+            ));
+            return;
         }
 
         while self.tail.back().unwrap().lifetime.ended() {
@@ -276,6 +345,14 @@ impl Direction {
             Direction::Down => Vec2::new(0., 1.),
             Direction::Left => Vec2::new(-1., 0.),
             Direction::Right => Vec2::new(1., 0.),
+        }
+    }
+    fn fliped(&self) -> Self {
+        match self {
+            Direction::Up => Direction::Down,
+            Direction::Down => Direction::Up,
+            Direction::Left => Direction::Right,
+            Direction::Right => Direction::Left,
         }
     }
 }

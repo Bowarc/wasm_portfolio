@@ -112,11 +112,14 @@ footer {
   background: yellow;
 }
 
-
 #wasm_view{
   margin-left: 3%;
+  margin-right: 3%;
   text-align: left;
 }
-
+li{
+  
+  list-style: none;
+}
 
 
