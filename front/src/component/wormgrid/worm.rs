@@ -4,8 +4,11 @@ pub const SPEED: f64 = 370.;
 pub const ROTATION_TIMER_LOW: f64 = 0.5;
 pub const ROTATION_TIMER_HIGH: f64 = 3.;
 
+static mut CurrentId: u16 = 0;
+
 #[derive(Clone)]
 pub struct Worm {
+    id: u16,
     rect: maths::Rect,
     color: crate::render::Color,
     head_color: crate::render::Color,
@@ -32,6 +35,10 @@ pub enum Direction {
 impl Worm {
     pub fn new(rect: maths::Rect, color: crate::render::Color) -> Self {
         Self {
+            id: unsafe {
+                CurrentId += 1;
+                CurrentId - 1
+            },
             rect,
             color,
             head_color: crate::render::Color::random_rgb(),
@@ -43,6 +50,10 @@ impl Worm {
             tail: std::collections::VecDeque::<WormTailBit>::new(),
             tail_spawn_delay: time::DTDelay::new(rect.size().x / SPEED),
         }
+    }
+    
+    pub fn id(&self) -> u16{
+        self.id
     }
 
     pub fn step(&mut self, dt: f64) {
@@ -110,14 +121,14 @@ impl Worm {
     }
 
     #[inline]
-    pub fn color(&self) -> crate::render::Color{
+    pub fn color(&self) -> crate::render::Color {
         self.color
     }
 
     #[inline]
-    pub fn head_color(&self) -> crate::render::Color{
+    pub fn head_color(&self) -> crate::render::Color {
         self.head_color
-    } 
+    }
 
     #[inline]
     pub fn position(&self) -> maths::Point {
@@ -130,12 +141,12 @@ impl Worm {
     }
 
     #[inline]
-    pub fn rotation_timer(&self) -> &time::DTDelay{
+    pub fn rotation_timer(&self) -> &time::DTDelay {
         &self.rotation_timer
     }
 
     #[inline]
-    pub fn rotation_timer_mut(&mut self) -> &mut time::DTDelay{
+    pub fn rotation_timer_mut(&mut self) -> &mut time::DTDelay {
         &mut self.rotation_timer
     }
 
@@ -172,7 +183,7 @@ impl WormTailBit {
         self.position
     }
 
-    pub fn lifetime(&self) -> &time::DTDelay{
+    pub fn lifetime(&self) -> &time::DTDelay {
         &self.lifetime
     }
 
@@ -204,7 +215,7 @@ impl Direction {
     //         Direction::Right => Direction::Left,
     //     }
     // }
-    
+
     // fn others(&self) -> [Self; 3] {
     //     match self {
     //         Direction::Up => [Self::Down, Self::Left, Self::Right],

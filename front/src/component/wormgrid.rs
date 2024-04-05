@@ -139,10 +139,12 @@ impl WormGrid {
                 worm::Direction::Down,
                 worm::Direction::Left,
                 worm::Direction::Right,
-            ].iter().any(|direction|{
+            ]
+            .iter()
+            .any(|direction| {
                 let prediction_time_s = 0.1;
 
-                let border= match direction {
+                let border = match direction {
                     worm::Direction::Up => maths::Line::new(
                         maths::Point::new(-self.size.x, self.size.y),
                         maths::Point::new(self.size.x, self.size.y),
@@ -153,10 +155,10 @@ impl WormGrid {
                     ),
                     worm::Direction::Left => maths::Line::new(
                         maths::Point::new(self.size.x, -self.size.y),
-                        maths::Point::new(-self.size.x, -self.size.y ),
+                        maths::Point::new(-self.size.x, -self.size.y),
                     ),
                     worm::Direction::Right => maths::Line::new(
-                        maths::Point::new(-self.size.x, -self.size.y ),
+                        maths::Point::new(-self.size.x, -self.size.y),
                         maths::Point::new(-self.size.x, self.size.y),
                     ),
                 };
@@ -168,7 +170,7 @@ impl WormGrid {
                 );
 
                 maths::collision::line_line(border, los)
-            }){
+            }) {
                 worm.set_direction(random::pick(&worm.direction().sides()));
                 worm.rotation_timer_mut().restart()
             }
@@ -181,7 +183,14 @@ impl WormGrid {
                 || worm.position().y < -window_size.y
                 || worm.position().y > window_size.y
             {
-                worm.set_position(maths::Point::ZERO)
+                worm.set_position(maths::Point::ZERO);
+                worm.tail_mut()
+                    .iter_mut()
+                    .for_each(|bit| bit.set_position(maths::Point::ZERO));
+                log!(format!(
+                    "Worm ({}) has exited the window and has been corrected",
+                    worm.id()
+                ));
             }
 
             worm.step(dt);
