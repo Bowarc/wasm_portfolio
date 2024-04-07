@@ -45,7 +45,7 @@ impl yew::Component for WASM {
             remove_script("prism");
             remove_script("prism-rust");
 
-            // gloo_timers::future::TimeoutFuture::new(100).await;
+            gloo_timers::future::TimeoutFuture::new(100).await;
         }); // Implicit () which is the message type of this component
     }
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
