@@ -4,7 +4,7 @@ pub const SPEED: f64 = 370.;
 pub const ROTATION_TIMER_LOW: f64 = 0.5;
 pub const ROTATION_TIMER_HIGH: f64 = 3.;
 
-static mut CurrentId: u16 = 0;
+static mut CURRENT_ID: u16 = 0;
 
 #[derive(Clone)]
 pub struct Worm {
@@ -36,8 +36,8 @@ impl Worm {
     pub fn new(rect: maths::Rect, color: crate::render::Color) -> Self {
         Self {
             id: unsafe {
-                CurrentId += 1;
-                CurrentId - 1
+                CURRENT_ID += 1;
+                CURRENT_ID - 1
             },
             rect,
             color,
@@ -140,10 +140,10 @@ impl Worm {
         self.direction.clone()
     }
 
-    #[inline]
-    pub fn rotation_timer(&self) -> &time::DTDelay {
-        &self.rotation_timer
-    }
+    // #[inline]
+    // pub fn rotation_timer(&self) -> &time::DTDelay {
+    //     &self.rotation_timer
+    // }
 
     #[inline]
     pub fn rotation_timer_mut(&mut self) -> &mut time::DTDelay {

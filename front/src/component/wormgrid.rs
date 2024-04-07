@@ -45,46 +45,6 @@ impl WormGrid {
         }
     }
 
-    fn update_collision(&mut self) {
-        for i in 0..self.worms.len() {
-            let iworm = self.worms.get(i).unwrap();
-            let collide = self.worms.iter().enumerate().any(|(j, jworm)| {
-                if i == j {
-                    return false;
-                }
-
-                jworm.tail().iter().any(|bit: &worm::WormTailBit| {
-                    let prediction_time_s = 0.5;
-
-                    // One eye at each side of it's head looking forward
-                    [90.0f64, -90.0f64].iter().any(|angle| {
-                        let angle = angle.to_radians();
-                        maths::collision::rect_line(
-                            maths::Rect::new_from_center(bit.position(), iworm.size(), 0.),
-                            maths::Line::new_rotated(
-                                maths::Point::new_rotated(
-                                    iworm.position(),
-                                    iworm.position() + maths::Point::new(iworm.size().x / 2., 0.),
-                                    angle + iworm.direction().to_vec2().as_angle(),
-                                ),
-                                SPEED * prediction_time_s,
-                                iworm.direction().to_vec2().as_angle(),
-                            ),
-                        )
-                    })
-                })
-            });
-
-            let worm = self.worms.get_mut(i).unwrap();
-
-            if collide {
-                worm.set_direction(random::pick(&worm.direction().sides()));
-                worm.rotation_timer_mut().restart();
-                // worm.step(dt)
-            }
-        }
-    }
-
     pub fn update(&mut self, window_size: maths::Vec2) {
         self.size = window_size;
         let dt = self.last_update.elapsed().as_secs_f64();
@@ -135,33 +95,30 @@ impl WormGrid {
             let worm = self.worms.get_mut(i).unwrap();
 
             if [
-                worm::Direction::Up,
-                worm::Direction::Down,
-                worm::Direction::Left,
-                worm::Direction::Right,
+                // worm::Direction::Up,
+                maths::Line::new(
+                    maths::Point::new(-self.size.x, self.size.y),
+                    maths::Point::new(self.size.x, self.size.y),
+                ),
+                // worm::Direction::Down,
+                maths::Line::new(
+                    maths::Point::new(self.size.x, self.size.y),
+                    maths::Point::new(self.size.x, -self.size.y),
+                ),
+                // worm::Direction::Left,
+                maths::Line::new(
+                    maths::Point::new(self.size.x, -self.size.y),
+                    maths::Point::new(-self.size.x, -self.size.y),
+                ),
+                // worm::Direction::Right,
+                maths::Line::new(
+                    maths::Point::new(-self.size.x, -self.size.y),
+                    maths::Point::new(-self.size.x, self.size.y),
+                ),
             ]
-            .iter()
-            .any(|direction| {
-                let prediction_time_s = 0.1;
-
-                let border = match direction {
-                    worm::Direction::Up => maths::Line::new(
-                        maths::Point::new(-self.size.x, self.size.y),
-                        maths::Point::new(self.size.x, self.size.y),
-                    ),
-                    worm::Direction::Down => maths::Line::new(
-                        maths::Point::new(self.size.x, self.size.y),
-                        maths::Point::new(self.size.x, -self.size.y),
-                    ),
-                    worm::Direction::Left => maths::Line::new(
-                        maths::Point::new(self.size.x, -self.size.y),
-                        maths::Point::new(-self.size.x, -self.size.y),
-                    ),
-                    worm::Direction::Right => maths::Line::new(
-                        maths::Point::new(-self.size.x, -self.size.y),
-                        maths::Point::new(-self.size.x, self.size.y),
-                    ),
-                };
+            .into_iter()
+            .any(|border| {
+                let prediction_time_s = 0.2;
 
                 let los = maths::Line::new_rotated(
                     worm.position(),
