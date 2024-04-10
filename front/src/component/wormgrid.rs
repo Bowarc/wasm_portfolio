@@ -15,7 +15,9 @@ pub struct WormGrid {
 }
 
 impl WormGrid {
-    pub fn new(canvas_size: maths::Vec2, count: u16) -> Self {
+    pub fn new(canvas_size: maths::Vec2) -> Self {
+        let count = ((canvas_size.x + canvas_size.y /2.) *0.015) as u16;
+
         log!(format!(
             "Initializing wormgrid with {count} worms on a canvas of size: {canvas_size}"
         ));
