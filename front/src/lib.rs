@@ -133,7 +133,7 @@ impl App {
             let circle_shader_program = render::setup_shader(&glctx, "circle");
             let glctx = glctx.clone();
             let update_fn = update_fn.clone();
-            let mut wormgrid = component::WormGrid::new(canvas_size, 30);
+            let mut wormgrid = component::WormGrid::new(canvas_size);
             move || {
                 glctx.clear(
                     WebGlRenderingContext::COLOR_BUFFER_BIT
