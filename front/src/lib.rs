@@ -187,7 +187,7 @@ impl Scene{
 impl std::fmt::Display for Scene {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Scene::Home => write!(f, "Home menu"),
+            Scene::Home => write!(f, "Home"),
             Scene::GitRepos => write!(f, "Git repos"),
             Scene::WASMShowcase => write!(f, "Web assembly"),
             Scene::Contact => write!(f, "Contact"),

@@ -1,7 +1,7 @@
 code[class*=language-], pre[class*=language-] {
     color: #fff!important;
     background: 0 0;
-    text-shadow: none!important;
+    text-shadow: none !important;
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -41,7 +41,7 @@ pre[class*=language-]::selection, pre[class*=language-]::selection {
 
 .language-css .token.string, .style .token.string, 
 .token.entity, .token.operator, .token.url {
-    background: rgba(255, 255, 255, .5)
+    background: rg  ba(255, 255, 255, .5)
 }
 
 .token.class-name, .token.function {
@@ -49,9 +49,10 @@ pre[class*=language-]::selection, pre[class*=language-]::selection {
 }
 
 pre[class*=language-] {
-    background-color: color-mix(in srgb, var(--background-50), transparent 15%)!important;
-    backdrop-filter: blur(5px);
-    border: .3em solid red;
+/*    background-color: color-mix(in srgb, var(--background-50), transparent 15%)!important;*/
+/*    background-color: transparent;*/
+/*    backdrop-filter: blur(5px);*/
+/*    border: .3em solid var(--secondary-600);*/
     border-radius: .5em
 }
 
@@ -74,7 +75,7 @@ pre[class*=language-] {
 :not(pre)>code[class*=language-] {
     padding: .15em .2em .05em;
     border-radius: .3em;
-    border: .13em solid #7a6652;
+/*    border: .13em solid #7a6652;*/
     white-space: normal
 }
 

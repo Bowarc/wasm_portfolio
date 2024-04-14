@@ -1,4 +1,5 @@
 /front/out
+/front/pkg
 /static/*.js
 /static/*.wasm
 /target
