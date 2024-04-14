@@ -34,7 +34,9 @@ impl yew::Component for Home {
                     <a href="https://webassembly.org/" class="link">{"WebAssembly"}</a>
                     {", ce qui me permet de créer des expériences utilisateur riches et réactives."}
                 </p>
-                <p>{"J'ai eu l'occasion de travailler sur divers projets, dont [insérer exemple notable ou quantifiable ici], démontrant ma capacité à livrer des solutions de haute qualité dans des environnements variés."}</p>
+                <p>{"J'ai eu l'occasion de travailler sur divers projets, dont" }
+                <a href="https://github.com/Bowarc/chess_game" class="link">{" un jeu d'échec en multijoueur, "}</a>
+                { "démontrant ma capacité à livrer des solutions de haute qualité dans des environnements variés."}</p>
                 <p>{"Je suis passionné par l'innovation technologique et je m'efforce constamment d'approfondir mes compétences pour relever de nouveaux défis."}</p>
             </p>
         </>}
