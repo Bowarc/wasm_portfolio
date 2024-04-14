@@ -5,27 +5,57 @@
   text-align: left;
 }
 
-#wasm_view, li{
-  list-style: none;
-}
-
-.frame{
-  --side-margin: 5%;
+.wasm_frame{
+/*  --wasm-frame-side-margin: 5%;*/
   background-color: var(--text-background-color);
   border: 2px solid var(--secondary-600);
   border-radius: 7px;
-  margin-left: var(--side-margin);
-  margin-right: var(--side-margin);
+  margin-left: var(--wasm-frame-side-margin);
+  margin-right: var(--wasm-frame-side-margin);
   padding: 2%;
-  margin-bottom: 2%;
+  margin-bottom: 3vh;
+}
+@media {
+  .wasm_frame{
+    --wasm-frame-side-margin: 25%;
+  }
+}
+@media (width <= 1450px) {
+  .wasm_frame{
+    --wasm-frame-side-margin: 20%;
+  }
+}
+@media (width <= 1150px) {
+  .wasm_frame{
+    --wasm-frame-side-margin: 10%;
+  }
+}
+@media (width <= 800px) {
+  .wasm_frame{
+    --wasm-frame-side-margin: 5%;
+  }
+}
+@media (width <= 600px) {
+  .wasm_frame{
+    --wasm-frame-side-margin: 1%;
+  }
+
+  .wasm_title{
+    font-size: 1.2em !important;
+  }
+
+  .wasm_content{
+    font-size: 0.8em !important;
+  }
 }
 
+
 /* This removes weird black background */
-.frame * {
+.wasm_frame * {
   background-color: transparent;
 }
 
-.frame .title{
+.wasm_title{
   text-align: center;
   font-size: 2em;
   color: var(--secondary-500);
@@ -33,20 +63,22 @@
   line-height: 110%;
 }
 
-.frame .content{
+.wasm_content{
   color: var(--text-500);
   line-height: 150%;
   font-size: 0.9em;
 }
 
 /* Multiple frames encapsulated */
-.frame .frame{
-  --side-margin: 0%; /* Holy shit it works */
+.wasm_frame .wasm_frame{
+  --wasm-frame-side-margin: 0%; /* Holy shit it works */
   border: none;
+  margin-bottom: 0px;
+
 }
 
 /* Title of an encapsulated frame */
-.frame .frame .title {
+.wasm_frame .wasm_frame .wasm_title {
   background-color: transparent !important;
   text-align: left;
   font-size: 150%;
@@ -54,34 +86,44 @@
 }
 
 /* Content that contains frame */
-.frame .content:has(>.frame){
+.wasm_content:has(>.wasm_frame){
   display:flex; 
   justify-content: center;
 }
 
 /* Content that contains a list */
-.frame .content:has(>ul){
+.wasm_content:has(>ul){
 /*  border: 1px solid red;*/
 }
 
 /* List inside a content */
-.frame .content ul {
-/*  border: 1px solid green;*/
-
+.wasm_content ul {
+  list-style: none;
+  padding-left: 0px;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
 }
 
-.numbered-square {
-  color: var(--text-900) !important;
-  display: inline-block;
-  width: 24px; /* Adjust width and height as needed */
-  height: 24px;
-  background-color: rgb(67, 35, 58); /* Background color of the square */
-  text-align: center;
-  line-height: 24px; /* Center the text vertically */
-  border-radius: 4px; /* Rounded corners */
-  margin-right: 8px; /* Space between the number and the content */
-  border: 1px solid color-mix(in srgb, white, transparent 70%) !important;
+/* Frames that are in a list */
+ul .wasm_frame{
+/*  border: 1px solid green;*/
+}
+
+/* Content tables */
+.wasm_content table th{
+  font-size: 1.1em;
+  vertical-align: top;
+}
+
+.wasm_content table td{
+  padding-left: 20px;
+}
+/* top border on first child */
+.wasm_content tr:first-child th,  .wasm_content tr:first-child td{
+  border-top: 1px solid var(--secondary-600);
+}
+/* bottom borders */
+.wasm_content td, .wasm_content th {
+  border-bottom: 1px solid var(--secondary-600);
 }

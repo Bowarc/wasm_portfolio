@@ -27,6 +27,7 @@ pre[class*="language-"] {
 	-moz-hyphens: none;
 	-ms-hyphens: none;
 	hyphens: none;
+	background-color: transparent !important;
 }
 
 pre[class*="language-"]::-moz-selection,
@@ -43,16 +44,20 @@ code[class*="language-"]::selection,
 code[class*="language-"] ::selection {
 	color: #fbf1c7; /* fg0 */
 	background: #7c6f64; /* bg4 */
+
 }
 
 /* Code blocks */
 pre[class*="language-"] {
-	padding: 1em;
+/*	padding: 1em;*/
 	margin: 0.5em 0;
 	overflow: auto;
-    background-color: color-mix(in srgb, var(--background-50), transparent 15%)!important;
-    backdrop-filter: blur(5px);
-    border: .3em solid var(--background-300);
+/*    background-color: color-mix(in srgb, var(--background-50), transparent 15%)!important;*/
+    background-color: transparent;
+
+/*    backdrop-filter: blur(5px);*/
+/*    border: .1em solid var(--secondary-600);*/
+/*	border: none !important;*/
     border-radius: .5em
 }
 
