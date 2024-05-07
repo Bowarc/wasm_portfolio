@@ -3,6 +3,7 @@
   margin-left: 3%;
   margin-right: 3%;
   text-align: left;
+  font-size: 120%;
 }
 
 .wasm_frame{
@@ -115,12 +116,14 @@ ul .wasm_frame{
 /* Content tables */
 .wasm_content table th{
   font-size: 1.1em;
-  vertical-align: top;
+/*  vertical-align: center;*/
+  line-height: 150%;
 }
 
 .wasm_content table td{
   padding-left: 20px;
 }
+
 /* top border on first child */
 .wasm_content tr:first-child th,  .wasm_content tr:first-child td{
   border-top: 1px solid var(--secondary-600);
