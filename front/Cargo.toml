@@ -14,7 +14,6 @@ name = "front_lib"
 path = "src/lib.rs"
 crate-type = ["cdylib", "rlib"]
 
-
 [dependencies]
 random = {git = "https://github.com/bowarc/Crates", package = "random"}
 time = {git = "https://github.com/bowarc/Crates", package = "time"}
@@ -30,7 +29,6 @@ serde = { version = "1.0.194", features = ["derive"] }
 futures = "0.3.30"
 gloo-timers = { version = "0.3.0", features = ["futures"] }
 # wasm-bindgen-futures = "0.4.39"
-# shared = { path = "../shared"}
 # serde_json = "1.0.111"
 # gloo-utils = { version = "0.1", features = ["serde"] }
 # mem = { git = "https://github.com/bowarc/Crates" , package = "mem"}
