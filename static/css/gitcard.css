@@ -26,7 +26,9 @@
 .card_link {
   display: block;
   padding: 3% 2%;
-  background-color: var(--background-50);
+  background-color: var(--text-background-color);
+  backdrop-filter: blur(var(--blur-size));
+  -webkit-backdrop-filter: blur(var(--blur-size));
 /*  background-color: ;*/
   overflow: hidden;
   position: relative;
