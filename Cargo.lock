@@ -108,7 +108,6 @@ dependencies = [
  "log",
  "logger",
  "rocket",
- "shared",
 ]
 
 [[package]]
@@ -1795,10 +1794,6 @@ checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static",
 ]
-
-[[package]]
-name = "shared"
-version = "0.1.0"
 
 [[package]]
 name = "signal-hook-registry"
