@@ -6,5 +6,5 @@ mod wasm;
 pub use wasm::WASM;
 mod home;
 pub use home::Home;
-mod storage_server;
-pub use storage_server::StorageServer;
+mod internships;
+pub use internships::Internships;
