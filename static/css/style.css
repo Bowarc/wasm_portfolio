@@ -68,7 +68,7 @@ body{
 }
 
 a {
-  color: var(--text-700);
+  color: var(--accent-500);
   text-decoration: None;
 }
 
