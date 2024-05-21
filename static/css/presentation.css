@@ -61,7 +61,7 @@
 
 .presentation_title{
   text-align: center;
-  font-size: 2em;
+  font-size: 2.5em;
   color: var(--secondary-500);
   margin-bottom: 2%;
   line-height: 110%;
@@ -70,7 +70,7 @@
 .presentation_content{
   color: var(--text-500);
   line-height: 150%;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 /* Multiple frames encapsulated */
