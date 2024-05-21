@@ -75,27 +75,21 @@ impl yew::Component for Internships {
                             </div>
                         </div></li>
                         <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Title" }</div>
+                            <div class="presentation_title">{ "Blackjack" }</div>
                             <div class="presentation_content">{
-                                "Wasm peut être déployé sur des appareils IoT et des systèmes embarqués grâce à sa faible empreinte mémoire."
+                                ""
                             }</div>
                         </div></li>
                         <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Optimisation des performances" }</div>
+                            <div class="presentation_title">{ "Centrale inertielle + flightgear" }</div>
                             <div class="presentation_content">{
-                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
+                                ""
                             }</div>
                         </div></li>
                         <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Optimisation des performances" }</div>
+                            <div class="presentation_title">{ "Scanneur à addresse mémoire" }</div>
                             <div class="presentation_content">{
-                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
-                            }</div>
-                        </div></li>
-                        <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Optimisation des performances" }</div>
-                            <div class="presentation_content">{
-                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
+                                ""
                             }</div>
                         </div></li>
                     </ul>
