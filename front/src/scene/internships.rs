@@ -8,87 +8,109 @@ pub enum Message {
 }
 
 impl yew::Component for Internships {
-    type Message = Message;
+    type Message = ();
 
     type Properties = ();
 
     fn create(ctx: &yew::prelude::Context<Self>) -> Self {
-        ctx.link().send_message(Message::Pop);
+        // ctx.link().send_message(Message::Pop);
         Self
     }
 
     fn update(&mut self, ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
-        use wasm_bindgen::JsCast as _;
+        log!("updated internship zoom");
+        // use wasm_bindgen::JsCast as _;
 
-        match msg {
-            Message::Pop => {
-                log!("pop");
-                ctx.link().send_future(async {
-                    gloo_timers::future::TimeoutFuture::new(5000).await;
-                    Self::Message::Pop
-                }); 
-                return false;
-            }
-        }
+        // match msg {
+        //     Message::Pop => {
+        //         log!("pop");
+        //         ctx.link().send_future(async {
+        //             gloo_timers::future::TimeoutFuture::new(5000).await;
+        //             Self::Message::Pop
+        //         });
+        //         false
+        //     }
+        // }
+        false
+    }
 
-        true
+    fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, _first_render: bool) {
+        ctx.link().send_future(async {
+            disable_zoom();
+
+            gloo_timers::future::TimeoutFuture::new(100).await;
+
+            enable_zoom();
+        }); // Implicit () which is the message type of this component
     }
 
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
         html! {<>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Réalisation d'un portfolio" }</div>
-                <p class="wasm_content">{
-                    "Réalisation d'un portfolio de présentation en HTML / CSS / JS puis en Next.js 14 pour apprendre les fondamentaux. Déploiement de ce portfolio sur https://stage.asf-web.fr/hugo/ et bowarc.ovh."
-                }</p>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Observation des performances" }</div>
-                <p class="wasm_content">{
-                    "Observation des performances avec Google Lighthouse, retour sur les fichiers du portfolio pour améliorer le SEO et les bonnes pratiques."
-                }</p>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Conception et réalisation d'un serveur de stockage" }</div>
-                <div class="wasm_content">
-                    <div class="wasm_frame">
-                        <div class="wasm_title">{ "Backend en Rust" }</div>
-                        <p class="wasm_content">{
-                            "Conception et réalisation d'un serveur de stockage en Rust avec une API JSON et un encodage base64 pour les fichiers, compression Brotli pour le stockage."
-                        }</p>
-                    </div>
-                    <div class="wasm_frame">
-                        <div class="wasm_title">{ "Frontend en WASM" }</div>
-                        <p class="wasm_content">{
-                            "Développement de la partie front-end en WebAssembly."
-                        }</p>
-                    </div>
+            <div class="presentation_frame">
+                <div class="presentation_title">{ "Projets de l'année 2023-2024" }</div>
+                <div class="presentation_content">
+                    <ul>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Jeu d'échec en multijoueur." }</div>
+                            <div class="presentation_content">
+                                { "Un jeu d'échec en multijoueur codé en Rust" }
+                                // <div class="zoomable_element" style="background-image: url('/resources/storage_server.drawio200px.png');"></div>
+                            </div>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Réalisation d'un portfolio basique" }</div>
+                            <p class="presentation_content">
+                                { "Réalisation d'un portfolio de présentation en HTML / CSS / JS puis en Next.js 14 pour apprendre les fondamentaux. " }
+                                { "Déploiement de ce portfolio sur " } 
+                                <a href="https://stage.asf-web.fr/hugo/" class="link">{ "https://stage.asf-web.fr/hugo/"} </a>
+                                { " et " }
+                                <a href="https://bowarc.ovh/old" class="link">{ "https://bowarc.ovh/old." }</a>
+                            </p>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Serveur de stockage et de compression" }</div>
+                            <div class="presentation_content">
+                                { "Serveur de stockage et de compression avec une api en JSON" }
+                                // <div class="zoomable_element" style="background-image: url('/resources/storage_server.drawio200px.png');"></div>
+                            </div>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Title" }</div>
+                            <div class="presentation_content">{
+                                "Wasm peut être déployé sur des appareils IoT et des systèmes embarqués grâce à sa faible empreinte mémoire."
+                            }</div>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Optimisation des performances" }</div>
+                            <div class="presentation_content">{
+                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
+                            }</div>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Optimisation des performances" }</div>
+                            <div class="presentation_content">{
+                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
+                            }</div>
+                        </div></li>
+                        <li><div class="presentation_frame">
+                            <div class="presentation_title">{ "Optimisation des performances" }</div>
+                            <div class="presentation_content">{
+                                "Wasm permet d'accélérer les parties critiques d'une application web, améliorant ainsi l'expérience utilisateur."
+                            }</div>
+                        </div></li>
+                    </ul>
                 </div>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Résolution de problèmes de CORS" }</div>
-                <p class="wasm_content">{
-                    "Résolution de problèmes de CORS."
-                }</p>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Documentation et gestion des erreurs" }</div>
-                <p class="wasm_content">{
-                    "Documentation avec exemples, logging et gestion des potentielles erreurs."
-                }</p>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Publication et versionning" }</div>
-                <p class="wasm_content">{
-                    "Publication et versionning à l'aide de git / GitHub."
-                }</p>
-            </div>
-            <div class="wasm_frame">
-                <div class="wasm_title">{ "Installation et configuration d'un VPS Linux Debian" }</div>
-                <p class="wasm_content">{
-                    "Installation et configuration d'un VPS Linux Debian."
-                }</p>
             </div>
         </>}
     }
+}
+
+fn disable_zoom() {
+    use crate::utils::remove_script;
+    remove_script("zoom");
+}
+
+fn enable_zoom() {
+    use crate::utils::add_script;
+    add_script("./lib/zoom/zoom.js", "zoom");
 }
