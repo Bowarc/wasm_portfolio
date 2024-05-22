@@ -146,10 +146,10 @@ impl WormGrid {
                 worm.tail_mut()
                     .iter_mut()
                     .for_each(|bit| bit.set_position(maths::Point::ZERO));
-                log!(format!(
-                    "Worm ({}) has exited the window and has been corrected",
-                    worm.id()
-                ));
+                // log!(format!(
+                //     "Worm ({}) has exited the window and has been corrected",
+                //     worm.id()
+                // ));
             }
 
             worm.step(dt);
