@@ -1,13 +1,13 @@
 use gloo::console::log;
 use yew::html;
 
-pub struct Internships;
+pub struct Projects;
 
 pub enum Message {
     Pop,
 }
 
-impl yew::Component for Internships {
+impl yew::Component for Projects {
     type Message = ();
 
     type Properties = ();
@@ -53,7 +53,7 @@ impl yew::Component for Internships {
                         <li><div class="presentation_frame">
                             <div class="presentation_title">{ "Jeu d'échec en multijoueur." }</div>
                             <div class="presentation_content">
-                                { "Un jeu d'échec en multijoueur codé en Rust" }
+                                { "Un jeu d'échec en multijoueur en Rust dans le cadre d'un project personnel" }
                                 // <div class="zoomable_element" style="background-image: url('/resources/storage_server.drawio200px.png');"></div>
                             </div>
                         </div></li>
@@ -77,19 +77,19 @@ impl yew::Component for Internships {
                         <li><div class="presentation_frame">
                             <div class="presentation_title">{ "Blackjack" }</div>
                             <div class="presentation_content">{
-                                ""
+                                "Jeu de blackjack en javascript"
                             }</div>
                         </div></li>
                         <li><div class="presentation_frame">
                             <div class="presentation_title">{ "Centrale inertielle + flightgear" }</div>
                             <div class="presentation_content">{
-                                ""
+                                "Projet de stage consistant à assembler des composants arduino pour constuire une centrale inertielle, lire ses données avec python et les injecter dans le logiciel de simulation de vol FlightGear"
                             }</div>
                         </div></li>
                         <li><div class="presentation_frame">
                             <div class="presentation_title">{ "Scanneur à addresse mémoire" }</div>
                             <div class="presentation_content">{
-                                ""
+                                "Projet personnel dans lequel j'ai codé un scanneur à addresse mémoire utilisant une injection dll pour lire la mémoire du programe cible"
                             }</div>
                         </div></li>
                     </ul>
