@@ -1,4 +1,4 @@
-#wasm_view{
+#presentation_view{
   color: var(--text-700);
   margin-left: 3%;
   margin-right: 3%;
@@ -6,82 +6,83 @@
   font-size: 120%;
 }
 
-.wasm_frame{
-/*  --wasm-frame-side-margin: 5%;*/
+.presentation_frame{
+/*  --presentation-frame-side-margin: 5%;*/
   background-color: var(--text-background-color);
   border: 2px solid var(--secondary-600);
   border-radius: 7px;
-  margin-left: var(--wasm-frame-side-margin);
-  margin-right: var(--wasm-frame-side-margin);
+  margin-left: var(--presentation-frame-side-margin);
+  margin-right: var(--presentation-frame-side-margin);
   padding: 2%;
   margin-bottom: 3vh;
   backdrop-filter: blur(var(--blur-size));
   -webkit-backdrop-filter: blur(var(--blur-size));
 }
+
 @media {
-  .wasm_frame{
-    --wasm-frame-side-margin: 25%;
+  .presentation_frame{
+    --presentation-frame-side-margin: 25%;
   }
 }
 @media (width <= 1450px) {
-  .wasm_frame{
-    --wasm-frame-side-margin: 20%;
+  .presentation_frame{
+    --presentation-frame-side-margin: 20%;
   }
 }
 @media (width <= 1150px) {
-  .wasm_frame{
-    --wasm-frame-side-margin: 10%;
+  .presentation_frame{
+    --presentation-frame-side-margin: 10%;
   }
 }
 @media (width <= 800px) {
-  .wasm_frame{
-    --wasm-frame-side-margin: 5%;
+  .presentation_frame{
+    --presentation-frame-side-margin: 5%;
   }
 }
 @media (width <= 600px) {
-  .wasm_frame{
-    --wasm-frame-side-margin: 1%;
+  .presentation_frame{
+    --presentation-frame-side-margin: 1%;
   }
 
-  .wasm_title{
+  .presentation_title{
     font-size: 1.2em !important;
   }
 
-  .wasm_content{
+  .presentation_content{
     font-size: 0.8em !important;
   }
 }
 
 
 /* This removes weird black background */
-.wasm_frame * {
+.presentation_frame * {
   background-color: transparent;
 }
 
-.wasm_title{
+.presentation_title{
   text-align: center;
-  font-size: 2em;
+  font-size: 2.5em;
   color: var(--secondary-500);
   margin-bottom: 2%;
   line-height: 110%;
 }
 
-.wasm_content{
+.presentation_content{
   color: var(--text-500);
   line-height: 150%;
-  font-size: 0.9em;
+  font-size: 1.1em;
 }
 
 /* Multiple frames encapsulated */
-.wasm_frame .wasm_frame{
-  --wasm-frame-side-margin: 0%; /* Holy shit it works */
+.presentation_frame .presentation_frame{
+  --presentation-frame-side-margin: 0%; /* Holy shit it works */
   border: none;
   margin-bottom: 0px;
 
 }
 
 /* Title of an encapsulated frame */
-.wasm_frame .wasm_frame .wasm_title {
+.presentation_frame .presentation_frame .presentation_title {
   background-color: transparent !important;
   text-align: left;
   font-size: 150%;
@@ -89,18 +90,18 @@
 }
 
 /* Content that contains frame */
-.wasm_content:has(>.wasm_frame){
+.presentation_content:has(>.presentation_frame){
   display:flex; 
   justify-content: center;
 }
 
 /* Content that contains a list */
-.wasm_content:has(>ul){
+.presentation_content:has(>ul){
 /*  border: 1px solid red;*/
 }
 
 /* List inside a content */
-.wasm_content ul {
+.presentation_content ul {
   list-style: none;
   padding-left: 0px;
   display: grid;
@@ -109,26 +110,26 @@
 }
 
 /* Frames that are in a list */
-ul .wasm_frame{
+ul .presentation_frame{
 /*  border: 1px solid green;*/
 }
 
 /* Content tables */
-.wasm_content table th{
+.presentation_content table th{
   font-size: 1.1em;
 /*  vertical-align: center;*/
   line-height: 150%;
 }
 
-.wasm_content table td{
+.presentation_content table td{
   padding-left: 20px;
 }
 
 /* top border on first child */
-.wasm_content tr:first-child th,  .wasm_content tr:first-child td{
+.presentation_content tr:first-child th,  .presentation_content tr:first-child td{
   border-top: 1px solid var(--secondary-600);
 }
 /* bottom borders */
-.wasm_content td, .wasm_content th {
+.presentation_content td, .presentation_content th {
   border-bottom: 1px solid var(--secondary-600);
 }
