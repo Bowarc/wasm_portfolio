@@ -1,5 +1,5 @@
 :root{
-  --text-background-color: color-mix(in srgb, var(--background-50), transparent 10%);
+  --text-background-color: color-mix(in srgb, var(--background-50), transparent 15%);
   --blur-size: 7.5px;
 }
 
@@ -82,6 +82,7 @@ a {
   backdrop-filter: blur(var(--blur-size));
   -webkit-backdrop-filter: blur(var(--blur-size));
   background-color: var(--text-background-color);
+  text-align: left;
 }
 
 /* https://stackoverflow.com/a/62221520 ily */
