@@ -35,13 +35,13 @@ impl yew::Component for Projects {
     }
 
     fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, _first_render: bool) {
-        ctx.link().send_future(async {
-            disable_zoom();
+        // ctx.link().send_future(async {
+        //     disable_zoom();
 
-            gloo_timers::future::TimeoutFuture::new(100).await;
+        //     gloo_timers::future::TimeoutFuture::new(100).await;
 
-            enable_zoom();
-        }); // Implicit () which is the message type of this component
+        //     enable_zoom();
+        // }); // Implicit () which is the message type of this component
     }
 
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {

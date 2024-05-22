@@ -3,8 +3,13 @@ use yew::html;
 
 pub struct WASM;
 
+pub enum Msg {
+    EnablePrism,
+    DisablePrism,
+}
+
 impl yew::Component for WASM {
-    type Message = ();
+    type Message = Msg;
 
     type Properties = ();
 
@@ -12,22 +17,33 @@ impl yew::Component for WASM {
         Self
     }
 
-    fn update(&mut self, _ctx: &yew::prelude::Context<Self>, _msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
+        use crate::utils::{add_script, remove_script};
         log!("updated wasm prism");
 
+        match msg {
+            Msg::EnablePrism => {
+                add_script("./lib/prism/prism.min.js", "prism");
+                add_script("./lib/prism/prism-rust.min.js", "prism-rust");
+                false
+            }
+            Msg::DisablePrism => {
+                remove_script("prism");
+                remove_script("prism-rust");
+                false
+            }
+        }
 
-        false
     }
 
     fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, _first_render: bool) {
+        ctx.link().send_message(Msg::DisablePrism);
         ctx.link().send_future(async {
-            disable_prism();
-
             gloo_timers::future::TimeoutFuture::new(100).await;
-            
-            enable_prism();
-        }); // Implicit () which is the message type of this component
+            Msg::EnablePrism
+        });
     }
+    
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
         log!("draw wasm");
 
@@ -267,16 +283,4 @@ fn main() {
             </div>
         </>}
     }
-}
-
-fn disable_prism() {
-    use crate::utils::remove_script;
-    remove_script("prism");
-    remove_script("prism-rust");
-}
-
-fn enable_prism() {
-    use crate::utils::add_script;
-    add_script("./lib/prism/prism.min.js", "prism");
-    add_script("./lib/prism/prism-rust.min.js", "prism-rust");
 }

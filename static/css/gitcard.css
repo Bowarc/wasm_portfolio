@@ -27,9 +27,8 @@
   display: block;
   padding: 3% 2%;
   background-color: var(--text-background-color);
-  backdrop-filter: blur(var(--blur-size));
-  -webkit-backdrop-filter: blur(var(--blur-size));
-/*  background-color: ;*/
+/*  backdrop-filter: blur(var(--blur-size)); laggy*/
+/*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
   overflow: hidden;
   position: relative;
   height: 100%;
