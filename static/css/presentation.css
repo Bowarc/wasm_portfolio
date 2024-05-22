@@ -78,6 +78,7 @@
   --presentation-frame-side-margin: 0%; /* Holy shit it works */
   border: none;
   margin-bottom: 0px;
+  background-color: transparent;
 
 }
 
