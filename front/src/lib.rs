@@ -18,7 +18,7 @@ pub enum Scene {
     Home,
     GitRepos,
     WASMShowcase,
-    Internships,
+    Projects,
     Contact,
     Void,
 }
@@ -76,7 +76,7 @@ impl Component for App {
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Internships, Scene::Contact, Scene::Void ].iter().map(|scene|{
+                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Projects, Scene::Contact, Scene::Void ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
@@ -179,7 +179,7 @@ impl Scene{
             Scene::Home => html!{<><scene::Home /></>},
             Scene::GitRepos => html!{<><scene::GitRepos /></>},
             Scene::WASMShowcase => html!{<><scene::WASM /></>},
-            Scene::Internships => html!{<><scene::Internships /></>},
+            Scene::Projects => html!{<><scene::Projects /></>},
             Scene::Contact => html!{<><scene::Contact /></>},
             Scene::Void => html!{<></>}
         }
@@ -192,7 +192,7 @@ impl std::fmt::Display for Scene {
             Scene::Home => write!(f, "Home"),
             Scene::GitRepos => write!(f, "Git repos"),
             Scene::WASMShowcase => write!(f, "Web assembly"),
-            Scene::Internships => write!(f, "Internships"),
+            Scene::Projects => write!(f, "Projects"),
             Scene::Contact => write!(f, "Contact"),
             Scene::Void => write!(f, "Void"),
         }

@@ -52,7 +52,7 @@ impl yew::Component for GitProjectList {
                                             repo.language.to_lowercase()
                                         )
                                     }
-                                    alt={ "icon " }
+                                    alt={ format!("{} ", repo.language) }
                                     class="icon"
                                 />
                                 { &repo.name }

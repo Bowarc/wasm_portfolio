@@ -6,5 +6,5 @@ mod wasm;
 pub use wasm::WASM;
 mod home;
 pub use home::Home;
-mod internships;
-pub use internships::Internships;
+mod projects;
+pub use projects::Projects;
