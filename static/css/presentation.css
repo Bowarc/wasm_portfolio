@@ -15,8 +15,8 @@
   margin-right: var(--presentation-frame-side-margin);
   padding: 2%;
   margin-bottom: 3vh;
-  backdrop-filter: blur(var(--blur-size));
-  -webkit-backdrop-filter: blur(var(--blur-size));
+/*  backdrop-filter: blur(var(--blur-size)); laggy*/
+/*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
 }
 
 @media {
