@@ -76,7 +76,7 @@ impl Component for App {
                     <img src="resources/github.webp" alt="Github icon" class="icon"/>
                 </a>
                 <div id="scene_list" class="header_item">{
-                    [ Scene::Home, Scene::GitRepos, Scene::WASMShowcase, Scene::Projects, Scene::Contact, Scene::Void ].iter().map(|scene|{
+                    [ Scene::Home, Scene::GitRepos, Scene::Contact, Scene::Void ].iter().map(|scene|{
                         let current = if &self.current_scene == scene{
                             "current"
                         }else{
