@@ -15,17 +15,35 @@ impl yew::Component for Contact {
         html! {<>
             <div class="contact">
                 <h1>{"Contact Me"}</h1>
-                <p>{"Vous pouvez me contacter sur ces adresses mail:"}</p>
-                <ul>
-                    // <li>{"GitHub: "}
-                        // <a href="https://github.com/Bowarc" target="_blank">{"Bowarc"}</a>{" & "}
-                        // <a href="https://github.com/HugoLz" target="_blank">{"HugoLz"}</a>
-                    // </li>
-                    <li>{"Email: "}
-                        <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>{" & "}
-                        <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>
-                    </li>
-                </ul>
+                <p>{"You can reach me at: "}</p>
+                <table>
+                    <tr>
+                        <th>{
+                            "Email:"
+                        }</th>
+                        <td>
+                            <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>
+                            <br />
+                            <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>{
+                            "Discord:"
+                        }</th>
+                        <td>{
+                            "Bowarc"
+                        }</td>
+                    </tr>
+                    <tr>
+                        <th>{
+                            "Twitter:"
+                        }</th>
+                        <td>{
+                            "@Bowarc_"
+                        }</td>
+                    </tr>
+                </table>
             </div>
         </>}
     }

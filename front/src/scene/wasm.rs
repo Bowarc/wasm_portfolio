@@ -52,7 +52,7 @@ impl yew::Component for WASM {
                 <div class="presentation_frame">
                     <div class="presentation_title">{ "Le WebAssembly : Une révolution dans le Web" }</div>
                     <p class="presentation_content">{
-                        "Le WebAssembly, ou Wasm, est un langage de programmation open source qui révolutionne le web en offrant des performances et une sécurité inégalées. Il permet de créer des applications web rapides et réactives, repoussant les limites du web traditionnel."
+                        "Le WebAssembly, ou Wasm, est un outil de programmation open source qui révolutionne le web en offrant des performances et une sécurité inégalées. Il permet de créer des applications web rapides et réactives, repoussant les limites du web traditionnel."
                     }</p>
                 </div>
                 <div class="presentation_frame">
@@ -137,34 +137,37 @@ impl yew::Component for WASM {
                     }</p>
                 </div>
                 <div class="presentation_frame">
-                    <div class="presentation_title">{ "Avancées récentes dans le WebAssembly" }</div>
-                    <div class="presentation_content"><ul>
-                        <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Introduction de WebAssembly 2.0" }</div>
-                            <p class="presentation_content">{
-                                "Depuis septembre 2023, WebAssembly 2.0 a été introduit, apportant des améliorations majeures telles que des performances accrues et de nouvelles fonctionnalités comme le threading et le garbage collection. [Source](https://example.com/webassembly2.0)."
-                            }</p>
-                        </div></li>
-                        <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Support amélioré pour WASI" }</div>
-                            <p class="presentation_content">{
-                                "Le support pour WASI (WebAssembly System Interface) a été amélioré, permettant aux applications WebAssembly de fonctionner de manière plus transparente sur différents systèmes d'exploitation. [Source](https://example.com/wasi-update)."
-                            }</p>
-                        </div></li>
-                        <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Extensions de compilateurs" }</div>
-                            <p class="presentation_content">{
-                                "Des extensions pour des compilateurs comme Emscripten et wasm-pack ont été développées, facilitant la compilation de nouveaux langages vers WebAssembly. [Source](https://example.com/compiler-extensions)."
-                            }</p>
-                        </div></li>
-                        <li><div class="presentation_frame">
-                            <div class="presentation_title">{ "Adoption par les frameworks" }</div>
-                            <p class="presentation_content">{
-                                "Des frameworks populaires comme React et Vue.js ont intégré des optimisations pour supporter WebAssembly, augmentant ainsi les performances des applications web. [Source](https://example.com/frameworks-adoption)."
-                            }</p>
-                        </div></li>
-                    </ul></div>
+                    <div class="presentation_title">{ "Avancées Récentes dans le WebAssembly" }</div>
+                    <div class="presentation_content">
+                        <ul>
+                            <li>
+                                <div class="presentation_frame">
+                                    <div class="presentation_title">{ "Améliorations de Performance" }</div>
+                                    <p class="presentation_content">{
+                                        "Des améliorations continues sont apportées aux performances de WebAssembly, notamment en matière de vitesse d'exécution et d'optimisation des compilateurs."
+                                    }</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="presentation_frame">
+                                    <div class="presentation_title">{ "Support Amélioré pour WASI" }</div>
+                                    <p class="presentation_content">{
+                                        "Le support pour WASI (WebAssembly System Interface) continue de s'améliorer, permettant une intégration plus fluide avec différents systèmes d'exploitation et facilitant le développement d'applications hors navigateur."
+                                    }</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="presentation_frame">
+                                    <div class="presentation_title">{ "Adoption par les Frameworks" }</div>
+                                    <p class="presentation_content">{
+                                        "Des frameworks populaires comme React et Vue.js intègrent de plus en plus de support pour WebAssembly, ce qui permet d'améliorer les performances des applications web en utilisant Wasm pour les tâches intensives."
+                                    }</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+
                 <div class="presentation_frame">
                     <div class="presentation_title">{ "Perspectives futures du WebAssembly" }</div>
                     <div class="presentation_content"><table>

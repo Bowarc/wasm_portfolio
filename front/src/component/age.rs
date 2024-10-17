@@ -21,7 +21,6 @@ impl yew::Component for Age {
 
         html! {<>
             { (birth_date.get_time()/ 1000. / 60. / 60. / 24. / 365.242199) as i32 }
-            { " ans" }
         </>}
     }
 }
