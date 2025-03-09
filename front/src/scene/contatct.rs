@@ -19,16 +19,6 @@ impl yew::Component for Contact {
                 <table>
                     <tr>
                         <th>{
-                            "Email:"
-                        }</th>
-                        <td>
-                            <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>
-                            <br />
-                            <a href="mailto:***REMOVED***">{"***REMOVED***"}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>{
                             "Discord:"
                         }</th>
                         <td>{
