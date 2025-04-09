@@ -1,6 +1,12 @@
 #skill_list{
-    width: 60vw;
-    margin-left: 20vw;
+  color: white;
+  width: 60%;
+
+  display: inline-grid;
+  --card-width: 5%;
+  /* grid-template-columns: var(--card-width) var(--card-width); */
+  justify-content: center;
+  grid-gap: 3vw 3vw;
 /*    border: 1px solid green;*/
 }
 
@@ -8,16 +14,33 @@
     list-style: none;
     padding-left: 0px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 20px;
-
 }
 
 .skill_card{
-/*    border: 2px solid red;*/
+
+  padding-left: 10px;
+  overflow: hidden;
+  border: 1px solid var(--background-500);
+  border-radius: 10px;
+/*  margin-bottom: 2%;*/
+  width: 98%;
+  /* height: 98%; */
+  background-color: var(--text-background-color);
+
+  height: auto; /* Change to auto to allow height to adjust based on content */
+  display: flex; /* Use flexbox */
+  align-items: center; /* Center items vertically */
+  /* padding: 10px; /* Add some padding for better spacing */ */    
 }
 
 .skill_logo{
-    width: 100px;
+    margin-left: auto;
+    margin-right: 10px;
+
+
+    width: 20%;
     height: auto;
+    /* margin-right: 10px; /* Add some space between the logo and the text */ */
 }

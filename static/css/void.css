@@ -1,0 +1,17 @@
+.void button{
+  position: absolute;
+  left: 0px;
+  margin-left: 1%;
+  margin-top: -1%;
+  border: 2px solid white;
+  border-radius: 7px;
+  background-color: var(--text-background-color);
+  color: white;
+}
+
+.void .on{
+  border-color: green;
+}
+.void .off{
+  border-color: red;
+}
