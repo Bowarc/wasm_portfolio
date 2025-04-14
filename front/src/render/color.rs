@@ -66,6 +66,9 @@ impl Color {
     pub fn rgba(&self) -> [u8; 4] {
         [self.red(), self.green(), self.blue(), self.alpha()]
     }
+    pub fn rgb(&self) -> [u8; 3] {
+        [self.red(), self.green(), self.blue()]
+    }
     pub fn red(&self) -> u8 {
         self.0
     }
@@ -125,5 +128,10 @@ impl Default for Color {
 impl From<[u8; 4]> for Color {
     fn from(u8array: [u8; 4]) -> Color {
         Color::from_rgba(u8array[0], u8array[1], u8array[2], u8array[3])
+    }
+}
+impl From<[u8; 3]> for Color {
+    fn from(u8array: [u8; 3]) -> Color {
+        Color::from_rgba(u8array[0], u8array[1], u8array[2], 255)
     }
 }

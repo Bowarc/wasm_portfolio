@@ -6,10 +6,21 @@ mod routes;
 
 #[rocket::main]
 async fn main() {
-    let logcfg = logger::LoggerConfig::new()
-        .set_level(log::LevelFilter::Trace)
-        .add_filter("rocket", log::LevelFilter::Warn);
-    logger::init(logcfg, Some("log/server.log"));
+    // let logcfg = logger::LoggerConfig::new()
+    //     .set_level(log::LevelFilter::Trace)
+    //     .add_filter("rocket", log::LevelFilter::Warn);
+    // logger::init(logcfg, Some("log/server.log"));
+
+    logger::init([
+        logger::Config::default()
+            .level(log::LevelFilter::Trace)
+            .filter("rocket", log::LevelFilter::Warn)
+            .output(logger::Output::Stdout),
+        logger::Config::default()
+            .level(log::LevelFilter::Trace)
+            .filter("rocket", log::LevelFilter::Warn)
+            .output(logger::Output::File("./log/server.log".into())),
+    ]);
 
     // Small print to show the start of the program log in the file
     trace!(

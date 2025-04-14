@@ -1,4 +1,22 @@
+mod component;
+mod render;
+mod scene;
+mod utils;
+mod app;
 
-fn main(){
-    yew::Renderer::<front_lib::App>::new().render();
+#[yew::function_component]
+fn Router() -> yew::Html {
+    use {scene::Scene, yew::html};
+
+    let scenes = vec![Scene::Home, Scene::GitRepos, Scene::Contact, Scene::Void];
+    let default_scene_index = 0;
+
+    html! {
+        <app::App {scenes} {default_scene_index}/>
+    }
 }
+
+fn main() {
+    yew::Renderer::<Router>::new().render();
+}
+    

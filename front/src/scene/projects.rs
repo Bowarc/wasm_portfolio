@@ -3,21 +3,17 @@ use yew::html;
 
 pub struct Projects;
 
-pub enum Message {
-    Pop,
-}
-
 impl yew::Component for Projects {
     type Message = ();
 
     type Properties = ();
 
-    fn create(ctx: &yew::prelude::Context<Self>) -> Self {
+    fn create(_ctx: &yew::prelude::Context<Self>) -> Self {
         // ctx.link().send_message(Message::Pop);
         Self
     }
 
-    fn update(&mut self, ctx: &yew::prelude::Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _ctx: &yew::prelude::Context<Self>, _msg: Self::Message) -> bool {
         log!("updated internship zoom");
         // use wasm_bindgen::JsCast as _;
 
@@ -34,7 +30,7 @@ impl yew::Component for Projects {
         false
     }
 
-    fn rendered(&mut self, ctx: &yew::prelude::Context<Self>, _first_render: bool) {
+    fn rendered(&mut self, _ctx: &yew::prelude::Context<Self>, _first_render: bool) {
         // ctx.link().send_future(async {
         //     disable_zoom();
 
@@ -99,12 +95,12 @@ impl yew::Component for Projects {
     }
 }
 
-fn disable_zoom() {
+fn _disable_zoom() {
     use crate::utils::remove_script;
     remove_script("zoom");
 }
 
-fn enable_zoom() {
+fn _enable_zoom() {
     use crate::utils::add_script;
     add_script("./lib/zoom/zoom.js", "zoom");
 }

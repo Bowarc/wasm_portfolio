@@ -14,10 +14,11 @@ impl yew::Component for GitRepos {
 
     fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
         html! {<>
-            <p>
-            { "Here lies my git repositories ordered by most recently updated" } 
+            <h3>
+            { "Here lies my git repositories ordered by most recently updated" }
+            </h3>
+            <br/>
             <GitProjectList />
-            </p>
         </>}
     }
 }

@@ -51,12 +51,12 @@ pub fn setup_shader(glctx: &WebGlRenderingContext, name: &str) -> web_sys::WebGl
 pub fn draw_rect(
     glctx: &WebGlRenderingContext,
     rect_shader_prog: &web_sys::WebGlProgram,
-    rect: maths::Rect,
+    rect: math::Rect,
     color: Color,
 ) {
     let vertices = rect_to_vert(
         rect,
-        maths::Vec2::new(
+        math::Vec2::new(
             glctx.drawing_buffer_width() as f64,
             glctx.drawing_buffer_height() as f64,
         ),
@@ -115,14 +115,14 @@ pub fn draw_rect(
 pub fn draw_circle(
     glctx: &WebGlRenderingContext,
     circle_shader_prog: &web_sys::WebGlProgram,
-    circle: maths::Circle,
+    circle: math::Circle,
     color: Color,
     gradient: bool,
     ring: bool,
 ) {
     let vertices = circle_to_vert(
         circle,
-        maths::Vec2::new(
+        math::Vec2::new(
             glctx.drawing_buffer_width() as f64,
             glctx.drawing_buffer_height() as f64,
         ),
@@ -203,13 +203,13 @@ pub fn end_frame(f: &wasm_bindgen::closure::Closure<dyn FnMut()>) {
         .expect("should register `requestAnimationFrame` OK");
 }
 
-pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
-    let sized_rect = maths::Rect::new_from_center(
-        maths::Point::new(
+pub fn rect_to_vert(rect: math::Rect, canvas_size: math::Vec2) -> [f32; 24] {
+    let sized_rect = math::Rect::new_from_center(
+        math::Point::new(
             rect.center().x / canvas_size.x,
             rect.center().y / canvas_size.y,
         ),
-        maths::Point::new(rect.width() / canvas_size.x, rect.height() / canvas_size.y),
+        math::Point::new(rect.width() / canvas_size.x, rect.height() / canvas_size.y),
         0.,
     );
 
@@ -242,9 +242,9 @@ pub fn rect_to_vert(rect: maths::Rect, canvas_size: maths::Vec2) -> [f32; 24] {
     out
 }
 
-pub fn circle_to_vert(circle: maths::Circle, canvas_size: maths::Vec2) -> [f32; 24] {
+pub fn circle_to_vert(circle: math::Circle, canvas_size: math::Vec2) -> [f32; 24] {
     rect_to_vert(
-        maths::Rect::new_from_center(circle.center(), circle.radius, 0.),
+        math::Rect::new_from_center(circle.center(), circle.radius, 0.),
         canvas_size,
     )
 }

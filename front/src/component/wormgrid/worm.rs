@@ -4,12 +4,9 @@ pub const SPEED: f64 = 370.;
 pub const ROTATION_TIMER_LOW: f64 = 0.5;
 pub const ROTATION_TIMER_HIGH: f64 = 3.;
 
-static mut CURRENT_ID: u16 = 0;
-
 #[derive(Clone)]
 pub struct Worm {
-    id: u16,
-    rect: maths::Rect,
+    rect: math::Rect,
     color: crate::render::Color,
     head_color: crate::render::Color,
     direction: Direction,
@@ -20,7 +17,7 @@ pub struct Worm {
 
 #[derive(Clone)]
 pub struct WormTailBit /* You're a wizzard Pettigrew */ {
-    position: maths::Point,
+    position: math::Point,
     lifetime: time::DTDelay,
 }
 
@@ -33,16 +30,12 @@ pub enum Direction {
 }
 
 impl Worm {
-    pub fn new(rect: maths::Rect, color: crate::render::Color) -> Self {
+    pub fn new(rect: math::Rect, color: crate::render::Color) -> Self {
         Self {
-            id: unsafe {
-                CURRENT_ID += 1;
-                CURRENT_ID - 1
-            },
             rect,
             color,
             head_color: crate::render::Color::random_rgb(),
-            direction: random::pick(&Direction::all()),
+            direction: random::pick(&Direction::all()).clone(),
             rotation_timer: time::DTDelay::new(random::get_inc(
                 ROTATION_TIMER_LOW,
                 ROTATION_TIMER_HIGH,
@@ -52,21 +45,17 @@ impl Worm {
         }
     }
     
-    pub fn id(&self) -> u16{
-        self.id
-    }
-
     pub fn step(&mut self, dt: f64) {
         self.rotation_timer.update(dt);
         if self.rotation_timer.ended() {
-            self.direction = random::pick(&self.direction.sides());
+            self.direction = random::pick(&self.direction.sides()).clone();
             self.rotation_timer =
                 time::DTDelay::new(random::get_inc(ROTATION_TIMER_LOW, ROTATION_TIMER_HIGH))
         }
 
         let mut pos = self.rect.center();
 
-        pos += self.direction.to_vec2() * maths::Vec2::new(SPEED * dt, SPEED * dt);
+        pos += self.direction.to_vec2() * math::Vec2::new(SPEED * dt, SPEED * dt);
 
         self.rect.set_center(pos);
     }
@@ -78,7 +67,7 @@ impl Worm {
             .tail
             .iter()
             .map(|tailbit| tailbit.position)
-            .collect::<Vec<maths::Point>>();
+            .collect::<Vec<math::Point>>();
 
         self.tail.iter_mut().enumerate().for_each(|(i, bit)| {
             let previous_pos = if i == 0 {
@@ -87,14 +76,14 @@ impl Worm {
                 *positions.get(i - 1).unwrap()
             };
 
-            if maths::get_distance(bit.position, previous_pos) < self.rect.size().x - SPEED * dt {
+            if math::get_distance(&bit.position, &previous_pos) < self.rect.size().x - SPEED * dt {
                 return;
             }
 
-            let direction = maths::point::two_points_angle(bit.position, previous_pos);
+            let direction = math::point::two_points_angle(bit.position, previous_pos);
 
             bit.position +=
-                maths::Point::from_angle(direction) * maths::Vec2::new(SPEED * dt, SPEED * dt);
+                math::Point::from_angle(direction) * math::Vec2::new(SPEED * dt, SPEED * dt);
 
             // bit.lifetime.update(dt)
         });
@@ -111,12 +100,12 @@ impl Worm {
     }
 
     #[inline]
-    pub fn rect(&self) -> &maths::Rect {
+    pub fn rect(&self) -> &math::Rect {
         &self.rect
     }
 
     #[inline]
-    pub fn size(&self) -> maths::Vec2 {
+    pub fn size(&self) -> math::Vec2 {
         self.rect.size()
     }
 
@@ -131,7 +120,7 @@ impl Worm {
     }
 
     #[inline]
-    pub fn position(&self) -> maths::Point {
+    pub fn position(&self) -> math::Point {
         self.rect.center()
     }
 
@@ -161,7 +150,7 @@ impl Worm {
     }
 
     #[inline]
-    pub fn set_position(&mut self, new_center: impl Into<maths::Point>) {
+    pub fn set_position(&mut self, new_center: impl Into<math::Point>) {
         self.rect.set_center(new_center.into());
     }
 
@@ -172,14 +161,14 @@ impl Worm {
 }
 
 impl WormTailBit {
-    pub fn new(position: maths::Point) -> Self {
+    pub fn new(position: math::Point) -> Self {
         Self {
             position,
             lifetime: time::DTDelay::new(0.5),
         }
     }
 
-    pub fn position(&self) -> maths::Point {
+    pub fn position(&self) -> math::Point {
         self.position
     }
 
@@ -187,7 +176,7 @@ impl WormTailBit {
         &self.lifetime
     }
 
-    pub fn set_position(&mut self, new_position: impl Into<maths::Point>) {
+    pub fn set_position(&mut self, new_position: impl Into<math::Point>) {
         self.position = new_position.into()
     }
 }
@@ -197,8 +186,8 @@ impl Direction {
         [Self::Up, Self::Down, Self::Left, Self::Right]
     }
 
-    pub fn to_vec2(&self) -> maths::Vec2 {
-        use maths::Vec2;
+    pub fn to_vec2(&self) -> math::Vec2 {
+        use math::Vec2;
         match self {
             Direction::Up => Vec2::new(0., -1.),
             Direction::Down => Vec2::new(0., 1.),
