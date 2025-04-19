@@ -22,7 +22,7 @@ pub enum Scene {
 }
 
 impl Scene{
-    pub fn html(&self, _ctx: &yew::Context<crate::app::App>) -> yew::virtual_dom::VNode{
+    pub fn html(&self) -> yew::virtual_dom::VNode{
         use yew::html;
 
 

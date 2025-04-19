@@ -1,5 +1,7 @@
+mod locale_switch;
 mod wormgrid;
-pub use wormgrid::{WormGrid, WORM_DEBUG_DRAW_VISION_POINTS, start_wormgrid};
+pub use locale_switch::LocaleSwitch;
+pub use wormgrid::{start_wormgrid, WormGrid, WORM_DEBUG_DRAW_VISION_POINTS};
 mod age;
 pub use age::Age;
 mod git_projects;

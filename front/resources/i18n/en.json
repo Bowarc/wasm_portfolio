@@ -1,0 +1,11 @@
+{
+  "home": {
+    "construction_warning": "This website is still under construction",
+    "skills": {
+      "title": "Technical skills"
+    }
+  },
+  "gitrepos": {
+    "title": "Here lies my git repositories ordered by most recently updated"
+  }
+}

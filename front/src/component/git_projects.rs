@@ -1,4 +1,3 @@
-use futures::SinkExt;
 use gloo::{console::log, utils::format::JsValueSerdeExt as _};
 use js_sys::Date;
 use wasm_bindgen::JsCast as _;
@@ -25,7 +24,7 @@ pub struct Repository {
     last_update: Date,
     language: String,
     // public: bool,
-    fork: bool,
+    // fork: bool,
     // size: i32,
 }
 
@@ -151,7 +150,7 @@ impl yew::Component for GitProjectList {
                 i
             };
 
-            let deleted = self.repos.get(delete_idx).unwrap();
+            let _deleted = self.repos.get(delete_idx).unwrap();
             // log!(format!("Removing repo from: {}", deleted.owner_name));
             repos_to_display.remove(i);
         }
@@ -245,7 +244,7 @@ async fn fetch_repos(user: &'static str) -> Result<Vec<Repository>, wasm_bindgen
                 ))),
                 language: as_rs_string(value.get("language")?),
                 // public: !value.get("private")?.as_bool()?,
-                fork: value.get("fork")?.as_bool()?,
+                // fork: value.get("fork")?.as_bool()?,
                 // size: value.get("size")?.as_i64()? as i32,
             })
         })

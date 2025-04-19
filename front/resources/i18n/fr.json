@@ -1,0 +1,11 @@
+{
+  "home": {
+    "construction_warning": "Ce site est toujours en cours de création",
+    "skills": {
+      "title": "Compétences techniques"
+    }
+  },
+  "gitrepos": {
+    "title": "Voici mes dépôts Git classés par date de mise à jour"
+  }
+}

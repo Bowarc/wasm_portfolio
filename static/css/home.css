@@ -1,4 +1,4 @@
-#skill_list{
+#skill_list {
   color: white;
   width: 60%;
 
@@ -7,40 +7,43 @@
   /* grid-template-columns: var(--card-width) var(--card-width); */
   justify-content: center;
   grid-gap: 3vw 3vw;
-/*    border: 1px solid green;*/
+  /*    border: 1px solid green;*/
 }
 
-#skill_list ul{
-    list-style: none;
-    padding-left: 0px;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px;
+#skill_list ul {
+  list-style: none;
+  padding-left: 0px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
 }
 
-.skill_card{
+.skill_card {
 
   padding-left: 10px;
   overflow: hidden;
   border: 1px solid var(--background-500);
   border-radius: 10px;
-/*  margin-bottom: 2%;*/
+  /*  margin-bottom: 2%;*/
   width: 98%;
   /* height: 98%; */
   background-color: var(--text-background-color);
 
-  height: auto; /* Change to auto to allow height to adjust based on content */
-  display: flex; /* Use flexbox */
-  align-items: center; /* Center items vertically */
-  /* padding: 10px; /* Add some padding for better spacing */ */    
+  height: auto;
+  /* Change to auto to allow height to adjust based on content */
+  display: flex;
+  /* Use flexbox */
+  align-items: center;
+  /* Center items vertically */
+  /* padding: 10px; /* Add some padding for better spacing */
 }
 
-.skill_logo{
-    margin-left: auto;
-    margin-right: 10px;
+.skill_logo {
+  margin-left: auto;
+  margin-right: 10px;
 
 
-    width: 20%;
-    height: auto;
-    /* margin-right: 10px; /* Add some space between the logo and the text */ */
+  width: 20%;
+  height: auto;
+  /* margin-right: 10px; /* Add some space between the logo and the text */
 }

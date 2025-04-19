@@ -1,4 +1,4 @@
-#gridworm_canvas{
+#gridworm-canvas {
   background-color: var(--background-50);
   position: fixed;
   z-index: -1;
@@ -6,5 +6,5 @@
   top: 0px;
   margin: 0px;
   padding: 0px;
-/*  width: 100vw; height: 100vh; display: block;*/
+  /*  width: 100vw; height: 100vh; display: block;*/
 }

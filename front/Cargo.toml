@@ -13,7 +13,9 @@ path = "src/main.rs"
 random = {git = "https://github.com/bowarc/Crates", package = "random"}
 time = {git = "https://github.com/bowarc/Crates", package = "time"}
 math = {git = "https://github.com/bowarc/Crates", package = "math"}
-gloo = "0.11.0" # Yew depends on this version
+gloo = "0.10.0" # Yew depends on this version
+gloo-console =  "0.2.3" # Gloo 0.10.0 depends on this version
+
 js-sys = "0.3.68"
 yew = { version = "0.21.0", features = ["csr"] }
 wasm-bindgen = { version = "0.2.93"}
@@ -23,6 +25,8 @@ serde_json = "1.0.111"
 serde = { version = "1.0.194", features = ["derive"] }
 futures = "0.3.30"
 gloo-timers = { version = "0.3.0", features = ["futures"] }
+bi18n = "0.3.0"
+i18nrs = { version = "0.1.5", features = ["yew"] }
 # wasm-bindgen-futures = "0.4.39"
 # serde_json = "1.0.111"
 # gloo-utils = { version = "0.1", features = ["serde"] }

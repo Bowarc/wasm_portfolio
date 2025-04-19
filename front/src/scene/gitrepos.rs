@@ -1,24 +1,16 @@
-use yew::html;
 use crate::component::GitProjectList;
+use yew::{function_component, html, Html};
+use i18nrs::yew::use_translation;
 
-pub struct GitRepos;
-
-impl yew::Component for GitRepos {
-    type Message = ();
-
-    type Properties = ();
-
-    fn create(_ctx: &yew::prelude::Context<Self>) -> Self {
-        Self
-    }
-
-    fn view(&self, _ctx: &yew::prelude::Context<Self>) -> yew::prelude::Html {
-        html! {<>
-            <h3>
-            { "Here lies my git repositories ordered by most recently updated" }
-            </h3>
-            <br/>
-            <GitProjectList />
-        </>}
-    }
+#[function_component]
+pub fn GitRepos() -> Html {
+    let (i18n, _) = use_translation();
+    
+    html! {<>
+        <h3>
+        { i18n.t("gitrepos.title") }
+        </h3>
+        <br/>
+        <GitProjectList />
+    </>}
 }

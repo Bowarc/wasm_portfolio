@@ -1,8 +1,12 @@
+#[allow(unused_imports)]
+#[macro_use(trace, debug, info, warn, error, log)]
+extern crate gloo_console;
+
+mod app;
 mod component;
 mod render;
 mod scene;
 mod utils;
-mod app;
 
 #[yew::function_component]
 fn Router() -> yew::Html {
@@ -19,4 +23,3 @@ fn Router() -> yew::Html {
 fn main() {
     yew::Renderer::<Router>::new().render();
 }
-    
