@@ -1,17 +1,17 @@
-:root{
+:root {
   --text-background-color: color-mix(in srgb, var(--background-50), transparent 15%);
   --blur-size: 7.5px;
 }
 
-*{
+* {
   scrollbar-color: #454a4d #202324;
 }
 
-html{
+html {
   color: var(--text-900);
 }
 
-body{
+body {
   background-color: transparent;
   width: 100%;
   height: 100%;
@@ -24,35 +24,66 @@ body{
   width: 100%;
   height: 6vh;
   margin-bottom: 3%;
-/*  background-color: red;*/
-/*  border: 2px solid red;*/
+  margin-top: 0.5vh;
 }
 
-#header .icon{
+#header .icon {
+  float: right;
+  padding-right: 0.5vw;
+}
+
+#header #locale_switch {
   float: right;
 }
 
-#header #scene_list{
+#header #locale_switch>ul {
+  list-style: none;
+  display: inline-flex;
+  padding-right: 0.5vw;
+  margin-top: 0;
+}
+
+#header #locale_switch>ul>li {
+  margin-right: 10%;
+}
+
+#header #locale_switch button {
+  border: 1px solid transparent;
+  background-color: var(--text-background-color);
+  padding: 0px;
+}
+
+#header #locale_switch button:hover {
+  border: 1px solid red;
+}
+
+#header #locale_switch img {
+  width: 25px;
+  aspect-ratio: 4/3;
+  vertical-align: middle;
+}
+
+#header #scene_list {
   height: 100%;
   left: 0px;
   display: grid;
   grid-template-columns: repeat(100, auto);
   grid-gap: 0.5%;
   padding-left: 0.2%;
-/*  border: 2px solid green; */
+  /*  border: 2px solid green; */
 }
 
-.current{
+.current {
   border: 2px solid var(--primary-700) !important;
 }
 
-.scene_button{
+.scene_button {
   width: 100%;
   font-size: 16px;
-  margin-top: 0.5vh;
+  /* margin-top: 0.5vh; */
   margin-bottom: 0.5vh;
   cursor: pointer;
-/*  padding: 10px 20px;*/
+  /*  padding: 10px 20px;*/
   border: 1px solid var(--primary-400);
   border-radius: 8px;
   background-color: transparent;
@@ -61,10 +92,9 @@ body{
   -webkit-backdrop-filter: blur(var(--blur-size));
 }
 
-.icon{
+.icon {
   width: 25px;
   height: 25px;
-  font-size: 10px;
 }
 
 a {
@@ -74,8 +104,8 @@ a {
 
 #description {
   --side-margin: 20%;
-  margin-left:  var(--side-margin);
-  margin-right: var(--side-margin) ; 
+  margin-left: var(--side-margin);
+  margin-right: var(--side-margin);
   font-size: 1.5em;
   color: var(--primary-500);
 
@@ -106,13 +136,12 @@ footer {
 }
 
 
-.warning{
+.warning {
   color: black;
   width: 100%;
   height: 50px;
-/*  align: center;*/
+  /*  align: center;*/
   line-height: 50px;
   text-align: center;
   background: yellow;
 }
-

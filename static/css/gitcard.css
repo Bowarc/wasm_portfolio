@@ -1,4 +1,4 @@
-#project_list{
+#project_list {
   color: white;
   width: 95%;
 
@@ -8,17 +8,18 @@
   justify-content: center;
   grid-gap: 1vw 1vw;
 
-/*  border: 2px solid red;*/
+  /*  border: 2px solid red;*/
 }
 
 .card {
   overflow: hidden;
   border: 1px solid var(--background-500);
   border-radius: 10px;
-/*  margin-bottom: 2%;*/
+  /*  margin-bottom: 2%;*/
   width: 100%;
   height: 100%;
 }
+
 .card:not(:last-child) {
   margin-bottom: 0.8%;
 }
@@ -27,21 +28,22 @@
   display: block;
   padding: 3% 2%;
   background-color: var(--text-background-color);
-/*  backdrop-filter: blur(var(--blur-size)); laggy*/
-/*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
+  /*  backdrop-filter: blur(var(--blur-size)); laggy*/
+  /*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
   overflow: hidden;
   position: relative;
   height: 100%;
 }
 
-.card_link:hover .card_date .card_title .card_description{
+.card_link:hover .card_date .card_title .card_description {
   text-decoration: none;
   color: #FFF;
 }
 
 .card_link:hover .card_bg {
   transform: translate(0vw, 60%) scale(3);
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .card_title {
@@ -51,7 +53,7 @@
   margin-bottom: 10px;
 }
 
-.card_description{
+.card_description {
   margin-bottom: 10px;
   color: var(--secondary-500);
   margin-left: 1%
@@ -85,6 +87,7 @@
 
   transition: all .5s ease;
 }
+
 /*
 .card:nth-child(2n) .card_bg {
   background-color: #3ecd5e30;
@@ -126,6 +129,7 @@
 .card:nth-child(5n) .card_bg {
   background-color: color-mix(in srgb, var(--text-500), transparent 66%);
 }
+
 /*
 .card:nth-child(6n) .card_bg {
   background-color: color-mix(in srgb, var(--secondary-800), transparent 66%);
@@ -135,4 +139,3 @@
   background-color: color-mix(in srgb, var(--primary-800), transparent 66%);
 }
 */
-

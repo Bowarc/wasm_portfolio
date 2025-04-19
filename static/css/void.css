@@ -1,4 +1,4 @@
-.void button{
+.void button {
   position: absolute;
   left: 0px;
   margin-left: 1%;
@@ -9,9 +9,10 @@
   color: white;
 }
 
-.void .on{
+.void .on {
   border-color: green;
 }
-.void .off{
+
+.void .off {
   border-color: red;
 }
