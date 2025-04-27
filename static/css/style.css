@@ -48,16 +48,17 @@ body {
 }
 
 #header #locale_switch button {
-  border: 1px solid transparent;
+  border: none;
   background-color: var(--text-background-color);
   padding: 0px;
 }
 
-#header #locale_switch button:hover {
-  border: 1px solid red;
+#header #locale_switch img:hover {
+  border: 1px solid var(--primary-700);
 }
 
 #header #locale_switch img {
+  margin: 0px !important;
   width: 25px;
   aspect-ratio: 4/3;
   vertical-align: middle;
@@ -134,7 +135,6 @@ footer {
   text-align: right;
   background-color: transparent;
 }
-
 
 .warning {
   color: black;

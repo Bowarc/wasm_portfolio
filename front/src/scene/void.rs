@@ -10,7 +10,7 @@ pub fn Void() -> Html {
             WORM_DEBUG_DRAW_VISION_POINTS = !WORM_DEBUG_DRAW_VISION_POINTS;
             
         };
-        debug!("flipped debug vision");
+        debug!("toggled debug vision");
 
         
     });

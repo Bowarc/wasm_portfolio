@@ -6,7 +6,7 @@
   border: 2px solid white;
   border-radius: 7px;
   background-color: var(--text-background-color);
-  color: white;
+  color: var(--text-500);
 }
 
 .void .on {

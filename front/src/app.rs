@@ -1,13 +1,3 @@
-/*
-
-
-    TODO: maybe make this a function component and use use_state & props to store &modify data ?
-
-    idfk
-
-
-*/
-
 use crate::component::LocaleSwitch;
 use gloo::utils::window;
 use wasm_bindgen::JsCast as _;
@@ -46,19 +36,64 @@ pub fn App(props: &Props) -> Html {
 
     let grid_canvas_clone = grid_canvas.clone();
     {
-        // Calls only once
-        use_effect_with((), move |_| {
-            let canvas = grid_canvas_clone.cast::<HtmlCanvasElement>().unwrap();
-            let w = window();
-            canvas.set_width(w.inner_width().unwrap().as_f64().unwrap() as u32);
-            canvas.set_height(w.inner_height().unwrap().as_f64().unwrap() as u32);
+        fn to_size_u32(r: Result<wasm_bindgen::JsValue, wasm_bindgen::JsValue>) -> Option<u32> {
+            r.ok().and_then(|v| v.as_f64()).map(|v| v as u32)
+        }
 
-            let glctx = canvas
-                .get_context("webgl")
-                .unwrap()
-                .unwrap()
-                .dyn_into::<WebGlRenderingContext>()
-                .unwrap();
+        // Calls only once
+        use_effect_with((), move |_| 'worms_init: {
+            let Some(canvas) = grid_canvas_clone.cast::<HtmlCanvasElement>() else {
+                error!("Could not cast grid worm canvas to a HtmlCanvasElement, worm animation init failed");
+                break 'worms_init;
+            };
+            let w = window();
+            let (w_width, w_height) =
+                match (to_size_u32(w.inner_width()), to_size_u32(w.inner_height())) {
+                    (Some(w), Some(h)) => (w, h),
+                    (Some(_), None) | (None, Some(_)) | (None, None) => {
+                        error!("Failed to get the size of the window, worm animation init failed");
+                        break 'worms_init;
+                    }
+                };
+
+            canvas.set_width(w_width);
+            canvas.set_height(w_height);
+
+            let glctx = match (|| {
+                let ctx = canvas
+                    .get_context("webgl")
+                    .map_err(|e| format!("Failed to get webgl context due to: {e:?}"))?
+                    .ok_or(String::from("Failed to get webgl context"))?;
+
+                ctx.dyn_into::<WebGlRenderingContext>().map_err(|e| {
+                    format!("failed to convert context to WebGlRenderingContext due to: {e:?}")
+                })
+            })() {
+                Ok(ctx) => ctx,
+                Err(e) => {
+                    error!(format!("{e}, worm animation init failed"));
+                    break 'worms_init;
+                }
+            };
+
+            // Both are the same, the first one does not repeat error! calls & looks cleaner to me
+            // let Some(glctx) = canvas
+            //     .get_context("webgl")
+            //     .map_err(|e| error!(format!("Failed to get webgl context due to: {e:?}")))
+            //     .ok()
+            //     .flatten()
+            //     .and_then(|ctx| {
+            //         ctx.dyn_into::<WebGlRenderingContext>()
+            //             .map_err(|e| {
+            //                 error!(format!(
+            //                     "Failed to convert context to WebGlRenderingContext due to: {e:?}"
+            //                 ));
+            //             })
+            //             .ok()
+            //     })
+            // else {
+            //     break 'worms_init;
+            // };
 
             crate::component::start_wormgrid(glctx);
         })
@@ -76,7 +111,7 @@ pub fn App(props: &Props) -> Html {
         >
         <div id="global">
         <div id="header">
-            <a class="header-item" href="http://github.com/Bowarc/leaguecord">
+            <a class="header-item" href="http://github.com/Bowarc/wasm_portfolio">
                 <img src="/resources/github.webp" alt="Github icon" class="icon"/>
             </a>
             <LocaleSwitch />
