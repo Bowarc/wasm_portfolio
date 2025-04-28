@@ -11,8 +11,6 @@ pub fn Void() -> Html {
             
         };
         debug!("toggled debug vision");
-
-        
     });
 
     html! {<>

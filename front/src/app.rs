@@ -101,6 +101,8 @@ pub fn App(props: &Props) -> Html {
 
     html! {
         <I18nProvider
+            // There is probably a way to put theses in a use_state and have it dynamically load i18ns when
+            // swithing to a non-default one
             translations={HashMap::from([
                 ("en",include_str!("../resources/i18n/en.json")),
                 ("fr",include_str!("../resources/i18n/fr.json"))
