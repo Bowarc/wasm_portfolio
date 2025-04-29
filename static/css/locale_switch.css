@@ -1,0 +1,44 @@
+#locale-switch {
+  float: right;
+}
+
+#locale-switch>ul {
+  list-style: none;
+  display: inline-flex;
+  padding-right: calc(0.7vw);
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 0px;
+}
+
+#locale-switch>ul>li {
+  margin-right: 10%;
+  padding: 0px;
+}
+
+#locale-switch button {
+  border: none;
+  background-color: var(--text-background-color);
+  padding: 0px;
+}
+
+#locale-switch img:hover {
+  border: 1px solid var(--primary-700);
+}
+
+#locale-switch img {
+  margin: 0px !important;
+  width: 25px;
+  aspect-ratio: 4/3;
+  vertical-align: middle;
+}
+
+#scene_list {
+  height: 100%;
+  left: 0px;
+  display: grid;
+  grid-template-columns: repeat(100, auto);
+  grid-gap: 0.5%;
+  padding-left: 0.2%;
+  /*  border: 2px solid green; */
+}

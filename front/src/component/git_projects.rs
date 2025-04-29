@@ -99,16 +99,20 @@ impl yew::Component for GitProjectList {
         while i < repos_to_display.len() {
             let repo = repos_to_display.get(i).unwrap();
 
-            // gloo::console::log!(format!("{}", repo.name));
-
             if repo.description == "null" {
-                // log!(format!("Removed due to no desc"));
+                // log!(format!(
+                //     "Removed due to no desc ({}/{})",
+                //     repo.owner_name, repo.name
+                // ));
                 repos_to_display.remove(i);
                 continue;
             }
 
-            if [".cfg", ".nvim"].iter().any(|s| repo.name.contains(s)){
-                // log!(format!("Removed because it's a config repo"));
+            if [".cfg", ".nvim"].iter().any(|s| repo.name.contains(s)) {
+                // log!(format!(
+                //     "Removed because it's a config repo ({}/{})",
+                //     repo.owner_name, repo.name
+                // ));
                 repos_to_display.remove(i);
                 continue;
             }
@@ -123,7 +127,7 @@ impl yew::Component for GitProjectList {
 
             let dup_repo = repos_to_display.get(dup_pos).unwrap();
 
-            // gloo::console::log!(format!(
+            // log!(format!(
             //     "duplicates\nfirst: {} by {} with date: {}\nseccond: {} by {} with date: {}",
             //     repo.name,
             //     repo.owner_name,
@@ -150,11 +154,11 @@ impl yew::Component for GitProjectList {
                 i
             };
 
-            let _deleted = self.repos.get(delete_idx).unwrap();
+            let _deleted = repos_to_display.remove(delete_idx);
             // log!(format!("Removing repo from: {}", deleted.owner_name));
-            repos_to_display.remove(i);
         }
 
+        debug!(format!("{repos_to_display:?}"));
         html! {
             <div id="project_list">
                 {repos_to_display.iter().map(|repo|{ html!{
@@ -168,7 +172,7 @@ impl yew::Component for GitProjectList {
                                             repo.language.to_lowercase()
                                         )
                                     }
-                                    alt={ format!("{} ", repo.language) }
+                                    alt={ " " }
                                     class="icon"
                                 />
                                 { &repo.name }

@@ -1,3 +1,5 @@
+#![allow(static_mut_refs)]
+
 use wasm_bindgen::JsCast;
 use web_sys::{window, WebGlRenderingContext};
 

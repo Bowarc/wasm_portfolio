@@ -1,21 +1,20 @@
-use yew::{function_component, html, Html, Callback};
+use std::sync::atomic::Ordering;
+use yew::{function_component, html, Callback, Html};
 
 #[function_component]
 pub fn Void() -> Html {
     use crate::component::WORM_DEBUG_DRAW_VISION_POINTS;
 
-    let onclick = Callback::from(move |_|{
+    let onclick = Callback::from(move |_| {
         use crate::component::WORM_DEBUG_DRAW_VISION_POINTS;
-        unsafe{
-            WORM_DEBUG_DRAW_VISION_POINTS = !WORM_DEBUG_DRAW_VISION_POINTS;
-            
-        };
+        WORM_DEBUG_DRAW_VISION_POINTS.fetch_not(Ordering::AcqRel);
+
         debug!("toggled debug vision");
     });
 
     html! {<>
         <div class="void">
-            <button class={if unsafe{WORM_DEBUG_DRAW_VISION_POINTS}{"on"}else{"off"}}onclick={onclick}>{"Toggle debug vision"}</button>
+            <button class={if WORM_DEBUG_DRAW_VISION_POINTS.load(Ordering::Acquire){"on"}else{"off"}}onclick={onclick}>{"Toggle debug vision"}</button>
         </div>
     </>}
 }

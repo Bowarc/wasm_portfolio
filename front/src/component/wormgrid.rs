@@ -1,12 +1,13 @@
 use gloo::console::log;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 mod worm;
 
 use worm::SPEED;
 
 // Debug
-pub static mut WORM_DEBUG_DRAW_VISION_POINTS: bool = false;
-const DEBUG_DRAW_HEAD_POINTS: bool = false;
+pub static WORM_DEBUG_DRAW_VISION_POINTS: AtomicBool = AtomicBool::new(false);
+const DEBUG_DRAW_HEAD_POINTS: AtomicBool = AtomicBool::new(false);
 
 pub struct WormGrid {
     size: math::Vec2,
@@ -183,7 +184,7 @@ impl WormGrid {
             });
 
             // Draw corner point
-            if DEBUG_DRAW_HEAD_POINTS {
+            if DEBUG_DRAW_HEAD_POINTS.load(Ordering::Relaxed) {
                 [
                     worm.rect().aa_topleft(),
                     worm.rect().aa_topright(),
@@ -267,7 +268,7 @@ impl WormGrid {
             );
 
             // Debug vision points
-            if unsafe { WORM_DEBUG_DRAW_VISION_POINTS } {
+            if WORM_DEBUG_DRAW_VISION_POINTS.load(Ordering::Acquire) {
                 [90.0f64, -90.0f64].iter().for_each(|angle| {
                     let angle = angle.to_radians();
                     // let line = math::Line::new_rotated(

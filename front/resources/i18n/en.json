@@ -1,6 +1,53 @@
 {
   "home": {
     "construction_warning": "This website is still under construction",
+    "description": {
+      "intro": {
+        "title": "Hellow !",
+        "content": {
+          "1": "I'm a ",
+          "2": " year old software developer currently living in France."
+        }
+      },
+      "journey": {
+        "title": "My Journey into Programming",
+        "content": {
+          "1": "My programming journey began ",
+          "2": " years ago, driven by curiosity and a love for problem-solving. I started with Python, which helped me grasp programming concepts and explore areas like scripting, automation, and basic software development.",
+          "3": "Seeking to tackle more technical challenges, I turned to Rust, which I particularly appreciate for its performance, safety, and robust type system."
+        }
+      },
+      "frontend": {
+        "title": "Expanding into Front-End Development",
+        "content": {
+          "1": "While software / backend development is my main focus, I also enjoy working on front-end projects to create engaging user experiences. I work with Yew, a Rust-based framework that leverages WebAssembly for high-performance web applications.",
+          "2": "Although I have experience with popular JavaScript frameworks like React and Next.js, I find Yew particularly exciting because it combines my love for Rust with modern web development practices."
+        }
+      },
+      "open_source": {
+        "title": "Open Source Contributions",
+        "content": {
+          "1": "One of the most rewarding aspects of my career has been contributing to open-source projects. I'm proud to be a contributor of the ggez 2D game framework, which empowers developers to create simple yet powerful 2D games using Rust.",
+          "2": "As a contributor, I handle tasks such as improving the framework's functionality, assisting other developers by reviewing pull requests, and ensuring compatibility with new versions of Rust and related libraries. This experience has taught me valuable lessons about collaboration and community-building."
+        }
+      },
+      "experience": {
+        "title": "Experience",
+        "content": "I completed a 3-month internship at 'Artistes Sans Frontières', where I developed a storage server to efficiently manage and store images, optimizing disk space usage."
+      },
+      "personal_statement": {
+        "title": "Personal Statement",
+        "content": "I am passionate about coding and dedicated to creating impactful software solutions. I continuously seek to learn new technologies and enhance my skills."
+      },
+      "connect": {
+        "title": "Let's Connect",
+        "content": {
+          "1": "Please head up to the ",
+          "2": " to contact me."
+        },
+        "button_text": "contact page"
+      }
+    },
     "skills": {
       "title": "Technical skills"
     }

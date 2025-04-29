@@ -47,3 +47,11 @@
   height: auto;
   /* margin-right: 10px; /* Add some space between the logo and the text */
 }
+
+button {
+  background-color: var(--text-background-color);
+  color: var(--text-900);
+  border: 1px solid var(--accent-400);
+  border-radius: 8px;
+  padding: 5px;
+}

@@ -4,7 +4,7 @@ use yew::{function_component, html, virtual_dom::VNode, Callback, Html};
 #[function_component]
 pub fn LocaleSwitch() -> Html {
     let (_i18n, switch_cb) = use_translation();
-    html! {<div class="header-item" id="locale_switch"><ul>{
+    html! {<div class="header-item" id="locale-switch"><ul>{
         ["en", "fr"].into_iter().map(|locale|{
             html!{<li>
                 <button

@@ -1,4 +1,4 @@
-use crate::component::LocaleSwitch;
+use crate::component::{LocaleSwitch, ThemeSwitch};
 use gloo::utils::window;
 use wasm_bindgen::JsCast as _;
 use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
@@ -117,6 +117,7 @@ pub fn App(props: &Props) -> Html {
                 <img src="/resources/github.webp" alt="Github icon" class="icon"/>
             </a>
             <LocaleSwitch />
+            <ThemeSwitch />
             <div class="header-item" id="scene_list">{
                 scenes.into_iter().map(|scene|{
                     html!{
@@ -133,7 +134,7 @@ pub fn App(props: &Props) -> Html {
         <div id="content">
                 <canvas id="gridworm-canvas" ref={grid_canvas} />
                 {
-                    current_scene.html()
+                    current_scene.html(current_scene.clone())
                 }
                 <NotificationManager />
         </div>

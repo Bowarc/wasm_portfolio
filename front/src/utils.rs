@@ -11,6 +11,17 @@ pub enum FetchState<T> {
     Failed(wasm_bindgen::JsValue),
 }
 
+pub fn age() -> u16 {
+    use js_sys::Date;
+    use wasm_bindgen::JsValue;
+
+    let birth_date = Date::new(&JsValue::from_f64(
+        Date::new_0().get_time() - Date::new(&JsValue::from_str("2001, 9, 15")).get_time(),
+    ));
+
+    (birth_date.get_time() / 1000. / 60. / 60. / 24. / 365.242199) as u16
+}
+
 pub fn time_since(date: Date) -> String {
     let s =
         |n: i32, time: &str| -> String { format!("{n} {time}{}", if n > 1 { "s" } else { "" }) };
@@ -38,17 +49,20 @@ pub fn time_since(date: Date) -> String {
         return s(interval, "minute");
     }
 
-    s(interval, "second")   
+    s(interval, "second")
 }
 
-
 pub fn add_script(path: &str, id: &str) {
-    let Some(window) = web_sys::window() else{
-        log!(format!("Could not set script {id} due to: Could not get the window"));
+    let Some(window) = web_sys::window() else {
+        log!(format!(
+            "Could not set script {id} due to: Could not get the window"
+        ));
         return;
     };
-    let Some(document) = window.document() else{
-        log!(format!("Could not set script {id} due to: Could not get the document"));
+    let Some(document) = window.document() else {
+        log!(format!(
+            "Could not set script {id} due to: Could not get the document"
+        ));
         return;
     };
 
@@ -60,12 +74,16 @@ pub fn add_script(path: &str, id: &str) {
 }
 
 pub fn remove_script(id: &str) {
-    let Some(window) = web_sys::window() else{
-        log!(format!("Could not remove script {id} due to: Could not get the window"));
+    let Some(window) = web_sys::window() else {
+        log!(format!(
+            "Could not remove script {id} due to: Could not get the window"
+        ));
         return;
     };
-    let Some(document) = window.document() else{
-        log!(format!("Could not remove script {id} due to: Could not get the document"));
+    let Some(document) = window.document() else {
+        log!(format!(
+            "Could not remove script {id} due to: Could not get the document"
+        ));
         return;
     };
 

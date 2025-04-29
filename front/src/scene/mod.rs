@@ -22,12 +22,12 @@ pub enum Scene {
 }
 
 impl Scene{
-    pub fn html(&self) -> yew::virtual_dom::VNode{
+    pub fn html(&self, current_scene: yew::UseStateHandle<Scene>) -> yew::virtual_dom::VNode{
         use yew::html;
 
 
         match self{
-            Scene::Home => html!{<Home />},
+            Scene::Home => html!{<Home {current_scene}/>},
             Scene::GitRepos => html!{<GitRepos />},
             // Scene::WASMShowcase => html!{<WASM />},
             Scene::Projects => html!{<Projects />},

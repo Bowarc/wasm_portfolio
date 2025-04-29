@@ -1,6 +1,7 @@
 :root {
   --text-background-color: color-mix(in srgb, var(--background-50), transparent 15%);
   --blur-size: 7.5px;
+  --data-theme: "dark";
 }
 
 * {
@@ -17,80 +18,6 @@ body {
   height: 100%;
   margin: 0;
   text-align: center;
-}
-
-#header {
-  top: 0px;
-  width: 100%;
-  height: 6vh;
-  margin-bottom: 3%;
-  margin-top: 0.5vh;
-}
-
-#header .icon {
-  float: right;
-  padding-right: 0.5vw;
-}
-
-#header #locale_switch {
-  float: right;
-}
-
-#header #locale_switch>ul {
-  list-style: none;
-  display: inline-flex;
-  padding-right: 0.5vw;
-  margin-top: 0;
-}
-
-#header #locale_switch>ul>li {
-  margin-right: 10%;
-}
-
-#header #locale_switch button {
-  border: none;
-  background-color: var(--text-background-color);
-  padding: 0px;
-}
-
-#header #locale_switch img:hover {
-  border: 1px solid var(--primary-700);
-}
-
-#header #locale_switch img {
-  margin: 0px !important;
-  width: 25px;
-  aspect-ratio: 4/3;
-  vertical-align: middle;
-}
-
-#header #scene_list {
-  height: 100%;
-  left: 0px;
-  display: grid;
-  grid-template-columns: repeat(100, auto);
-  grid-gap: 0.5%;
-  padding-left: 0.2%;
-  /*  border: 2px solid green; */
-}
-
-.current {
-  border: 2px solid var(--primary-700) !important;
-}
-
-.scene_button {
-  width: 100%;
-  font-size: 16px;
-  /* margin-top: 0.5vh; */
-  margin-bottom: 0.5vh;
-  cursor: pointer;
-  /*  padding: 10px 20px;*/
-  border: 1px solid var(--primary-400);
-  border-radius: 8px;
-  background-color: transparent;
-  color: var(--background-900);
-  backdrop-filter: blur(var(--blur-size));
-  -webkit-backdrop-filter: blur(var(--blur-size));
 }
 
 .icon {

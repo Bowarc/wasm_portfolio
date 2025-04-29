@@ -1,5 +1,4 @@
-@media (prefers-color-scheme: light) {
-  :root {
+[data-theme="light"] {
   --text-50: rgb(243, 244, 240);
   --text-100: rgb(231, 233, 226);
   --text-200: rgb(208, 212, 196);
@@ -60,10 +59,9 @@
   --accent-900: rgb(22, 25, 29);
   --accent-950: rgb(11, 13, 14);
 
-  }
 }
-@media (prefers-color-scheme: dark) {
-  :root {
+
+[data-theme="dark"] {
   --text-50: rgb(14, 15, 11);
   --text-100: rgb(27, 29, 22);
   --text-200: rgb(55, 58, 44);
@@ -124,5 +122,4 @@
   --accent-900: rgb(226, 229, 233);
   --accent-950: rgb(241, 242, 244);
 
-  }
 }

@@ -1,8 +1,15 @@
-use crate::component;
-use yew::{function_component, html, Html};
+use crate::scene::Scene;
+use crate::utils::age;
+
+use yew::{function_component, html, Callback, Html};
+
+#[derive(yew::Properties, std::cmp::PartialEq)]
+pub struct Props {
+    pub current_scene: yew::UseStateHandle<crate::scene::Scene>,
+}
 
 #[function_component]
-pub fn Home() -> Html {
+pub fn Home(props: &Props) -> Html {
     use i18nrs::yew::use_translation;
 
     let (i18n, _) = use_translation();
@@ -14,14 +21,45 @@ pub fn Home() -> Html {
         </header>
 
         <section id="description">
-            <p>{ "I'm a self-taught " }<component::Age />{ " years old developer, focusing on software and backend development." }</p>
-            <p>{ "I started with Python but now mainly work with Rust because I love its performance, safety, and solid type system." }</p>
+        <h2>{ i18n.t("home.description.intro.title") }</h2>
+        <p>
+            { i18n.t("home.description.intro.content.1") }
+            { age() }
+            { i18n.t("home.description.intro.content.2") }
+        </p>
 
-            <p>{ "I also do front-end development, primarily using " }<a href="https://yew.rs/" class="link">{ "Yew" }</a>{ " and " }<a href="https://webassembly.org/" class="link">{ "WebAssembly" }</a>
-            { "." }
-            <br />
-            { "While I have experience with React and Next.js, I find Yew to be a more enjoyable framework to work with." }</p>
-            <p>{ "Maintainer of the " }<a href="https://ggez.rs/" class="link">{ "ggez" }</a>{ " 2D game framework." }</p>
+        <h2>{ i18n.t("home.description.journey.title") }</h2>
+        <p>
+            { i18n.t("home.description.journey.content.1") }
+            { age()-16 }
+            { i18n.t("home.description.journey.content.2") }
+        </p>
+        <p>{  i18n.t("home.description.journey.content.3") }</p>
+
+        <h2>{  i18n.t("home.description.frontend.title") }</h2>
+        <p>{  i18n.t("home.description.frontend.content.1") }</p>
+        <p>{  i18n.t("home.description.frontend.content.2") }</p>
+
+        <h2>{  i18n.t("home.description.open_source.title") }</h2>
+        <p>{  i18n.t("home.description.open_source.content.1") }</p>
+        <p>{  i18n.t("home.description.open_source.content.2") }</p>
+
+        <h2>{  i18n.t("home.description.experience.title") }</h2>
+        <p>{  i18n.t("home.description.experience.content") }</p>
+
+        <h2>{  i18n.t("home.description.personal_statement.title") }</h2>
+        <p>{  i18n.t("home.description.personal_statement.content") }</p>
+
+        <h2>{  i18n.t("home.description.connect.title") }</h2>
+        <p>
+            { i18n.t("home.description.connect.content.1") }
+            <button onclick={
+                let current_scene_clone = props.current_scene.clone();
+                Callback::from(move |_| current_scene_clone.set(Scene::Contact))
+            }>{ i18n.t("home.description.connect.button_text") }</button>
+            { i18n.t("home.description.connect.content.2") }
+        </p>
+
         </section>
         <section id="skill_list">
             <h2>{ i18n.t("home.skills.title") }</h2>
@@ -105,18 +143,14 @@ pub fn Home() -> Html {
                 <h3><a href="https://en.wikipedia.org/wiki/PowerShell" target="_blank" class="link">{ "PowerShell" }</a></h3>
                 <img src="./resources/pwsh2.webp" alt="PowerShell" class="skill_logo" />
             </div></li>
-
-
             // <li><div class="skill_card">
             //     <h3><a href="https://filezilla-project.org/" target="_blank" class="link">{ "FTP/SFTP" }</a></h3>
             //     <img src="./resources/ftp.webp" alt="FTP/SFTP" class="skill_logo" />
             // </div></li>
-
             <li><div class="skill_card">
                 <h3><a href="https://git-scm.com/" target="_blank" class="link">{ "Git" }</a></h3>
                 <img src="./resources/git.webp" alt="Git" class="skill_logo" />
             </div></li>
-
             <li><div class="skill_card">
                 <h3><a href="https://www.mysql.com/" target="_blank" class="link">{ "SQL" }</a></h3>
                 <img src="./resources/sql.webp" alt="SQL" class="skill_logo" />
