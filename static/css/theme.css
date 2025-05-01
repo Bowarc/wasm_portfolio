@@ -123,3 +123,16 @@
   --accent-950: rgb(241, 242, 244);
 
 }
+
+/* @link https://utopia.fyi/type/calculator?c=320,13,1.125,1920,16,1.2,5,3,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+:root {
+  --text--2: clamp(0.642rem, 0.6315rem + 0.0525vw, 0.6944rem);
+  --text--1: clamp(0.7222rem, 0.7rem + 0.1111vw, 0.8333rem);
+  --text-0: clamp(0.8125rem, 0.775rem + 0.1875vw, 1rem);
+  --text-1: clamp(0.9141rem, 0.8569rem + 0.2859vw, 1.2rem);
+  --text-2: clamp(1.0283rem, 0.946rem + 0.4117vw, 1.44rem);
+  --text-3: clamp(1.1569rem, 1.0426rem + 0.5711vw, 1.728rem);
+  --text-4: clamp(1.3015rem, 1.147rem + 0.7721vw, 2.0736rem);
+  --text-5: clamp(1.4642rem, 1.2593rem + 1.0242vw, 2.4883rem);
+}

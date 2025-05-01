@@ -2,7 +2,7 @@ use gloo::utils::window;
 use yew::{function_component, html, use_effect_with, use_node_ref, use_state, Callback, Html};
 
 #[function_component]
-pub fn ThemeSwitch() -> Html {
+pub fn LightSwitch() -> Html {
     // let (_i18n, switch_cb) = use_translation();
     let theme = use_state(|| "light".to_string());
 

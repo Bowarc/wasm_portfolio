@@ -6,11 +6,11 @@ use i18nrs::yew::use_translation;
 pub fn GitRepos() -> Html {
     let (i18n, _) = use_translation();
     
-    html! {<>
+    html! {<div id="gitrepos">
         <h3>
         { i18n.t("gitrepos.title") }
         </h3>
         <br/>
         <GitProjectList />
-    </>}
+    </div>}
 }

@@ -1,0 +1,19 @@
+.hidden_element {
+  display: hidden;
+}
+
+.visible_element {
+  animation: fadeEffect 2s;
+  /* display: block; */
+}
+
+@keyframes fadeEffect {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

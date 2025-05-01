@@ -2,7 +2,7 @@ use yew::{function_component, html, Html};
 
 #[function_component]
 pub fn Contact() -> Html {
-    html! {<div class="contact">
+    html! {<div id="contact">
         <h1>{"Contact Me"}</h1>
         <p>{"You can reach me at: "}</p>
         <table>

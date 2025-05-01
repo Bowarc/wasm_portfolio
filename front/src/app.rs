@@ -1,4 +1,4 @@
-use crate::component::{LocaleSwitch, ThemeSwitch};
+use crate::component::{LocaleSwitch, LightSwitch, Hidable};
 use gloo::utils::window;
 use wasm_bindgen::JsCast as _;
 use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
@@ -111,13 +111,14 @@ pub fn App(props: &Props) -> Html {
             storage_name={"i18nrs".to_string()}
             default_language={"en".to_string()}
         >
+        <Hidable />
         <div id="global">
         <div id="header">
             <a class="header-item" href="http://github.com/Bowarc/wasm_portfolio">
                 <img src="/resources/github.webp" alt="Github icon" class="icon"/>
             </a>
             <LocaleSwitch />
-            <ThemeSwitch />
+            <LightSwitch />
             <div class="header-item" id="scene_list">{
                 scenes.into_iter().map(|scene|{
                     html!{

@@ -34,7 +34,6 @@ impl yew::Component for GitProjectList {
     type Properties = ();
 
     fn create(ctx: &yew::prelude::Context<Self>) -> Self {
-        log!("GitProjectList comp created");
         ctx.link().send_message(Msg::FetchRepos);
         Self { repos: Vec::new() }
     }
@@ -158,11 +157,10 @@ impl yew::Component for GitProjectList {
             // log!(format!("Removing repo from: {}", deleted.owner_name));
         }
 
-        debug!(format!("{repos_to_display:?}"));
         html! {
             <div id="project_list">
                 {repos_to_display.iter().map(|repo|{ html!{
-                    <div class="card">
+                    <div class="card hidable_element">
                         <a href={ format!("https://github.com/{}/{}", repo.owner_name, repo.name) }
                                 class="card_link">
                             <div class="card_bg"></div>
@@ -199,7 +197,8 @@ impl yew::Component for GitProjectList {
     }
 
     fn rendered(&mut self, _ctx: &yew::prelude::Context<Self>, _first_render: bool) {
-        log!("Repo rendered")
+        // call everytime since it's all repos won't be loaded on the first render (& obv scrolling doesn't re render)
+        super::hidable::update_visibles();
     }
 }
 
