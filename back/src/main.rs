@@ -1,26 +1,64 @@
 #[macro_use(trace, debug, info, warn, error)]
 extern crate log;
+pub mod catchers;
+pub mod response;
+pub mod routes;
 
-mod response;
-mod routes;
+fn setup_loggers() {
+    use {log::LevelFilter, std::time::Duration};
 
-#[rocket::main]
-async fn main() {
-    // let logcfg = logger::LoggerConfig::new()
-    //     .set_level(log::LevelFilter::Trace)
-    //     .add_filter("rocket", log::LevelFilter::Warn);
-    // logger::init(logcfg, Some("log/server.log"));
+    const DEP_FILTERS: &[(&str, LevelFilter)] = &[
+        ("rocket::server.rs", LevelFilter::Off), // on 0.5.1, it only has infos about querying a 404 and catcher panicking
+    ];
 
     logger::init([
         logger::Config::default()
-            .level(log::LevelFilter::Trace)
-            .filter("rocket", log::LevelFilter::Warn)
-            .output(logger::Output::Stdout),
+            .output(logger::Output::Stdout)
+            .colored(true)
+            .filters(DEP_FILTERS),
         logger::Config::default()
-            .level(log::LevelFilter::Trace)
+            .output(logger::Output::new_timed_file(
+                "./log/server.log",
+                Duration::from_secs(86400), // 1 day
+            ))
+            .level(log::LevelFilter::Off)
             .filter("rocket", log::LevelFilter::Warn)
-            .output(logger::Output::File("./log/server.log".into())),
-    ]);
+            .colored(false),
+    ])
+}
+
+// Needed for tests
+pub async fn build_rocket() -> rocket::Rocket<rocket::Ignite> {
+    rocket::build()
+        .register("/", rocket::catchers![catchers::root_404])
+        .mount(
+            "/",
+            rocket::routes![
+                routes::root,
+                routes::front_js,
+                routes::front_bg_wasm,
+                routes::index_html,
+                routes::static_css,
+                routes::static_resource,
+                routes::static_js,
+                routes::favicon_ico,
+                // Theses routes are troll routes, made to fuck with the bots
+                routes::bot_env,
+                routes::bot_admin,
+                routes::bot_wp,
+                routes::bot_wordpress,
+                routes::bot_wp_admin,
+                // Theses are test routes
+            ],
+        )
+        .ignite()
+        .await
+        .unwrap()
+}
+
+#[rocket::main]
+async fn main() {
+    setup_loggers();
 
     // Small print to show the start of the program log in the file
     trace!(
@@ -29,29 +67,7 @@ async fn main() {
         message = "Program start"
     );
 
-    let rocket = rocket::build()
-        // .manage(cache)
-        .register("/", rocket::catchers![])
-        .register("/upload", rocket::catchers![])
-        .mount(
-            "/",
-            rocket::routes![
-                routes::root,
-                routes::themecss,
-                routes::stylecss,
-                routes::wormscss,
-                routes::gitcardcss,
-                routes::front,
-                routes::live,
-                routes::wasm,
-                routes::github_icon,
-                routes::rust_icon,
-                routes::python_icon,
-            ],
-        )
-        .ignite()
-        .await
-        .unwrap();
+    let rocket = build_rocket().await;
 
     display_config(rocket.config(), rocket.routes(), rocket.catchers());
 
@@ -69,7 +85,7 @@ fn display_config<'a>(
     let port = rocket_cfg.port;
     let workers = rocket_cfg.workers;
     // let max_blocking = cfg.max_blocking;
-    let indent = rocket_cfg.ident.as_str().unwrap_or("[ERROR] Undefined");
+    let ident = rocket_cfg.ident.as_str().unwrap_or("Disabled");
     let ip_headers = rocket_cfg
         .ip_header
         .as_ref()
@@ -96,10 +112,10 @@ fn display_config<'a>(
             let name = route
                 .name
                 .as_ref()
-                .map(|name| name.as_ref())
+                .map(std::borrow::Cow::as_ref)
                 .unwrap_or("[ERROR] Undefined");
             let method = route.method.as_str();
-            format!("{method:<7} {uri:<15} {name}")
+            format!("{method:<5} {uri:<20} {name}")
         })
         .collect::<Vec<String>>();
 
@@ -109,28 +125,30 @@ fn display_config<'a>(
             let name = catcher
                 .name
                 .as_ref()
-                .map(|name| name.as_ref())
+                .map(std::borrow::Cow::as_ref)
                 .unwrap_or("[ERROR] Undefined");
             let code = catcher
                 .code
                 .map(|code| code.to_string())
                 .unwrap_or("[ERROR] Undefined".to_string());
 
-            format!("{code:<7} {base:<15} {name}")
+            format!("{code:<5} {base:<20} {name}")
         })
         .collect::<Vec<String>>();
 
     let display_vec = |data: Vec<String>| -> String {
+        use std::fmt::Write as _;
         let mut out = String::new();
         out.push_str("[\n");
-        for d in data {
-            out.push_str(&format!(" {d}\n"))
-        }
+        out.push_str(&data.iter().fold(String::new(), |mut output, d| {
+            writeln!(output, "    {d}").unwrap(); // Writing to a string cannot fail
+            output
+        }));
         out.push(']');
         out
     };
 
-    info!("Config:\nUsing profile: {profile}\nAddress: {address}:{port}\nWorkers: {workers}\nIndent: {indent}\nHeaders: {ip_headers}\nLimits: {formatted_limits}\nConnection lifetime: {keep_alive_s}s\nShutdown mode: {shutdown_mode}\nRoutes: {formatted_routes}\nCatchers: {formatted_catchers}",
+    info!("\nConfig:\nUsing profile: {profile}\nAddress: {address}:{port}\nWorkers: {workers}\nIdent: {ident}\nHeaders: {ip_headers}\nLimits: {formatted_limits}\nConnection lifetime: {keep_alive_s}s\nShutdown mode: {shutdown_mode}\nRoutes: {formatted_routes}\nCatchers: {formatted_catchers}",
         formatted_limits = display_vec(limits),
         formatted_routes = display_vec(routes),
         formatted_catchers = display_vec(catchers)

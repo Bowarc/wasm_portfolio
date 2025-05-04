@@ -12,4 +12,12 @@ path = "src/main.rs"
 [dependencies]
 logger = { git = "https://github.com/Bowarc/Crates.git", package = "logger" }
 rocket = { version = "0.5.0", features = ["json"] }
+rocket-client-addr = { git = "https://github.com/bowarc/rocket-client-addr"}
+tokio = { version = "1.43.0", features = ["rt-multi-thread"] }
+tokio-util = { version = "0.7.13", default-features = false, features = [
+  "compat",
+] }
+futures = { version = "0.3.30", default-features = false, features = [
+  "async-await",
+] }
 log.workspace = true
