@@ -2,12 +2,14 @@
 
 ## defaults for ALL profiles
 [default]
-address = "127.0.0.1" # Local addr
-port = 8000
+ident = false
+address = "127.0.0.1"         # Local addr
+port = 0xa44c
 workers = 2
 keep_alive = 5
 log_level = "normal"
 cli_colors = false
+ip_header = "X-Forwarded-For"
 
 # Streaming read size limits.
 [default.limits]

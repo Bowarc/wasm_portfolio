@@ -8,7 +8,6 @@ RUST_LOG="walrus=error"
 # # Make sure rustup has the target, only procduces a dbg message if already installed
 # rustup target add wasm32-unknown-unknown
 
-# Build using wanted profile
 if [ "$1" = release ] || [ "$1" = r ]
 then
   echo Building front using release mode
@@ -21,7 +20,6 @@ else
 fi
 
 echo Bindgen
-# Generate the js bindings for the wasm prog
 wasm-bindgen --target=web --out-dir=./target/wasm-bindgen/$mode ./target/wasm32-unknown-unknown/$mode/front.wasm --no-typescript
 
 if ! [ -d "./static/" ]; then
@@ -29,10 +27,6 @@ if ! [ -d "./static/" ]; then
   mkdir ./static/
 fi
 
-# Copy the .wasm & .js to the static directory
 cp ./target/wasm-bindgen/$mode/* ./static/
-
-# Copy the translations to static
-cp ./front/resources/i18n/* ./static/resources/i18n/
 
 echo Done
