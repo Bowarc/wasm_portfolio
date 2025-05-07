@@ -37,6 +37,20 @@ pub async fn favicon_ico(ip_addr: rocket_client_addr::ClientAddr) -> super::resp
     static_file_response("favicon.ico", ContentType::Icon, ip_addr).await
 }
 
+#[rocket::get("/sitemap.xml")]
+pub async fn sitemap_xml(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
+    use rocket::http::ContentType;
+
+    static_file_response("sitemap.xml", ContentType::Icon, ip_addr).await
+}
+
+#[rocket::get("/robots.txt")]
+pub async fn robots_txt(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
+    use rocket::http::ContentType;
+
+    static_file_response("robots.txt", ContentType::Icon, ip_addr).await
+}
+
 // The goal of this method, is to not use FileServer (because i wanna make sure of what file i serve)
 macro_rules! static_dir_server {
     ($path:literal, $dir:literal, $func_name:ident, $allowed_files:expr) => {

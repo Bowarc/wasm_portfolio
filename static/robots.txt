@@ -1,0 +1,4 @@
+user-agent: *
+allow: /
+
+sitemap: https://bowarc.ovh/sitemap.xml

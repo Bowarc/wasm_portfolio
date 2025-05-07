@@ -42,6 +42,8 @@ pub async fn build_rocket() -> rocket::Rocket<rocket::Ignite> {
                 routes::static_resource,
                 routes::static_js,
                 routes::favicon_ico,
+                routes::sitemap_xml,
+                routes::robots_txt,
                 // Theses routes are troll routes, made to fuck with the bots
                 routes::bot_env,
                 routes::bot_admin,
