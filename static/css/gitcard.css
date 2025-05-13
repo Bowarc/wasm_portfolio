@@ -1,3 +1,7 @@
+#gitrepos h3 {
+  background-color: var(--text-background-color);
+}
+
 #project_list {
   color: white;
   width: 95%;

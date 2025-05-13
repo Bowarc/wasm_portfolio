@@ -2,6 +2,11 @@
 mod bot_routes;
 pub use bot_routes::{bot_admin, bot_env, bot_wordpress, bot_wp, bot_wp_admin};
 
+#[rocket::get("/404")]
+pub async fn _404(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
+    root(ip_addr).await
+}
+
 #[rocket::get("/")]
 pub async fn root(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
     use rocket::http::ContentType;
@@ -90,6 +95,7 @@ static_dir_server!(
         "theme.css",
         "void.css",
         "worms.css",
+        "not_found.css",
     ]
 );
 static_dir_server!(

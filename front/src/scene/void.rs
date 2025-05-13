@@ -1,15 +1,18 @@
 use std::sync::atomic::Ordering;
-use yew::{function_component, html, Callback, Html};
+use yew::{function_component, html, use_force_update, Callback, Html};
 
 #[function_component]
 pub fn Void() -> Html {
     use crate::component::WORM_DEBUG_DRAW_VISION_POINTS;
 
+    let force_update = use_force_update();
+        
     let onclick = Callback::from(move |_| {
         use crate::component::WORM_DEBUG_DRAW_VISION_POINTS;
         WORM_DEBUG_DRAW_VISION_POINTS.fetch_not(Ordering::AcqRel);
 
         debug!("toggled debug vision");
+        force_update.force_update();
     });
 
     html! {<>

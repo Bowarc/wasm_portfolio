@@ -14,8 +14,19 @@
         "content": {
           "1": "Mon parcours en programmation a commencé il y a ",
           "2": " ans, motivé par la curiosité et un amour pour la résolution de problèmes. J'ai commencé avec Python, ce qui m'a aidé à comprendre les concepts de programmation et à explorer des domaines comme le scripting, l'automatisation et le développement de logiciels de base.",
-          "3": "En cherchant à relever des défis plus techniques, je me suis tourné vers Rust que j'apprécie tout particulièrement pour ses performances, sa sécurité et son système de types robuste."
+          "3": "En cherchant à relever des défis plus techniques, je me suis tourné vers Rust que j'apprécie tout particulièrement pour ses performances, sa sécurité et son robuste système de types."
         }
+      },
+      "main_projects": {
+        "title": "Main projects",
+        "content": {
+          "storage_server": "Un serveur de stockage de fichier en Rust que j'ai commencé lors d'un stage et continué de mon coté.",
+          "chess_game": "Un jeu d'échecs en multijoueur construit sur le framework de jeu Rust ggez et ma propre bibliothèque de sockets réseau.",
+          "lumin": "Un outil pour gérer des fond d'écrans animés sur Windows",
+          "leaguecord": "Un système de group Discord temporaire pour faciliter la communication des joueurs de jeux vidéos"
+        },
+        "more_info": "Plus de details sur la ",
+        "button_text": "page de projets (WIP)"
       },
       "frontend": {
         "title": "Expansion dans le développement Front-End",
@@ -33,11 +44,18 @@
       },
       "experience": {
         "title": "Expérience",
-        "content": "J'ai complété un stage de 3 mois chez 'Artistes Sans Frontières', où j'ai développé un serveur de stockage pour gérer et stocker efficacement des images, optimisant l'utilisation de l'espace disque."
+        "content": {
+          "asf": "J'ai complété un stage chez 'Artistes Sans Frontières', où j'ai développé un serveur de stockage pour gérer et stocker efficacement des images, optimisant l'utilisation de l'espace disque.",
+          "atlantice": {
+            "1": "J'ai aussi complété un stage chez ",
+            "name": "Atlantice",
+            "2": " où j'ai développé un logiciel & serveur web pour lire, afficher et intégrer une Centrale inertielle construite en arduino, dans Flightgear"
+          }
+        }
       },
-      "personal_statement": {
-        "title": "Déclaration personnelle",
-        "content": "Je suis passionné par le codage et dédié à la création de solutions logicielles impactantes. Je cherche continuellement à apprendre de nouvelles technologies et à améliorer mes compétences."
+      "current_focus": {
+        "title": "Prêt pour de nouveaux défis",
+        "content": "En tant que développeur logiciel passionné, je suis dédié à la création d'applications impactantes et à la résolution de problèmes complexes. J'aime créer des logiciels qui font la différence et je suis activement à la recherche de nouvelles opportunités pour collaborer sur des projets innovants. Si vous recherchez un développeur motivé pour rejoindre votre équipe ou si vous avez un projet en tête, j'aimerais beaucoup avoir de vos nouvelles !"
       },
       "connect": {
         "title": "Connectons-nous",

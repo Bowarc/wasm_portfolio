@@ -8,6 +8,7 @@ fn setup_loggers() {
     use {log::LevelFilter, std::time::Duration};
 
     const DEP_FILTERS: &[(&str, LevelFilter)] = &[
+        ("rocket", LevelFilter::Warn),
         ("rocket::server.rs", LevelFilter::Off), // on 0.5.1, it only has infos about querying a 404 and catcher panicking
     ];
 
@@ -21,8 +22,7 @@ fn setup_loggers() {
                 "./log/server.log",
                 Duration::from_secs(86400), // 1 day
             ))
-            .level(log::LevelFilter::Off)
-            .filter("rocket", log::LevelFilter::Warn)
+            .level(LevelFilter::Off)
             .colored(false),
     ])
 }
@@ -35,6 +35,7 @@ pub async fn build_rocket() -> rocket::Rocket<rocket::Ignite> {
             "/",
             rocket::routes![
                 routes::root,
+                routes::_404,
                 routes::front_js,
                 routes::front_bg_wasm,
                 routes::index_html,

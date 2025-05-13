@@ -17,6 +17,17 @@
           "3": "Seeking to tackle more technical challenges, I turned to Rust, which I particularly appreciate for its performance, safety, and robust type system."
         }
       },
+      "main_projects": {
+        "title": "Main projects",
+        "content": {
+          "storage_server": "A file storage server made in Rust that I originally started during an internship and continued on my own.",
+          "chess_game": "A multiplayer chess game built on top of the Rust game framework ggez and my own networking socket library.",
+          "lumin": "An animated wallpaper manager for windows",
+          "leaguecord": "A temporary group system for Discord to help video games players communicate more easily."
+        },
+        "more_info": "More details in the ",
+        "button_text": "projects page (WIP)"
+      },
       "frontend": {
         "title": "Expanding into Front-End Development",
         "content": {
@@ -33,11 +44,18 @@
       },
       "experience": {
         "title": "Experience",
-        "content": "I completed a 3-month internship at 'Artistes Sans Frontières', where I developed a storage server to efficiently manage and store images, optimizing disk space usage."
+        "content": {
+          "asf": "I completed an internship at 'Artistes Sans Frontières', where I developed a storage server to efficiently manage and store images, optimizing disk space usage.",
+          "atlantice": {
+            "1": "I also did an internship at ",
+            "name": "Atlantice",
+            "2": " where I made a software & web server to read, display and integrate in Flightgear an Inertial measurement unit (IMU) made in arduino."
+          }
+        }
       },
-      "personal_statement": {
-        "title": "Personal Statement",
-        "content": "I am passionate about coding and dedicated to creating impactful software solutions. I continuously seek to learn new technologies and enhance my skills."
+      "current_focus": {
+        "title": "Ready for New Challenges",
+        "content": "As a dedicated software developer, I am passionate about building impactful applications and solving complex problems. I thrive on creating software that makes a difference and am actively seeking new opportunities to collaborate on innovative projects. If you're looking for a motivated developer to join your team or have a project in mind, I would love to hear from you!"
       },
       "connect": {
         "title": "Let's Connect",

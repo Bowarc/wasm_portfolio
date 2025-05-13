@@ -17,7 +17,7 @@ pub fn Home(props: &Props) -> Html {
     html! { <>
         <header>
             // <h1>{ "Welcome to my Portfolio" }</h1>
-            <p class="warning">{ i18n.t("home.construction_warning") }</p>
+            // <p class="warning">{ i18n.t("home.construction_warning") }</p>
         </header>
 
         <section id="description">
@@ -36,6 +36,26 @@ pub fn Home(props: &Props) -> Html {
         </p>
         <p class="hidable_element">{ i18n.t("home.description.journey.content.3") }</p>
 
+        <h2 class="hidable_element">{ i18n.t("home.description.main_projects.title") }</h2>
+        <ul class="hidable_element">
+            <li class="hidable_element">{ i18n.t("home.description.main_projects.content.storage_server") }</li>
+            <li class="hidable_element">{ i18n.t("home.description.main_projects.content.chess_game") }</li>
+            <li class="hidable_element">{ i18n.t("home.description.main_projects.content.lumin") }</li>
+            <li class="hidable_element">{ i18n.t("home.description.main_projects.content.leaguecord") }</li>
+        </ul>
+        <p class="hidable_element">
+            { i18n.t("home.description.main_projects.more_info") }
+            <button onclick={
+                let current_scene_clone = props.current_scene.clone();
+                Callback::from(move |_| current_scene_clone.set(Scene::Projects))
+            }>{ i18n.t("home.description.main_projects.button_text") }</button>
+        </p>
+        // <p class="hidable_element">
+        //     <h3> { i18n.t("home.description.main_projects.content.storage_server.title") }</h3>
+        //     <br />
+        //     { i18n.t("home.description.main_projects.content.storage_server.description") }
+        // </p>
+
         <h2 class="hidable_element">{ i18n.t("home.description.frontend.title") }</h2>
         <p class="hidable_element">{ i18n.t("home.description.frontend.content.1") }</p>
         <p class="hidable_element">{ i18n.t("home.description.frontend.content.2") }</p>
@@ -43,12 +63,17 @@ pub fn Home(props: &Props) -> Html {
         <h2 class="hidable_element">{ i18n.t("home.description.open_source.title") }</h2>
         <p class="hidable_element">{ i18n.t("home.description.open_source.content.1") }</p>
         <p class="hidable_element">{ i18n.t("home.description.open_source.content.2") }</p>
-
+        
         <h2 class="hidable_element">{ i18n.t("home.description.experience.title") }</h2>
-        <p class="hidable_element">{ i18n.t("home.description.experience.content") }</p>
+        <p class="hidable_element">{ i18n.t("home.description.experience.content.asf") }</p>
+        <p class="hidable_element">
+            { i18n.t("home.description.experience.content.atlantice.1")}
+            <a href="https://sn.linkedin.com/company/atlantice">{ i18n.t("home.description.experience.content.atlantice.name") }</a>
+            { i18n.t("home.description.experience.content.atlantice.2")}
+        </p>
 
-        <h2 class="hidable_element">{ i18n.t("home.description.personal_statement.title") }</h2>
-        <p class="hidable_element">{ i18n.t("home.description.personal_statement.content") }</p>
+        <h2 class="hidable_element">{ i18n.t("home.description.current_focus.title") }</h2>
+        <p class="hidable_element">{ i18n.t("home.description.current_focus.content") }</p>
 
         <h2 class="hidable_element">{ i18n.t("home.description.connect.title") }</h2>
         <p class="hidable_element">
