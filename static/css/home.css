@@ -11,25 +11,25 @@
   text-align: left !important;
 }
 
-@media (width <=1450px) {
+@media (max-width: 1450px) {
   #description {
     --side-margin: 15%;
   }
 }
 
-@media (width <=1150px) {
+@media (max-width: 1150px) {
   #description {
     --side-margin: 10%;
   }
 }
 
-@media (width <=800px) {
+@media (max-width: 800px) {
   #description {
     --side-margin: 5%;
   }
 }
 
-@media (width <=600px) {
+@media (max-width: 600px) {
   #description {
     --side-margin: 2%;
   }
@@ -71,7 +71,7 @@
   grid-gap: 20px;
 }
 
-@media (width <=1150px) {
+@media (max-width: 1150px) {
   #skill_list {
     width: 70%;
   }
@@ -81,13 +81,13 @@
   }
 }
 
-@media (width <=800px) {
+@media (max-width: 800px) {
   #skill_list ul {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
-@media (width <=600px) {
+@media (max-width: 600px) {
   #skill_list ul {
     grid-template-columns: repeat(1, 1fr) !important;
   }

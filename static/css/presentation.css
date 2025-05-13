@@ -19,31 +19,31 @@
   /*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
 }
 
-@media {
+@media (max-width: 1920) {
   .presentation_frame {
     --presentation-frame-side-margin: 25%;
   }
 }
 
-@media (width <=1450px) {
+@media (max-width: 1450px) {
   .presentation_frame {
     --presentation-frame-side-margin: 20%;
   }
 }
 
-@media (width <=1150px) {
+@media (max-width: 1150px) {
   .presentation_frame {
     --presentation-frame-side-margin: 10%;
   }
 }
 
-@media (width <=800px) {
+@media (max-width: 800px) {
   .presentation_frame {
     --presentation-frame-side-margin: 5%;
   }
 }
 
-@media (width <=600px) {
+@media (max-width: 600px) {
   .presentation_frame {
     --presentation-frame-side-margin: 1%;
   }
@@ -56,7 +56,6 @@
     font-size: 0.8em !important;
   }
 }
-
 
 /* This removes weird black background */
 .presentation_frame * {
