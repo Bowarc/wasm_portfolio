@@ -26,7 +26,6 @@ serde_json = "1.0.111"
 serde = { version = "1.0.194", features = ["derive"] }
 futures = "0.3.30"
 gloo-timers = { version = "0.3.0", features = ["futures"] }
-bi18n = "0.3.0"
 i18nrs = { version = "0.1.5", features = ["yew"] }
 # wasm-bindgen-futures = "0.4.39"
 # serde_json = "1.0.111"
