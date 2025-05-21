@@ -12,6 +12,12 @@ pub struct Props {
 pub fn Home(props: &Props) -> Html {
     use i18nrs::yew::use_translation;
 
+    if let Some(nav) = yew_router::hooks::use_navigator() {
+        nav.replace(&crate::Route::Home)
+    }else{
+        error!("Failed to retrieve the navigator")
+    }
+
     let (i18n, _) = use_translation();
 
     html! { <>
@@ -47,7 +53,7 @@ pub fn Home(props: &Props) -> Html {
             { i18n.t("home.description.main_projects.more_info") }
             <button onclick={
                 let current_scene_clone = props.current_scene.clone();
-                Callback::from(move |_| current_scene_clone.set(Scene::Projects))
+                Callback::from(move |_| current_scene_clone.set(Scene::GitRepos))
             }>{ i18n.t("home.description.main_projects.button_text") }</button>
         </p>
         // <p class="hidable_element">
@@ -68,7 +74,7 @@ pub fn Home(props: &Props) -> Html {
         <p class="hidable_element">{ i18n.t("home.description.experience.content.asf") }</p>
         <p class="hidable_element">
             { i18n.t("home.description.experience.content.atlantice.1")}
-            <a href="https://sn.linkedin.com/company/atlantice">{ i18n.t("home.description.experience.content.atlantice.name") }</a>
+            <a href="https://linkedin.com/company/atlantice">{ i18n.t("home.description.experience.content.atlantice.name") }</a>
             { i18n.t("home.description.experience.content.atlantice.2")}
         </p>
 

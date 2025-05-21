@@ -4,8 +4,8 @@ pub use gitrepos::GitRepos;
 pub use not_found::NotFound;
 mod contatct;
 pub use contatct::Contact;
-mod wasm;
-pub use wasm::WASM;
+// mod wasm;
+// pub use wasm::WASM;
 mod home;
 pub use home::Home;
 mod projects;
@@ -17,7 +17,7 @@ pub use void::Void;
 pub enum Scene {
     Home,
     GitRepos,
-    WASMShowcase,
+    // WASMShowcase,
     Projects,
     Contact,
     Void,
@@ -31,7 +31,7 @@ impl Scene {
         match self {
             Scene::Home => html! {<Home {current_scene}/>},
             Scene::GitRepos => html! {<GitRepos />},
-            Scene::WASMShowcase => html!{<WASM />},
+            // Scene::WASMShowcase => html!{<WASM />},
             Scene::Projects => html! {<Projects />},
             Scene::Contact => html! {<Contact />},
             Scene::Void => html! {<Void />},
@@ -45,7 +45,7 @@ impl std::fmt::Display for Scene {
         match self {
             Scene::Home => write!(f, "Home"),
             Scene::GitRepos => write!(f, "Git repos"),
-            Scene::WASMShowcase => write!(f, "Web assembly"),
+            // Scene::WASMShowcase => write!(f, "Web assembly"),
             Scene::Projects => write!(f, "Projects"),
             Scene::Contact => write!(f, "Contact"),
             Scene::Void => write!(f, "Void"),

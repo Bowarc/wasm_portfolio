@@ -35,6 +35,9 @@ pub async fn build_rocket() -> rocket::Rocket<rocket::Ignite> {
             "/",
             rocket::routes![
                 routes::root,
+                routes::home,
+                routes::git,
+                routes::contact,
                 routes::_404,
                 routes::front_js,
                 routes::front_bg_wasm,

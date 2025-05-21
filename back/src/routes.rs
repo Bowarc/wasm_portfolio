@@ -2,10 +2,22 @@
 mod bot_routes;
 pub use bot_routes::{bot_admin, bot_env, bot_wordpress, bot_wp, bot_wp_admin};
 
-#[rocket::get("/404")]
-pub async fn _404(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
-    root(ip_addr).await
+// Here are routes that are managed by the front end router, so just serve the page and let it do it's things
+macro_rules! front_route {
+    // here i could match on list of tokens with $($path:..)
+    // But I prefer keeping things simple
+    ($name:ident, $path:literal) => {
+        #[rocket::get($path)]
+        pub async fn $name(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
+            root(ip_addr).await
+        }
+    };
 }
+
+front_route!(home, "/home");
+front_route!(git, "/git");
+front_route!(contact, "/contact");
+front_route!(_404, "/404");
 
 #[rocket::get("/")]
 pub async fn root(ip_addr: rocket_client_addr::ClientAddr) -> super::response::Response {
@@ -186,7 +198,8 @@ async fn static_file_response(
                 .with_content_type(content_type);
 
             if cache {
-                response = response.with_header("Cache-Control", "max-age=3600") // Ask the browser to cache the request for 1 hour, might help for server load
+                response = response.with_header("Cache-Control", "max-age=3600")
+                // Ask the browser to cache the request for 1 hour, might help for server load
             }
 
             response.build()

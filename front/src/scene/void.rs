@@ -5,6 +5,12 @@ use yew::{function_component, html, use_force_update, Callback, Html};
 pub fn Void() -> Html {
     use crate::component::WORM_DEBUG_DRAW_VISION_POINTS;
 
+    if let Some(nav) = yew_router::hooks::use_navigator() {
+        nav.replace(&crate::Route::Default)
+    }else{
+        error!("Failed to retrieve the navigator")
+    }
+
     let force_update = use_force_update();
         
     let onclick = Callback::from(move |_| {

@@ -7,7 +7,7 @@
 }
 
 .presentation_frame {
-  /*  --presentation-frame-side-margin: 5%;*/
+  --presentation-frame-side-margin: 25%;
   background-color: var(--text-background-color);
   border: 2px solid var(--secondary-600);
   border-radius: 7px;
@@ -19,11 +19,11 @@
   /*  -webkit-backdrop-filter: blur(var(--blur-size)); laggy*/
 }
 
-@media (max-width: 1920) {
-  .presentation_frame {
-    --presentation-frame-side-margin: 25%;
-  }
-}
+/* @media (max-width: 1920) { */
+/* .presentation_frame { */
+/* --presentation-frame-side-margin: 25%; */
+/* } */
+/* } */
 
 @media (max-width: 1450px) {
   .presentation_frame {
