@@ -8,34 +8,46 @@ pub use contatct::Contact;
 // pub use wasm::WASM;
 mod home;
 pub use home::Home;
-mod projects;
-pub use projects::Projects;
+// mod projects;
+// pub use projects::Projects;
 mod void;
 pub use void::Void;
+use yew::Callback;
+
+use crate::Route;
 
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Scene {
     Home,
     GitRepos,
     // WASMShowcase,
-    Projects,
+    // Projects,
     Contact,
     Void,
-    NotFound
+    NotFound,
 }
 
 impl Scene {
-    pub fn html(&self, current_scene: yew::UseStateHandle<Scene>) -> yew::virtual_dom::VNode {
+    pub fn html(&self, set_scene_cb: Callback<Scene>) -> yew::virtual_dom::VNode {
         use yew::html;
 
         match self {
-            Scene::Home => html! {<Home {current_scene}/>},
+            Scene::Home => html! {<Home {set_scene_cb}/>},
             Scene::GitRepos => html! {<GitRepos />},
             // Scene::WASMShowcase => html!{<WASM />},
-            Scene::Projects => html! {<Projects />},
+            // Scene::Projects => html! {<Projects />},
             Scene::Contact => html! {<Contact />},
             Scene::Void => html! {<Void />},
             Scene::NotFound => html! {<NotFound />},
+        }
+    }
+    pub fn route(&self) -> crate::Route {
+        match self {
+            Scene::Home => Route::Home,
+            Scene::GitRepos => Route::Git,
+            Scene::Contact => Route::Contact,
+            Scene::NotFound => Route::NotFound,
+            _ => Route::Default
         }
     }
 }
@@ -46,7 +58,7 @@ impl std::fmt::Display for Scene {
             Scene::Home => write!(f, "Home"),
             Scene::GitRepos => write!(f, "Git repos"),
             // Scene::WASMShowcase => write!(f, "Web assembly"),
-            Scene::Projects => write!(f, "Projects"),
+            // Scene::Projects => write!(f, "Projects"),
             Scene::Contact => write!(f, "Contact"),
             Scene::Void => write!(f, "Void"),
             Scene::NotFound => write!(f, "Not found"),

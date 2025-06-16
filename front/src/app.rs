@@ -1,8 +1,9 @@
-use crate::component::{LocaleSwitch, LightSwitch, Hidable};
+use crate::{component::{Hidable, LightSwitch, LocaleSwitch}, scene::Scene};
 use gloo::utils::window;
 use wasm_bindgen::JsCast as _;
 use web_sys::{HtmlCanvasElement, WebGlRenderingContext};
 use yew::{function_component, html, use_effect_with, use_node_ref, use_state, Callback, Html};
+use yew_router::hooks::use_navigator;
 
 #[derive(Debug, PartialEq, yew::Properties)]
 pub struct Props {
@@ -31,6 +32,17 @@ pub fn App(props: &Props) -> Html {
     };
 
     let current_scene = use_state(|| current_scene_default);
+
+    let nav_opt = use_navigator();
+    let cs = current_scene.clone();
+    let set_scene_cb = Callback::from(move |scene: Scene| {
+        if let Some(nav) = &nav_opt {
+            nav.replace(&scene.route())
+        } else {
+            error!("Failed to retrieve the navigator");
+        }
+        cs.set(scene);
+    });
 
     let grid_canvas = use_node_ref();
 
@@ -123,8 +135,8 @@ pub fn App(props: &Props) -> Html {
                 scenes.into_iter().map(|scene|{
                     html!{
                         <button class={format!("scene_button{}", if *current_scene == scene {" current"} else {""})} onclick={
-                            let current_scene_clone = current_scene.clone();
-                            Callback::from(move |_| current_scene_clone.set(scene))
+                            let sscb = set_scene_cb.clone();
+                            Callback::from(move |_| sscb.emit(scene))
                         }>
                             { format!("{scene}") }
                         </button>
@@ -133,11 +145,11 @@ pub fn App(props: &Props) -> Html {
             }</div>
         </div>
         <div id="content">
-                <canvas id="gridworm-canvas" ref={grid_canvas} />
-                {
-                    current_scene.html(current_scene.clone())
-                }
-                <NotificationManager />
+            <canvas id="gridworm-canvas" ref={grid_canvas} />
+            {
+                current_scene.html(set_scene_cb)
+            }
+            <NotificationManager />
         </div>
         <footer>
             { format!("Rendered: {}", String::from(Date::new_0().to_string())) }

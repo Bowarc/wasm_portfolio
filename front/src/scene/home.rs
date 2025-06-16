@@ -1,17 +1,20 @@
 use crate::scene::Scene;
 use crate::utils::age;
+use crate::component::update_visibles;
+use yew::{function_component, html, use_effect, Callback, Html};
 
-use yew::{function_component, html, Callback, Html};
-
-#[derive(yew::Properties, std::cmp::PartialEq)]
+#[derive(yew::Properties, PartialEq)]
 pub struct Props {
-    pub current_scene: yew::UseStateHandle<crate::scene::Scene>,
+    pub set_scene_cb: Callback<Scene>
 }
 
 #[function_component]
 pub fn Home(props: &Props) -> Html {
     use i18nrs::yew::use_translation;
 
+    // This removes the blinking effect when switching back to the home scene
+    use_effect(update_visibles);
+    
     if let Some(nav) = yew_router::hooks::use_navigator() {
         nav.replace(&crate::Route::Home)
     }else{
@@ -52,8 +55,8 @@ pub fn Home(props: &Props) -> Html {
         <p class="hidable_element">
             { i18n.t("home.description.main_projects.more_info") }
             <button onclick={
-                let current_scene_clone = props.current_scene.clone();
-                Callback::from(move |_| current_scene_clone.set(Scene::GitRepos))
+                let sscb = props.set_scene_cb.clone();
+                Callback::from(move |_| sscb.emit(Scene::GitRepos))
             }>{ i18n.t("home.description.main_projects.button_text") }</button>
         </p>
         // <p class="hidable_element">
@@ -85,8 +88,8 @@ pub fn Home(props: &Props) -> Html {
         <p class="hidable_element">
             { i18n.t("home.description.connect.content.1") }
             <button onclick={
-                let current_scene_clone = props.current_scene.clone();
-                Callback::from(move |_| current_scene_clone.set(Scene::Contact))
+                let sscb = props.set_scene_cb.clone();
+                Callback::from(move |_| sscb.emit(Scene::Contact))
             }>{ i18n.t("home.description.connect.button_text") }</button>
             { i18n.t("home.description.connect.content.2") }
         </p>

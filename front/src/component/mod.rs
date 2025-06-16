@@ -1,7 +1,7 @@
 mod locale_switch;
 mod light_switch;
 mod hidable;
-pub use hidable::Hidable;
+pub use hidable::{Hidable, update_visibles};
 pub use light_switch::LightSwitch;
 mod wormgrid;
 pub use locale_switch::LocaleSwitch;
