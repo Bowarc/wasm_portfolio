@@ -78,6 +78,6 @@ COPY --from=minifier /app/static ./static
 
 RUN mkdir ./log
 
-EXPOSE 42070
+EXPOSE 42060
 
 CMD ["./server"]
