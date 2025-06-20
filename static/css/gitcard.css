@@ -93,6 +93,12 @@
   height: 100%;
 }
 
+.card img{
+  position: absolute;
+  left: 0.5vw;
+  top: 0.5vw;
+}
+
 .card_title {
   font-weight: bold;
   font-size: var(--text-2);

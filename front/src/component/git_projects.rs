@@ -164,15 +164,15 @@ impl yew::Component for GitProjectList {
                         <a href={ format!("https://github.com/{}/{}", repo.owner_name, repo.name) }
                                 class="card_link">
                             <div class="card_bg"></div>
+                            <img src={
+                                    format!("./resources/{}.webp",
+                                        repo.language.to_lowercase()
+                                    )
+                                }
+                                alt={ " " }
+                                class="icon"
+                            />
                             <div class="card_title">
-                                <img src={
-                                        format!("./resources/{}.webp",
-                                            repo.language.to_lowercase()
-                                        )
-                                    }
-                                    alt={ " " }
-                                    class="icon"
-                                />
                                 { &repo.name }
                             </div>
                             <div class="card_description">
